@@ -2,15 +2,15 @@
 Using SDL3 to handle window creation but DirectX11 for rendering. Removes a lot of the boilerplate of using purely directx11.
 */
 
+#include <iostream>
 
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
-#include <iostream>
+
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
 static SDL_Window* window = NULL;
 static SDL_Renderer* renderer = NULL;
-//static SDL_Renderer* renderer = SDL_CreateRenderer(window, "direct3d11");
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
@@ -28,11 +28,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
         return SDL_APP_FAILURE;
 	}
 
-	// There's a chance this uses directx11 anyway, but the former is more explicit.
-    /*if (!SDL_CreateWindowAndRenderer("CMP316 Engine", 800, 600, SDL_WINDOW_FULLSCREEN, &window, &renderer)) {
-        SDL_Log("Couldn't create window and renderer: %s", SDL_GetError());
-        return SDL_APP_FAILURE;
-    }*/
     return SDL_APP_CONTINUE;
 }
 
