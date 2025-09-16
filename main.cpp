@@ -1,6 +1,20 @@
 /*
 Using SDL3 to handle window creation but DirectX11 for rendering. Removes a lot of the boilerplate of using purely directx11.
 Also partly because directx11 is being used in other course modules as far as I'm aware.
+
+NOTE:
+- SDL uses its own main function as the entry point of the program, so the program entry point is SDL_main() (Or something like that) instead of this file.
+
+TODO:
+- Input Manager: (Detecting specific keys on a keyboard) 
+https://stackoverflow.com/questions/3741055/inputs-in-sdl-on-key-pressed 
+- Currently program ends on any key press, should remove this and instead toggle fullscreen when 'F11' is pressed so that you can press the X button to close the program instead.
+- Go through the core files and add comments / documentation explaining purpose of each class and function, and what they can be used for.
+- Possibly encapsulate the rasterizer in d3dclass.cpp
+- Encapsulate the scene/frame logic in a separate class (Application class?) ~ Move model, camera and colorshader to this class. Renderer should probably move into that class as well.
+- Possibly check if there is a better way to render voxel models that triangelist which is currently used in modelclass.cpp
+- Possibly update ColorShaderClass::Initialize so that the filepath to the vertex and pixel shader is calculated based on local 
+directory rather than hardcoded based on the name. Currently dependant on project folder being named exactly 'EngineCMP316'.
 */
 
 #include <iostream>
@@ -12,6 +26,9 @@ Also partly because directx11 is being used in other course modules as far as I'
 #include <SDL3/SDL_main.h>
 
 #include "d3dclass.h" // RENDERER
+#include "cameraclass.h"
+#include "modelclass.h"
+#include "colorshaderclass.h"
 
 /// WINDOW SETTINGS ///
 
@@ -22,8 +39,11 @@ const float SCREEN_NEAR = 0.3f;
 
 ///
 
-static D3DClass* renderer = NULL;
-static SDL_Window* window = NULL;
+static SDL_Window* window       = NULL;
+static D3DClass* renderer       = NULL;
+CameraClass* m_Camera           = NULL;
+ModelClass* m_Model             = NULL;
+ColorShaderClass* m_ColorShader = NULL;
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
@@ -57,6 +77,31 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
         return SDL_APP_FAILURE;
     }
 
+    // Create the camera object.
+    m_Camera = new CameraClass;
+
+    // Set the initial position of the camera.
+    m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+
+    // Create and initialize the model object.
+    m_Model = new ModelClass;
+
+    if (!m_Model->Initialize(renderer->GetDevice()))
+    {
+        MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+        return SDL_APP_FAILURE;
+    }
+
+    // Create and initialize the color shader object.
+    m_ColorShader = new ColorShaderClass;
+
+    if (!m_ColorShader->Initialize(renderer->GetDevice(), hwnd))
+    {
+        MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
+        return SDL_APP_FAILURE;
+    }
+
+
     return SDL_APP_CONTINUE;
 }
 
@@ -73,10 +118,31 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
-	//renderer->BeginScene(0.5f, 0.5f, 0.5f, 1.0f); // Grey
-    renderer->BeginScene(0.5f, 0.5f, 0.0f, 1.0f); // Yellow
+    XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 
-    // Scene contained here...
+    renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
+    //renderer->BeginScene(0.5f, 0.5f, 0.5f, 1.0f); // Grey
+
+    ///
+
+    // Generate the view matrix based on the camera's position.
+    m_Camera->Render();
+
+    // Get the world, view, and projection matrices from the camera and d3d objects.
+    renderer->GetWorldMatrix(worldMatrix);
+    m_Camera->GetViewMatrix(viewMatrix);
+    renderer->GetProjectionMatrix(projectionMatrix);
+
+    // Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+    m_Model->Render(renderer->GetDeviceContext());
+
+    // Render the model using the color shader.
+    if (!m_ColorShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix))
+    {
+        return SDL_APP_FAILURE;
+    }
+
+    ///
 
 	renderer->EndScene();
     return SDL_APP_CONTINUE;
@@ -85,6 +151,29 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 /* This function runs once at shutdown. */
 void SDL_AppQuit(void* appstate, SDL_AppResult result)
 {
+    // Release the color shader object.
+    if (m_ColorShader)
+    {
+        m_ColorShader->Shutdown();
+        delete m_ColorShader;
+        m_ColorShader = NULL;
+    }
+
+    // Release the model object.
+    if (m_Model)
+    {
+        m_Model->Shutdown();
+        delete m_Model;
+        m_Model = NULL;
+    }
+
+    // Release the camera object.
+    if (m_Camera)
+    {
+        delete m_Camera;
+        m_Camera = NULL;
+    }
+
     // Release the Direct3D object.
     if (renderer)
     {
