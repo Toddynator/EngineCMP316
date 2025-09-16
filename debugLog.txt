@@ -1,0 +1,2 @@
+Video Card Name: NVIDIA GeForce GTX 960
+Video Card Memory: 4040 MB of memory

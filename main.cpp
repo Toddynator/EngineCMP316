@@ -1,32 +1,61 @@
 /*
 Using SDL3 to handle window creation but DirectX11 for rendering. Removes a lot of the boilerplate of using purely directx11.
+Also partly because directx11 is being used in other course modules as far as I'm aware.
 */
 
 #include <iostream>
+#include <Windows.h>
 
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 
+#include "d3dclass.h" // RENDERER
+
+/// WINDOW SETTINGS ///
+
+const bool FULL_SCREEN = false;
+const bool VSYNC_ENABLED = true;
+const float SCREEN_DEPTH = 1000.0f;
+const float SCREEN_NEAR = 0.3f;
+
+///
+
+static D3DClass* renderer = NULL;
 static SDL_Window* window = NULL;
-static SDL_Renderer* renderer = NULL;
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
-    /* Create the window */
-    window = SDL_CreateWindow("CMP316 Engine", 800, 600, SDL_WINDOW_FULLSCREEN);
+    /// WINDOW ///
+
+    window = SDL_CreateWindow("CMP316 Engine", 800, 600, NULL);
     if(!window) {
         SDL_Log("Couldn't create window: %s", SDL_GetError());
         return SDL_APP_FAILURE;
 	}
+    
+    /// ADJUST WINDOW SETTINGS ///
 
-	renderer = SDL_CreateRenderer(window, "direct3d11");
-    if (!renderer) {
-        SDL_Log("Couldn't create renderer: %s", SDL_GetError());
+	SDL_SetWindowFullscreen(window, FULL_SCREEN ? SDL_WINDOW_FULLSCREEN : 0);
+
+    /// RENDERER  ///
+
+    renderer = new D3DClass;
+    
+    int screenWidth, screenHeight;
+	screenWidth = 0; screenHeight = 0;  
+	SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+
+    SDL_PropertiesID props = SDL_GetWindowProperties(window);
+    HWND hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+
+    if (!renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
+    {
+        MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
         return SDL_APP_FAILURE;
-	}
+    }
 
     return SDL_APP_CONTINUE;
 }
@@ -44,29 +73,24 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
-    const char* message = "Hello World!";
-    int w = 0, h = 0;
-    float x, y;
-    const float scale = 4.0f;
+	//renderer->BeginScene(0.5f, 0.5f, 0.5f, 1.0f); // Grey
+    renderer->BeginScene(0.5f, 0.5f, 0.0f, 1.0f); // Yellow
 
-    /* Center the message and scale it up */
-    SDL_GetRenderOutputSize(renderer, &w, &h);
-    SDL_SetRenderScale(renderer, scale, scale);
-    x = ((w / scale) - SDL_DEBUG_TEXT_FONT_CHARACTER_SIZE * SDL_strlen(message)) / 2;
-    y = ((h / scale) - SDL_DEBUG_TEXT_FONT_CHARACTER_SIZE) / 2;
+    // Scene contained here...
 
-    /* Draw the message */
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderDebugText(renderer, x, y, message);
-    SDL_RenderPresent(renderer);
-
+	renderer->EndScene();
     return SDL_APP_CONTINUE;
 }
 
 /* This function runs once at shutdown. */
 void SDL_AppQuit(void* appstate, SDL_AppResult result)
 {
+    // Release the Direct3D object.
+    if (renderer)
+    {
+        renderer->Shutdown();
+        delete renderer;
+        renderer = NULL;
+    }
 }
 
