@@ -3,6 +3,9 @@ Handles loading, unloading and accessing of a single texture resource. Each text
 Uses Targa Files (.tga) as the texture format.
 
 Add more functions here if I want to support other texture formats.
+
+NOTE:
+- Targa Loading functions are due a refactoring, currently some unnecessary code duplication.
 */
 
 #ifndef _TEXTURECLASS_H_

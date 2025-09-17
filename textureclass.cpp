@@ -127,7 +127,7 @@ bool TextureClass::LoadTarga(char* filename, int& bitsPerPixel)
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
 	unsigned int count;
-	TargaHeader targaFileHeader;
+	TargaHeader targaFileHeader{};
 	unsigned char* targaImage;
 
 
@@ -295,7 +295,6 @@ bool TextureClass::LoadTarga24Bit(char* filename)
 
 	targaImage = new unsigned char[imageSize];
 
-	///// NOTE ERROR HERE /////
 	count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
 	if (count != imageSize)
 	{

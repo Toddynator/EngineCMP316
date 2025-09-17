@@ -5,6 +5,7 @@ ModelClass::ModelClass()
 	m_vertexBuffer = NULL;
 	m_indexBuffer = NULL;
 	m_Texture = NULL;
+	m_worldTransformMatrix = XMMatrixIdentity();
 }
 
 
@@ -55,6 +56,12 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
 
+	/// TEST TRANSFORMS ///
+	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
+	m_worldTransformMatrix = translationMatrix * rotationMatrix;
+	///
+
 	return;
 }
 
@@ -103,19 +110,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	XMFLOAT4 vertexColour = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f); // RED
 
 	// Load the vertex array with data.
-	/*
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-	//vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	vertices[0].color = vertexColour;
-
-	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-	//vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	vertices[1].color = vertexColour;
-
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	//vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	vertices[2].color = vertexColour;
-	*/
 
 	vertices[0].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
 	vertices[1].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top right.

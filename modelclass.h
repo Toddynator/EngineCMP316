@@ -32,6 +32,8 @@ public:
 
 	ID3D11ShaderResourceView* GetTexture();
 
+	XMMATRIX GetTransform() { return m_worldTransformMatrix; }
+
 private:
 	bool InitializeBuffers(ID3D11Device*);
 	void ShutdownBuffers();
@@ -45,6 +47,8 @@ private:
 	int m_vertexCount, m_indexCount;
 
 	TextureClass* m_Texture;
+
+	XMMATRIX m_worldTransformMatrix;
 };
 
 #endif

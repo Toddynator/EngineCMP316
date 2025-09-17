@@ -6,6 +6,9 @@ NOTE:
 - SDL uses its own main function as the entry point of the program, so the program entry point is SDL_main() (Or something like that) instead of this file.
 
 TODO:
+- Sort out my priorities / todo list
+- Create helper for matrix transformations (Translation, Rotation, Scale)
+- Create Base Object class that has position, rotation and scale. ModelClass should only handle the model data and rendering ~ REMOVE TRANSFORMS FROM MODEL CLASS, remember to remove the test transforms in the render() function.
 - Input Manager: (Detecting specific keys on a keyboard) 
 https://stackoverflow.com/questions/3741055/inputs-in-sdl-on-key-pressed 
 - Currently program ends on any key press, should remove this and instead toggle fullscreen when 'F11' is pressed so that you can press the X button to close the program instead.
@@ -140,11 +143,9 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
     XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-
     renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
-    //renderer->BeginScene(0.5f, 0.5f, 0.5f, 1.0f); // Grey
 
-    ///
+    /////
 
     // Generate the view matrix based on the camera's position.
     m_Camera->Render();
@@ -155,21 +156,17 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     renderer->GetProjectionMatrix(projectionMatrix);
 
     // Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+    // CALL THIS FOR EACH OBJECT IN THE SCENE
     m_Model->Render(renderer->GetDeviceContext());
 
-    // Render the model using the color shader.
-   /* if (!m_ColorShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix))
-	{
-		return SDL_APP_FAILURE;
-	}*/
-
 	// Render the model using the texture shader.
-	if (!m_TextureShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture()))
+    // CALL THIS FOR EACH OBJECT IN THE SCENE
+	if (!m_TextureShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTransform(), m_Model->GetTexture()))
 	{
 		return SDL_APP_FAILURE;
 	}
 
-    ///
+    /////
 
 	renderer->EndScene();
     return SDL_APP_CONTINUE;
