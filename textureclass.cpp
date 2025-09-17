@@ -25,8 +25,11 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	unsigned int rowPitch;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 
+	// NOTE: Should have a file extension check here in the future to determine what type of texture it is loading.
+
 	// Load the targa image data into memory.
-	result = LoadTarga32Bit(filename);
+	int bpp = 0;
+	result = LoadTarga(filename, bpp);
 	if (!result)
 	{
 		return false;
@@ -53,7 +56,14 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	}
 
 	// Set the row pitch of the targa image data.
-	rowPitch = (m_width * 4) * sizeof(unsigned char);
+	if (bpp == 32)
+	{
+		rowPitch = (m_width * 4) * sizeof(unsigned char);
+	}
+	else // bpp == 24
+	{
+		rowPitch = (m_width * 3) * sizeof(unsigned char);
+	}
 
 	// Copy the targa image data into the texture.
 	deviceContext->UpdateSubresource(m_texture, 0, NULL, m_targaData, rowPitch, 0);
@@ -112,6 +122,50 @@ ID3D11ShaderResourceView* TextureClass::GetTexture()
 	return m_textureView;
 }
 
+bool TextureClass::LoadTarga(char* filename, int& bitsPerPixel)
+{
+	int error, bpp, imageSize, index, i, j, k;
+	FILE* filePtr;
+	unsigned int count;
+	TargaHeader targaFileHeader;
+	unsigned char* targaImage;
+
+
+	// Open the targa file for reading in binary.
+	error = fopen_s(&filePtr, filename, "rb");
+	if (error != 0)
+	{
+		return false;
+	}
+
+	// Read in the file header.
+	count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
+	if (count != 1)
+	{
+		return false;
+	}
+
+	// Get the important information from the header.
+	m_height = (int)targaFileHeader.height;
+	m_width = (int)targaFileHeader.width;
+	bpp = (int)targaFileHeader.bitsPerPixel;
+
+	bitsPerPixel = bpp;
+
+	if (bpp == 32)
+	{
+		return LoadTarga32Bit(filename);
+	}
+	else if (bpp == 24)
+	{
+		return LoadTarga24Bit(filename);	
+	}
+	else
+	{
+		return false;
+	}
+}
+
 bool TextureClass::LoadTarga32Bit(char* filename)
 {
 	int error, bpp, imageSize, index, i, j, k;
@@ -138,7 +192,7 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 	// Get the important information from the header.
 	m_height = (int)targaFileHeader.height;
 	m_width = (int)targaFileHeader.width;
-	bpp = (int)targaFileHeader.bpp;
+	bpp = (int)targaFileHeader.bitsPerPixel;
 
 	// Check that it is 32 bit and not 24 bit.
 	if (bpp != 32)
@@ -201,6 +255,85 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 	return true;
 }
 
+bool TextureClass::LoadTarga24Bit(char* filename)
+{
+	/*
+	// http://www.paulbourke.net/dataformats/tga/
+	*/
+
+	int error, bitsPerPixel, imageSize, index, i, j, k;
+	FILE* filePtr;
+	unsigned int count;
+	TargaHeader targaFileHeader;
+	unsigned char* targaImage;
+
+	// Open the targa file for reading in binary.
+	error = fopen_s(&filePtr, filename, "rb");
+	if (error != 0)
+	{
+		return false;
+	}
+
+	// Read in the file header.
+	count = (unsigned int)fread(&targaFileHeader, sizeof(TargaHeader), 1, filePtr);
+	if (count != 1)
+	{
+		return false;
+	}
+
+	// Get the important information from the header.
+	m_height = (int)targaFileHeader.height;
+	m_width = (int)targaFileHeader.width;
+	bitsPerPixel = (int)targaFileHeader.bitsPerPixel;
+
+	if (bitsPerPixel != 24)
+	{
+		return false;
+	}
+
+	imageSize = m_width * m_height * 3;
+
+	targaImage = new unsigned char[imageSize];
+
+	///// NOTE ERROR HERE /////
+	count = (unsigned int)fread(targaImage, 1, imageSize, filePtr);
+	if (count != imageSize)
+	{
+		return false;
+	}
+
+	error = fclose(filePtr);
+	if (error != 0)
+	{
+		return false;
+	}
+
+	m_targaData = new unsigned char[imageSize];
+
+	index = 0;
+
+	k = (m_width * m_height * 3) - (m_width * 3);
+
+	for (j = 0; j < m_height; j++)
+	{
+		for (i = 0; i < m_width; i++)
+		{
+			m_targaData[index + 0] = targaImage[k + 2];  // Red.
+			m_targaData[index + 1] = targaImage[k + 1];  // Green.
+			m_targaData[index + 2] = targaImage[k + 0];  // Blue
+
+			k += 3;
+			index += 3;
+		}
+
+		k -= (m_width * 6);
+	}
+
+	delete[] targaImage;
+	targaImage = 0;
+
+	return true;
+}
 
 int TextureClass::GetWidth()
 {

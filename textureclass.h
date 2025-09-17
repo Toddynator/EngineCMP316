@@ -14,13 +14,14 @@ Add more functions here if I want to support other texture formats.
 class TextureClass
 {
 private:
+	// http://www.paulbourke.net/dataformats/tga/
 	struct TargaHeader
 	{
-		unsigned char data1[12];
+		unsigned char data1[12]; // First 12 bytes of the header which are irrelevant for loading the targa. // short is 2 bytes, char is 1 byte
 		unsigned short width;
 		unsigned short height;
-		unsigned char bpp;
-		unsigned char data2;
+		unsigned char bitsPerPixel;
+		unsigned char data2; // Last bit of data that is also irrelevant for loading.
 	};
 
 public:
@@ -38,7 +39,9 @@ public:
 
 private:
 	/// SUPPORTED TEXTURE FORMATS ///
+	bool LoadTarga(char*, int&);
 	bool LoadTarga32Bit(char*);
+	bool LoadTarga24Bit(char*);
 
 private:
 	unsigned char* m_targaData; // Data read in from the targa file.

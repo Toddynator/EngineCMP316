@@ -15,6 +15,7 @@ https://stackoverflow.com/questions/3741055/inputs-in-sdl-on-key-pressed
 - Possibly check if there is a better way to render voxel models that triangelist which is currently used in modelclass.cpp
 - Possibly update ColorShaderClass::Initialize so that the filepath to the vertex and pixel shader is calculated based on local 
 directory rather than hardcoded based on the name. Currently dependant on project folder being named exactly 'EngineCMP316'.
+- Add Support for mixed texture and colour vertexs.
 */
 
 #include <iostream>
@@ -93,6 +94,8 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
 	// Set the name of the texture file that we will be loading.
 	strcpy_s(textureFilename, "../EngineCMP316/data/stone01.tga");
+    //strcpy_s(textureFilename, "../EngineCMP316/data/testTargaFile.tga");
+    //strcpy_s(textureFilename, "../EngineCMP316/data/test24bitTargaFile.tga");
 
     //if (!m_Model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext())) // Without Texture
     if (!m_Model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
