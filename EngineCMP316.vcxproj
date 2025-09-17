@@ -132,6 +132,8 @@
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="textureclass.cpp" />
+    <ClCompile Include="textureshaderclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="SDL3-3.2.20\VisualC\SDL\SDL.vcxproj">
@@ -143,10 +145,20 @@
     <ClInclude Include="colorshaderclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="textureclass.h" />
+    <ClInclude Include="textureshaderclass.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\color.ps" />
-    <None Include="Shaders\color.vs" />
+    <None Include="Shaders\color_ps.hlsl" />
+    <None Include="Shaders\color_vs.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\texture_ps.hlsl">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="Shaders\texture_vs.hlsl">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

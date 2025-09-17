@@ -20,5 +20,5 @@ struct PixelInputType
 float4 ColorPixelShader(PixelInputType input) : SV_TARGET
 {
     return input.color;
-    //return input.color * 0.5f; // Makes it half as bright, kinda cool
+    //return input.color * 0.5f; // Makes it half as bright
 }

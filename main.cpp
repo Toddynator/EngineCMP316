@@ -29,6 +29,7 @@ directory rather than hardcoded based on the name. Currently dependant on projec
 #include "cameraclass.h"
 #include "modelclass.h"
 #include "colorshaderclass.h"
+#include "textureshaderclass.h"
 
 /// WINDOW SETTINGS ///
 
@@ -44,10 +45,14 @@ static D3DClass* renderer       = NULL;
 CameraClass* m_Camera           = NULL;
 ModelClass* m_Model             = NULL;
 ColorShaderClass* m_ColorShader = NULL;
+TextureShaderClass* m_TextureShader = NULL;
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 {
+    /// TEXTURES ///
+    char textureFilename[128];
+
     /// WINDOW ///
 
     window = SDL_CreateWindow("CMP316 Engine", 800, 600, NULL);
@@ -86,26 +91,39 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
     // Create and initialize the model object.
     m_Model = new ModelClass;
 
-    if (!m_Model->Initialize(renderer->GetDevice()))
+	// Set the name of the texture file that we will be loading.
+	strcpy_s(textureFilename, "../EngineCMP316/data/stone01.tga");
+
+    //if (!m_Model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext())) // Without Texture
+    if (!m_Model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
     {
         MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
         return SDL_APP_FAILURE;
     }
 
-    // Create and initialize the color shader object.
-    m_ColorShader = new ColorShaderClass;
+    //// Create and initialize the color shader object.
+    //m_ColorShader = new ColorShaderClass;
 
-    if (!m_ColorShader->Initialize(renderer->GetDevice(), hwnd))
-    {
-        MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
-        return SDL_APP_FAILURE;
-    }
+    //if (!m_ColorShader->Initialize(renderer->GetDevice(), hwnd))
+    //{
+    //    MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
+    //    return SDL_APP_FAILURE;
+    //}
+
+	// Create and initialize the texture shader object.
+	m_TextureShader = new TextureShaderClass;
+
+	if (!m_TextureShader->Initialize(renderer->GetDevice(), hwnd))
+	{
+		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		return SDL_APP_FAILURE;
+	}
 
 
     return SDL_APP_CONTINUE;
 }
 
-/* This function runs when a new event (mouse input, keypresses, etc) occurs. */
+/* This function runs when a new event (mouse input, key presses, etc) occurs. */
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 {
     if (event->type == SDL_EVENT_KEY_DOWN ||
@@ -137,10 +155,16 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     m_Model->Render(renderer->GetDeviceContext());
 
     // Render the model using the color shader.
-    if (!m_ColorShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix))
-    {
-        return SDL_APP_FAILURE;
-    }
+   /* if (!m_ColorShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix))
+	{
+		return SDL_APP_FAILURE;
+	}*/
+
+	// Render the model using the texture shader.
+	if (!m_TextureShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTexture()))
+	{
+		return SDL_APP_FAILURE;
+	}
 
     ///
 
@@ -151,6 +175,14 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 /* This function runs once at shutdown. */
 void SDL_AppQuit(void* appstate, SDL_AppResult result)
 {
+	// Release the texture shader object.
+	if (m_TextureShader)
+	{
+		m_TextureShader->Shutdown();
+		delete m_TextureShader;
+		m_TextureShader = 0;
+	}
+
     // Release the color shader object.
     if (m_ColorShader)
     {
