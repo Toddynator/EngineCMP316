@@ -142,7 +142,7 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
-    XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+    XMMATRIX viewMatrix, projectionMatrix;
     renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
 
     /////
@@ -150,8 +150,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     // Generate the view matrix based on the camera's position.
     m_Camera->Render();
 
-    // Get the world, view, and projection matrices from the camera and d3d objects.
-    renderer->GetWorldMatrix(worldMatrix);
+    // Get the view, and projection matrices from the camera and d3d objects.
     m_Camera->GetViewMatrix(viewMatrix);
     renderer->GetProjectionMatrix(projectionMatrix);
 
@@ -161,7 +160,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
 	// Render the model using the texture shader.
     // CALL THIS FOR EACH OBJECT IN THE SCENE
-	if (!m_TextureShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_Model->GetTransform(), m_Model->GetTexture()))
+	if (!m_TextureShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), m_Model->GetWorldMatrix(), viewMatrix, projectionMatrix, m_Model->GetTexture()))
 	{
 		return SDL_APP_FAILURE;
 	}

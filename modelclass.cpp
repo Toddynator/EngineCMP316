@@ -5,7 +5,7 @@ ModelClass::ModelClass()
 	m_vertexBuffer = NULL;
 	m_indexBuffer = NULL;
 	m_Texture = NULL;
-	m_worldTransformMatrix = XMMatrixIdentity();
+	worldMatrix = XMMatrixIdentity();
 }
 
 
@@ -59,7 +59,7 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 	/// TEST TRANSFORMS ///
 	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
-	m_worldTransformMatrix = translationMatrix * rotationMatrix;
+	worldMatrix = translationMatrix * rotationMatrix;
 	///
 
 	return;

@@ -31,7 +31,6 @@ public:
     ID3D11DeviceContext* GetDeviceContext();
 
     void GetProjectionMatrix(XMMATRIX&);
-    void GetWorldMatrix(XMMATRIX&);
     void GetOrthoMatrix(XMMATRIX&);
 
     void GetVideoCardInfo(char*, int&);
@@ -52,7 +51,6 @@ private:
     ID3D11DepthStencilView* m_depthStencilView;
     ID3D11RasterizerState* m_rasterState;
     XMMATRIX m_projectionMatrix;
-    XMMATRIX m_worldMatrix;
     XMMATRIX m_orthoMatrix;
     D3D11_VIEWPORT m_viewport;
 };

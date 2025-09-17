@@ -350,15 +350,11 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 	/// MATRICES ///
 	// Projection matrix is required for converting the 3d coordinates of the scene into the 2d screen coordinates for rendering.
-	// The World matrix is used to define the position of objects in the 3d scene.
 	// The orthographic matrix is used for 2d rendering, such as for menus and HUDs.
 	// Normally you would have a view matrix too, but this is more relevant for a camera system and so it has been left out of this class.
 
 	// Create the projection matrix for 3D rendering.
 	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-
-	// Initialize the world matrix to the identity matrix.
-	m_worldMatrix = XMMatrixIdentity();
 
 	// Create an orthographic projection matrix for 2D rendering.
 	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
@@ -502,14 +498,6 @@ void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
 	projectionMatrix = m_projectionMatrix;
 	return;
 }
-
-
-void D3DClass::GetWorldMatrix(XMMATRIX& worldMatrix)
-{
-	worldMatrix = m_worldMatrix;
-	return;
-}
-
 
 void D3DClass::GetOrthoMatrix(XMMATRIX& orthoMatrix)
 {

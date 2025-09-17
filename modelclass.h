@@ -32,7 +32,7 @@ public:
 
 	ID3D11ShaderResourceView* GetTexture();
 
-	XMMATRIX GetTransform() { return m_worldTransformMatrix; }
+	XMMATRIX GetWorldMatrix() { return worldMatrix; }
 
 private:
 	bool InitializeBuffers(ID3D11Device*);
@@ -48,7 +48,7 @@ private:
 
 	TextureClass* m_Texture;
 
-	XMMATRIX m_worldTransformMatrix;
+	XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
 };
 
 #endif
