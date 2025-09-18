@@ -21,6 +21,9 @@ directory rather than hard coded based on the name. Currently Dependant on proje
 - Projection Matrix I think should be under camera class itself in the future, need to research this more to make sure I don't break everything. If I do this I can then enable support for multiple cameras.
   - REMEMBER TO MOVE THE PROJECTION MATRIX FROM D3DCLASS IF I DO THIS, PROJECTION MATRIX MUST BE RECALCULATED AFTER WINDOW RESIZE (CHECK D3DCLASS HANDLEWINDOWRESIZE FUNCTION).
 
+INPUTMANAGER TODO:
+- Add Mouse Functionality.
+- Unit Test & Profiling.
 */
 
 #include <iostream>
@@ -40,6 +43,7 @@ directory rather than hard coded based on the name. Currently Dependant on proje
 #include "modelclass.h"
 #include "colorshaderclass.h"
 #include "textureshaderclass.h"
+#include "InputManager.h"
 
 /// WINDOW SETTINGS ///
 
@@ -56,6 +60,9 @@ CameraClass* m_Camera = NULL;
 ModelClass* m_Model = NULL;
 ColorShaderClass* m_ColorShader = NULL;
 TextureShaderClass* m_TextureShader = NULL;
+InputManager* inputManager = new InputManager{};
+
+///
 
 /* This function runs once at startup. */
 SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
@@ -98,7 +105,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 
     // Create the camera object.
     m_Camera = new CameraClass;
-
     // Set the initial position of the camera.
     m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
 
@@ -146,31 +152,17 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 /* This function runs when a new event (mouse input, key presses, etc) occurs. */
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 {
-	/// IMGUI INPUT HANDLING ///
-
-	ImGui_ImplSDL3_ProcessEvent(event);
-
+	//////////////////
 	/// QUIT EVENT ///
 
-	if (event->type == SDL_EVENT_QUIT) 
-    {
+	if (event->type == SDL_EVENT_QUIT)
+	{
 		// WITHOUT THIS, YOU WON'T BE ABLE TO CLOSE THE WINDOW WHEN ALT+F4 IS PRESSED OR THE X BUTTON IS CLICKED.
 		return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
 	}
 
-    /// INPUT ///
-
-	/*const Uint8* state = (Uint8*)SDL_GetKeyboardState(nullptr);
-	if (state[SDL_SCANCODE_F11] && !event->key.repeat) {
-		std::cout << "\nTesting key press event: F11\n";
-		FULL_SCREEN = !FULL_SCREEN;
-		SDL_SetWindowFullscreen(window, FULL_SCREEN);
-	}*/
-	if (event->key.scancode == SDL_SCANCODE_F11 && event->type == SDL_EVENT_KEY_DOWN) {
-		std::cout << "\nTesting key press event: F11\n";
-		FULL_SCREEN = !FULL_SCREEN;
-		SDL_SetWindowFullscreen(window, FULL_SCREEN);
-	}
+    //////////////////////////////
+	/// WINDOW RESIZE HANDLING ///
 
     if (event->type == SDL_EVENT_WINDOW_RESIZED)
 	{
@@ -178,23 +170,50 @@ SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 		int screenWidth, screenHeight;
 		SDL_GetWindowSize(window, &screenWidth, &screenHeight);
 		renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
-    }
+    } 
 
-    ///
+	/////////////
+	/// INPUT ///
+
+	ImGui_ImplSDL3_ProcessEvent(event);  
+    inputManager->updateInputStates(event);
+
+    /////////////
 
     return SDL_APP_CONTINUE;
 }
 
+
+
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
+    /* Possible Structure:
+	application->updateInputs();
+	application->updateImGui();
+	application->updateRender();
+    inputManager->EndFrame();
+    */
+
+    ///// INPUT
+
+    if (inputManager->IsKeyPressed(SDL_SCANCODE_LSHIFT)) { std::cout << "\nShift was pressed, inputManager did its job!!"; }
+    if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) { 
+        FULL_SCREEN = !FULL_SCREEN; 
+        SDL_SetWindowFullscreen(window, FULL_SCREEN);
+    }
+    if (inputManager->IsMouseButtonPressed(SDL_BUTTON_LEFT)) { std::cout << "\nLeft Mouse was pressed, inputManager did its job!!"; }
+    if (inputManager->IsMouseButtonReleased(SDL_BUTTON_LEFT)) { std::cout << "\nLeft Mouse was released, inputManager did its job!!"; }
+
+    inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
+
     ///// IMGUI  
 
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
     ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport *)0, ImGuiDockNodeFlags_PassthruCentralNode); // Supports docking windows to the viewport, must be rendered before other ImGui Windows
-	ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow(); 
 
 	/////
 
@@ -232,9 +251,13 @@ SDL_AppResult SDL_AppIterate(void* appstate)
     return SDL_APP_CONTINUE;
 }
 
+
+
 /* This function runs once at shutdown. */
 void SDL_AppQuit(void* appstate, SDL_AppResult result)
 {
+    delete inputManager;
+
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
