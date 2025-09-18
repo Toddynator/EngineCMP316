@@ -18,7 +18,8 @@ https://stackoverflow.com/questions/3741055/inputs-in-sdl-on-key-pressed
 - Possibly check if there is a better way to render voxel models that triangelist which is currently used in modelclass.cpp
 - Possibly update ColorShaderClass::Initialize so that the filepath to the vertex and pixel shader is calculated based on local 
 directory rather than hardcoded based on the name. Currently dependant on project folder being named exactly 'EngineCMP316'.
-- Add Support for mixed texture and colour vertexs.
+- Add Support for mixed texture and colour vertices.
+- View Matrix I think should be under camera class itself in the future, need to research this more to make sure I don't break everything. If I do this I can then enable support for multiple cameras.
 */
 
 #include <iostream>
@@ -28,6 +29,10 @@ directory rather than hardcoded based on the name. Currently dependant on projec
 
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+
+#include <../ImGui/imgui.h>
+#include "ImGui/imgui_impl_sdl3.h"
+#include "ImGui/imgui_impl_dx11.h"
 
 #include "d3dclass.h" // RENDERER
 #include "cameraclass.h"
@@ -107,15 +112,6 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
         return SDL_APP_FAILURE;
     }
 
-    //// Create and initialize the color shader object.
-    //m_ColorShader = new ColorShaderClass;
-
-    //if (!m_ColorShader->Initialize(renderer->GetDevice(), hwnd))
-    //{
-    //    MessageBox(hwnd, L"Could not initialize the color shader object.", L"Error", MB_OK);
-    //    return SDL_APP_FAILURE;
-    //}
-
 	// Create and initialize the texture shader object.
 	m_TextureShader = new TextureShaderClass;
 
@@ -125,6 +121,19 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 		return SDL_APP_FAILURE;
 	}
 
+	/// IMGUI ///
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+
+	// Setup Platform/Renderer back-ends
+	ImGui_ImplSDL3_InitForD3D(window);
+	ImGui_ImplDX11_Init(renderer->GetDevice(), renderer->GetDeviceContext());
 
     return SDL_APP_CONTINUE;
 }
@@ -132,16 +141,28 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 /* This function runs when a new event (mouse input, key presses, etc) occurs. */
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 {
+	ImGui_ImplSDL3_ProcessEvent(event); /// IMGUI INPUT HANDLING ///
+
     if (event->type == SDL_EVENT_KEY_DOWN ||
         event->type == SDL_EVENT_QUIT) {
         return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
-    }
+    }    
+
     return SDL_APP_CONTINUE;
 }
 
 /* This function runs once per frame, and is the heart of the program. */
 SDL_AppResult SDL_AppIterate(void* appstate)
 {
+    ///// IMGUI  
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
+	ImGui::NewFrame();
+	ImGui::ShowDemoWindow(); // Show demo window! :)
+
+	/////
+
     XMMATRIX viewMatrix, projectionMatrix;
     renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
 
@@ -167,6 +188,11 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 
     /////
 
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+    /////
+
 	renderer->EndScene();
     return SDL_APP_CONTINUE;
 }
@@ -174,6 +200,10 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 /* This function runs once at shutdown. */
 void SDL_AppQuit(void* appstate, SDL_AppResult result)
 {
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplSDL3_Shutdown();
+	ImGui::DestroyContext();
+
 	// Release the texture shader object.
 	if (m_TextureShader)
 	{
