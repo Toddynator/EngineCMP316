@@ -159,6 +159,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
+    ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport *)0, ImGuiDockNodeFlags_PassthruCentralNode); // Supports docking windows to the viewport, must be rendered before other ImGui Windows
 	ImGui::ShowDemoWindow();
 
 	/////
