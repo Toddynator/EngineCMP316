@@ -529,3 +529,54 @@ void D3DClass::ResetViewport()
 
 	return;
 }
+
+void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear, float screenDepth)
+{
+	//https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing
+
+	if (m_swapChain)
+	{
+		m_deviceContext->OMSetRenderTargets(0, 0, 0);
+
+		// Release all outstanding references to the swap chain's buffers.
+		m_renderTargetView->Release();
+
+		HRESULT hr;
+		// Preserve the existing buffer count and format.
+		// Automatically choose the width and height to match the client rect for HWNDs.
+		hr = m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+		// Perform error handling here!
+
+		// Get buffer and create a render-target-view.
+		ID3D11Texture2D* pBuffer;
+		hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+			(void**)&pBuffer);
+		// Perform error handling here!
+
+		hr = m_device->CreateRenderTargetView(pBuffer, NULL,
+			&m_renderTargetView);
+		// Perform error handling here!
+		pBuffer->Release();
+
+		m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, NULL);
+
+		// Set up the viewport.
+		D3D11_VIEWPORT vp;
+		vp.Width = static_cast<float>(newWidth);
+		vp.Height = static_cast<float>(newHeight);
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		m_deviceContext->RSSetViewports(1, &vp);
+
+		/// UPDATE PROJECTION MATRIX
+
+		float screenAspect = static_cast<float>(newWidth) / static_cast<float>(newHeight);
+		float fieldOfView = 3.141592654f / 4.0f;
+
+		// Update the projection matrix otherwise the scene will be stretched.
+		m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+	}
+}

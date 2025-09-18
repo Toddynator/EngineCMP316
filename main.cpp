@@ -15,11 +15,12 @@ https://stackoverflow.com/questions/3741055/inputs-in-sdl-on-key-pressed
 - Go through the core files and add comments / documentation explaining purpose of each class and function, and what they can be used for.
 - Possibly encapsulate the rasterizer in d3dclass.cpp
 - Encapsulate the scene/frame logic in a separate class (Application class?) ~ Move model, camera and colorshader to this class. Renderer should probably move into that class as well.
-- Possibly check if there is a better way to render voxel models that triangelist which is currently used in modelclass.cpp
 - Possibly update ColorShaderClass::Initialize so that the filepath to the vertex and pixel shader is calculated based on local 
-directory rather than hardcoded based on the name. Currently dependant on project folder being named exactly 'EngineCMP316'.
+directory rather than hard coded based on the name. Currently Dependant on project folder being named exactly 'EngineCMP316'.
 - Add Support for mixed texture and colour vertices.
-- View Matrix I think should be under camera class itself in the future, need to research this more to make sure I don't break everything. If I do this I can then enable support for multiple cameras.
+- Projection Matrix I think should be under camera class itself in the future, need to research this more to make sure I don't break everything. If I do this I can then enable support for multiple cameras.
+  - REMEMBER TO MOVE THE PROJECTION MATRIX FROM D3DCLASS IF I DO THIS, PROJECTION MATRIX MUST BE RECALCULATED AFTER WINDOW RESIZE (CHECK D3DCLASS HANDLEWINDOWRESIZE FUNCTION).
+
 */
 
 #include <iostream>
@@ -42,17 +43,17 @@ directory rather than hardcoded based on the name. Currently dependant on projec
 
 /// WINDOW SETTINGS ///
 
-const bool FULL_SCREEN = false;
+bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.3f;
 
 ///
 
-static SDL_Window* window       = NULL;
-static D3DClass* renderer       = NULL;
-CameraClass* m_Camera           = NULL;
-ModelClass* m_Model             = NULL;
+static SDL_Window* window = NULL;
+static D3DClass* renderer = NULL;
+CameraClass* m_Camera = NULL;
+ModelClass* m_Model = NULL;
 ColorShaderClass* m_ColorShader = NULL;
 TextureShaderClass* m_TextureShader = NULL;
 
@@ -63,8 +64,12 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
     char textureFilename[128];
 
     /// WINDOW ///
-
-    window = SDL_CreateWindow("CMP316 Engine", 800, 600, NULL);
+    /// FLAGS: https://wiki.libsdl.org/SDL3/SDL_WindowFlags
+    SDL_WindowFlags flags{};
+    flags |= SDL_WINDOW_RESIZABLE;
+	if (FULL_SCREEN) { flags |= SDL_WINDOW_FULLSCREEN; }
+    ///
+    window = SDL_CreateWindow("CMP316 Engine", 800, 600, flags);
     if(!window) {
         SDL_Log("Couldn't create window: %s", SDL_GetError());
         return SDL_APP_FAILURE;
@@ -72,7 +77,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
     
     /// ADJUST WINDOW SETTINGS ///
 
-	SDL_SetWindowFullscreen(window, FULL_SCREEN ? SDL_WINDOW_FULLSCREEN : 0);
+	//SDL_SetWindowFullscreen(window, FULL_SCREEN);
 
     /// RENDERER  ///
 
@@ -141,12 +146,41 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 /* This function runs when a new event (mouse input, key presses, etc) occurs. */
 SDL_AppResult SDL_AppEvent(void* appstate, SDL_Event* event)
 {
-	ImGui_ImplSDL3_ProcessEvent(event); /// IMGUI INPUT HANDLING ///
+	/// IMGUI INPUT HANDLING ///
 
-    if (event->type == SDL_EVENT_KEY_DOWN ||
-        event->type == SDL_EVENT_QUIT) {
-        return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
-    }    
+	ImGui_ImplSDL3_ProcessEvent(event);
+
+	/// QUIT EVENT ///
+
+	if (event->type == SDL_EVENT_QUIT) 
+    {
+		// WITHOUT THIS, YOU WON'T BE ABLE TO CLOSE THE WINDOW WHEN ALT+F4 IS PRESSED OR THE X BUTTON IS CLICKED.
+		return SDL_APP_SUCCESS;  /* end the program, reporting success to the OS. */
+	}
+
+    /// INPUT ///
+
+	/*const Uint8* state = (Uint8*)SDL_GetKeyboardState(nullptr);
+	if (state[SDL_SCANCODE_F11] && !event->key.repeat) {
+		std::cout << "\nTesting key press event: F11\n";
+		FULL_SCREEN = !FULL_SCREEN;
+		SDL_SetWindowFullscreen(window, FULL_SCREEN);
+	}*/
+	if (event->key.scancode == SDL_SCANCODE_F11 && event->type == SDL_EVENT_KEY_DOWN) {
+		std::cout << "\nTesting key press event: F11\n";
+		FULL_SCREEN = !FULL_SCREEN;
+		SDL_SetWindowFullscreen(window, FULL_SCREEN);
+	}
+
+    if (event->type == SDL_EVENT_WINDOW_RESIZED)
+	{
+		// Have to update the renderer when the window resizes, otherwise the scene will appear distorted/stretched.
+		int screenWidth, screenHeight;
+		SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+		renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
+    }
+
+    ///
 
     return SDL_APP_CONTINUE;
 }

@@ -38,6 +38,8 @@ public:
     void SetBackBufferRenderTarget();
     void ResetViewport();
 
+    void HandleWindowResize(int width, int height, float screenNear, float screenDepth);
+
 private:
     bool m_vsync_enabled;
     int m_videoCardMemory;
