@@ -129,7 +129,7 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	//io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
 	// Setup Platform/Renderer back-ends
 	ImGui_ImplSDL3_InitForD3D(window);
@@ -159,7 +159,7 @@ SDL_AppResult SDL_AppIterate(void* appstate)
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow(); // Show demo window! :)
+	ImGui::ShowDemoWindow();
 
 	/////
 
