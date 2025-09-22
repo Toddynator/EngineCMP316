@@ -1,4 +1,5 @@
 #include "colorshaderclass.h"
+#include <filesystem>
 
 ColorShaderClass::ColorShaderClass()
 {
@@ -25,16 +26,25 @@ bool ColorShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 	wchar_t psFilename[128];
 	int error;
 
+	std::filesystem::path filepath = std::filesystem::current_path();
 
 	// Set the filename of the vertex shader.
-	error = wcscpy_s(vsFilename, 128, L"../EngineCMP316/Shaders/color_vs.hlsl");
+	std::wstring assetPath(L"/Shaders/color_vs.hlsl");
+	std::wstring filePathWString(filepath);
+	std::wstring fullAssetFilepath = filePathWString + assetPath;
+	const wchar_t* wideCharFilepath = fullAssetFilepath.c_str();
+	error = wcscpy_s(vsFilename, 128, wideCharFilepath);
 	if (error != 0)
 	{
 		return false;
 	}
 
 	// Set the filename of the pixel shader.
-	error = wcscpy_s(psFilename, 128, L"../EngineCMP316/Shaders/color_ps.hlsl");
+	assetPath = (L"/Shaders/color_ps.hlsl");
+	filePathWString = (filepath);
+	fullAssetFilepath = filePathWString + assetPath;
+	wideCharFilepath = fullAssetFilepath.c_str();
+	error = wcscpy_s(psFilename, 128, wideCharFilepath);
 	if (error != 0)
 	{
 		return false;

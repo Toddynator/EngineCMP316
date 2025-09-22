@@ -28,6 +28,7 @@ INPUTMANAGER TODO:
 
 #include <iostream>
 #include <Windows.h>
+#include <filesystem>
 
 #define SDL_MAIN_USE_CALLBACKS 1  /* use the callbacks instead of main() */
 
@@ -112,7 +113,9 @@ SDL_AppResult SDL_AppInit(void** appstate, int argc, char* argv[])
     m_Model = new ModelClass;
 
 	// Set the name of the texture file that we will be loading.
-	strcpy_s(textureFilename, "../EngineCMP316/data/stone01.tga");
+    std::filesystem::path filepath = std::filesystem::current_path();
+    std::string assetFilepath = filepath.string() + "/data/stone01.tga";
+	strcpy_s(textureFilename, assetFilepath.c_str());
     //strcpy_s(textureFilename, "../EngineCMP316/data/testTargaFile.tga");
     //strcpy_s(textureFilename, "../EngineCMP316/data/test24bitTargaFile.tga");
 
