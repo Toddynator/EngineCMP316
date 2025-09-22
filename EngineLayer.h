@@ -3,6 +3,9 @@
 #include <Windows.h>
 #include <filesystem>
 
+#include "InputManager.h"
+#include "TimeManager.h"
+
 #include <SDL3/SDL.h>
 
 #include <../ImGui/imgui.h>
@@ -14,10 +17,10 @@
 #include "modelclass.h"
 #include "colorshaderclass.h"
 #include "textureshaderclass.h"
-#include "InputManager.h"
 
 /// WINDOW SETTINGS ///
 
+#pragma once
 class EngineLayer
 {
 public:
@@ -36,16 +39,26 @@ private:
 	bool createRenderer(HWND hwnd);
 
 private:
+	// Managers
+	InputManager* inputManager = nullptr;
+	TimeManager* timeManager = nullptr;
+	//windowManager
+	//eventManager
+	//rendererManager
+
 	SDL_Window* window = nullptr;
 	D3DClass* renderer = nullptr;
-	CameraClass* m_Camera = nullptr;
-	ModelClass* m_Model = nullptr;
+
+	// Graphics
 	ColorShaderClass* m_ColorShader = nullptr;
 	TextureShaderClass* m_TextureShader = nullptr;
-	InputManager* inputManager = nullptr;
+
+	// Scene objects
+	CameraClass* m_Camera = nullptr;
+	ModelClass* m_Model = nullptr;	
 
 	bool FULL_SCREEN = false;
-	const bool VSYNC_ENABLED = true;
+	const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
 	const float SCREEN_DEPTH = 1000.0f;
 	const float SCREEN_NEAR = 0.3f;
 };

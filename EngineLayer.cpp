@@ -7,6 +7,10 @@ EngineLayer::EngineLayer()
 
 bool EngineLayer::Initialize()
 {
+	/// TIME MANAGGER ///
+
+	timeManager = new TimeManager{};
+
 	/// INPUT MANAGER ///
 
 	inputManager = new InputManager{};
@@ -88,6 +92,11 @@ void EngineLayer::Run()
 				return;
 			}
 		}
+
+		///// TIME
+
+		timeManager->Update();
+		//std::cout << "\nDeltaTime: " << timeManager->getDeltaTime() << " seconds"; //// TEST
 
 		///// INPUT
 
