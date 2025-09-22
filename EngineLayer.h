@@ -2,9 +2,13 @@
 #include <iostream>
 #include <Windows.h>
 #include <filesystem>
+#include <memory.h>
 
 #include "InputManager.h"
 #include "TimeManager.h"
+#include "EventManager.h"
+#include "EventManager_SDL.h"
+#include "WindowManager.h"
 
 #include <SDL3/SDL.h>
 
@@ -32,18 +36,17 @@ public:
 	void Shutdown();
 
 private:
-	bool pollEvent(SDL_Event* event);
-
-	// STUFF TO MOVE
+	// STUFF TO MOVE TO MANAGERS
+	bool processEvents();
 	bool createWindow();
-	bool createRenderer(HWND hwnd);
+	bool createRenderer(HWND hwnd); // Note: In the future this may need carefully handled by a platformManager of sorts, as HWND won't be relevant to non-windows OS platforms.
 
 private:
 	// Managers
 	InputManager* inputManager = nullptr;
 	TimeManager* timeManager = nullptr;
+	std::unique_ptr<CMP316engine::EventManager> eventManager = nullptr;
 	//windowManager
-	//eventManager
 	//rendererManager
 
 	SDL_Window* window = nullptr;

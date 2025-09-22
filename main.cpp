@@ -1,5 +1,12 @@
 /*
+MANAGERS TODO:
+- WindowManager
+* Should contain the window and abstract window creation from any particular API. 
+* Should be able to return HWND on windows (e.g. for Dx11 Renderer).
+* Should be able to modify the window, e.g. resizeWindow() or fullscreenWindow()
+
 TODO:
+- Use CMP316engine Namespace around all the managers.
 - Make all raw pointers in EngineLayer a smart pointer / unique pointer.
 - Create unified shader class that supports texture and colour, colour should multiply the colour of the texture.
 * Remove texture and colour shader class after this is complete.

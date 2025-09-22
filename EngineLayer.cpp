@@ -7,6 +7,10 @@ EngineLayer::EngineLayer()
 
 bool EngineLayer::Initialize()
 {
+	/// EVENT MANAGER ///
+
+	eventManager = std::make_unique<CMP316engine::EventManager_SDL>();
+
 	/// TIME MANAGGER ///
 
 	timeManager = new TimeManager{};
@@ -83,15 +87,8 @@ void EngineLayer::Run()
 	{
 		///// EVENTS
 
-		// Must be done first!
-		SDL_Event event;
-		if (SDL_PollEvent(&event))
-		{
-			if (!pollEvent(&event))  /// Can make this one function!
-			{
-				return;
-			}
-		}
+		if (!processEvents()) { return; } //// TEMP, setup eventManager!
+		if (!eventManager->processEvents()) { return; }
 
 		///// TIME
 
@@ -100,12 +97,12 @@ void EngineLayer::Run()
 
 		///// INPUT
 
-		// TEST INPUTS ///
-		if (inputManager->IsKeyPressed(SDL_SCANCODE_LSHIFT)) { std::cout << "\nShift was pressed, inputManager did its job!!"; }
 		if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
 			FULL_SCREEN = !FULL_SCREEN;
 			SDL_SetWindowFullscreen(window, FULL_SCREEN);
 		}
+		// TEST INPUTS ///
+		if (inputManager->IsKeyPressed(SDL_SCANCODE_LSHIFT)) { std::cout << "\nShift was pressed, inputManager did its job!!"; }
 		if (inputManager->IsMouseButtonPressed(SDL_BUTTON_LEFT)) { std::cout << "\nLeft Mouse was pressed, inputManager did its job!!"; }
 		if (inputManager->IsMouseButtonReleased(SDL_BUTTON_LEFT)) { std::cout << "\nLeft Mouse was released, inputManager did its job!!"; }
 		// TEST INPUTS ///
@@ -204,34 +201,37 @@ void EngineLayer::Shutdown()
 	}
 }
 
-bool EngineLayer::pollEvent(SDL_Event* event)
+bool EngineLayer::processEvents()
 {
-	//////////////////
-	/// QUIT EVENT ///
-
-	if (event->type == SDL_EVENT_QUIT)
+	SDL_Event event;
+	while(SDL_PollEvent(&event) != 0)
 	{
-		// WITHOUT THIS, YOU WON'T BE ABLE TO CLOSE THE WINDOW WHEN ALT+F4 IS PRESSED OR THE X BUTTON IS CLICKED.
-		return false;  /* end the program, reporting success to the OS. */
+		//////////////////
+		/// QUIT EVENT ///
+
+		if (event.type == SDL_EVENT_QUIT)
+		{
+			// WITHOUT THIS, YOU WON'T BE ABLE TO CLOSE THE WINDOW WHEN ALT+F4 IS PRESSED OR THE X BUTTON IS CLICKED.
+			return false;  /* end the program, reporting success to the OS. */
+		}
+
+		//////////////////////////////
+		/// WINDOW RESIZE HANDLING ///
+
+		if (event.type == SDL_EVENT_WINDOW_RESIZED)
+		{
+			// Have to update the renderer when the window resizes, otherwise the scene will appear distorted/stretched.
+			int screenWidth, screenHeight;
+			SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+			renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
+		}
+
+		/////////////
+		/// INPUT ///
+
+		ImGui_ImplSDL3_ProcessEvent(&event);
+		inputManager->updateInputStates(&event);
 	}
-
-	//////////////////////////////
-	/// WINDOW RESIZE HANDLING ///
-
-	if (event->type == SDL_EVENT_WINDOW_RESIZED)
-	{
-		// Have to update the renderer when the window resizes, otherwise the scene will appear distorted/stretched.
-		int screenWidth, screenHeight;
-		SDL_GetWindowSize(window, &screenWidth, &screenHeight);
-		renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
-	}
-
-	/////////////
-	/// INPUT ///
-
-	ImGui_ImplSDL3_ProcessEvent(event);
-	inputManager->updateInputStates(event);
-
 	return true;
 }
 
