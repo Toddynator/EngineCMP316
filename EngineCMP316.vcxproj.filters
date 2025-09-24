@@ -31,6 +31,18 @@
     <Filter Include="Header Files\Graphics">
       <UniqueIdentifier>{858742d2-a569-4f23-8455-a5131db2e829}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Managers\Window">
+      <UniqueIdentifier>{bb606b80-305f-43d6-b44d-f25fb3e20ba8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Managers\Window">
+      <UniqueIdentifier>{d6f124d1-16d3-4a1a-b4b3-494f091f0fbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Managers\Event">
+      <UniqueIdentifier>{5a87f5d9-e12f-47f9-a01b-5cba5a151a25}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers\Event">
+      <UniqueIdentifier>{61784b7e-0ab7-422b-aa45-603b9184bd02}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -81,20 +93,23 @@
     <ClCompile Include="EngineLayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WindowManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>Source Files\Managers</Filter>
-    </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
     <ClCompile Include="Manager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Source Files\Managers\Event</Filter>
+    </ClCompile>
     <ClCompile Include="EventManager_SDL.cpp">
-      <Filter>Source Files\Managers</Filter>
+      <Filter>Source Files\Managers\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Source Files\Managers\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager_SDL.cpp">
+      <Filter>Source Files\Managers\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -146,20 +161,23 @@
     <ClInclude Include="EngineLayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="WindowManager.h">
-      <Filter>Header Files\Managers</Filter>
-    </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
     <ClInclude Include="Manager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>Header Files\Managers\Event</Filter>
+    </ClInclude>
     <ClInclude Include="EventManager_SDL.h">
-      <Filter>Header Files\Managers</Filter>
+      <Filter>Header Files\Managers\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowManager.h">
+      <Filter>Header Files\Managers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowManager_SDL.h">
+      <Filter>Header Files\Managers\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

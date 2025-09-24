@@ -157,6 +157,7 @@
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="WindowManager.cpp" />
+    <ClCompile Include="WindowManager_SDL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="SDL3-3.2.20\VisualC\SDL\SDL.vcxproj">
@@ -185,6 +186,7 @@
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="TimeManager.h" />
     <ClInclude Include="WindowManager.h" />
+    <ClInclude Include="WindowManager_SDL.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\color_ps.hlsl" />

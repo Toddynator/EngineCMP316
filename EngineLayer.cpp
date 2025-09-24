@@ -10,6 +10,7 @@ bool EngineLayer::Initialize()
 	/// EVENT MANAGER ///
 
 	eventManager = std::make_unique<CMP316engine::EventManager_SDL>();
+	eventManager->Initialize();
 
 	/// TIME MANAGGER ///
 
@@ -29,6 +30,12 @@ bool EngineLayer::Initialize()
 	}
 	SDL_PropertiesID props = SDL_GetWindowProperties(window);
 	HWND hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
+
+	/*windowManager = std::make_unique<CMP316engine::WindowManager_SDL>();
+	if (!windowManager->Initialize()) {
+		return false;
+	}
+	HWND hwnd = windowManager->getHWND();*/
 
 	/// RENDERER  ///
 
@@ -155,7 +162,10 @@ void EngineLayer::Run()
 
 void EngineLayer::Shutdown()
 {
-	delete inputManager;
+	if (inputManager)
+	{
+		delete inputManager;
+	}
 
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
@@ -166,7 +176,7 @@ void EngineLayer::Shutdown()
 	{
 		m_TextureShader->Shutdown();
 		delete m_TextureShader;
-		m_TextureShader = 0;
+		m_TextureShader = NULL;
 	}
 
 	// Release the color shader object.
@@ -199,6 +209,12 @@ void EngineLayer::Shutdown()
 		delete renderer;
 		renderer = NULL;
 	}
+
+	/*if (windowManager)
+	{
+		windowManager->Shutdown();
+	}*/
+	SDL_DestroyWindow(window);
 }
 
 bool EngineLayer::processEvents()

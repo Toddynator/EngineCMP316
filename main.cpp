@@ -18,6 +18,7 @@ TODO:
 - Go through the core files and add comments / documentation explaining purpose of each class and function, and what they can be used for.
 - Enforce naming convention on all files.
 - Put view matrix under the camera class.
+- Multi-Window Support ~ E.g. game can have UI / stats on another window if the player chooses.
 
 INPUTMANAGER TODO:
 - Abstract from SDL, map SDL scan codes to my own input enum, use my own event system for updating the key states.
