@@ -43,11 +43,14 @@
     <Filter Include="Source Files\Managers\Event">
       <UniqueIdentifier>{61784b7e-0ab7-422b-aa45-603b9184bd02}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Core">
+      <UniqueIdentifier>{014840cd-5ecc-4fe4-86c7-f781748c8694}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Core">
+      <UniqueIdentifier>{7c32cfc6-7571-4c80-bec9-39b98275f06f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
@@ -90,9 +93,6 @@
     <ClCompile Include="InputManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="EngineLayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TimeManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
@@ -110,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="WindowManager_SDL.cpp">
       <Filter>Source Files\Managers\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineLayer.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,9 +164,6 @@
     <ClInclude Include="InputManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="EngineLayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="TimeManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="WindowManager_SDL.h">
       <Filter>Header Files\Managers\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineLayer.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

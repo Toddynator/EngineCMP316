@@ -1,7 +1,7 @@
 #include "InputManager.h"
 #include <iostream>
 
-InputManager::InputManager()
+CMP316engine::InputManager::InputManager()
 {
 	// Initialize all keys to not pressed
 	for (int i = 0; i < SDL_SCANCODE_COUNT; ++i) 
@@ -16,7 +16,7 @@ InputManager::InputManager()
 	}
 }
 
-void InputManager::EndFrame()
+void CMP316engine::InputManager::EndFrame()
 {
 	// Keyboard
 	for (int key = 0; key < SDL_SCANCODE_COUNT; key++)
@@ -30,7 +30,7 @@ void InputManager::EndFrame()
 	}
 }
 
-void InputManager::updateInputStates(const SDL_Event* event)
+void CMP316engine::InputManager::updateInputStates(const SDL_Event* event)
 {
 	switch (event->type)
 	{
@@ -51,38 +51,38 @@ void InputManager::updateInputStates(const SDL_Event* event)
 	}
 }
 
-bool InputManager::IsKeyPressed(SDL_Scancode key)
+bool CMP316engine::InputManager::IsKeyPressed(SDL_Scancode key)
 {
 	//if (keys[key] && event->key.scancode && event->type == sdl_event_key_down && !event->key.repeat)
 	if (keys[key] && !prevKeys[key]) { return true; }
 	return false;
 }
 
-bool InputManager::IsKeyDown(SDL_Scancode key)
+bool CMP316engine::InputManager::IsKeyDown(SDL_Scancode key)
 {
 	if(keys[key] && prevKeys[key]) { return true; }
 	return false;
 }
 
-bool InputManager::IsKeyReleased(SDL_Scancode key)
+bool CMP316engine::InputManager::IsKeyReleased(SDL_Scancode key)
 {
 	if (!keys[key] && prevKeys[key]) { return true; }
 	return false;
 }
 
-bool InputManager::IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton)
+bool CMP316engine::InputManager::IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton)
 {
 	if (mouseButtons[mouseButton] && !prevMouseButtons[mouseButton]) { return true; }
 	return false;
 }
 
-bool InputManager::IsMouseButtonDown(SDL_MouseButtonFlags mouseButton)
+bool CMP316engine::InputManager::IsMouseButtonDown(SDL_MouseButtonFlags mouseButton)
 {
 	if (mouseButtons[mouseButton] && prevMouseButtons[mouseButton]) { return true; }
 	return false;
 }
 
-bool InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton)
+bool CMP316engine::InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton)
 {
 	if (!mouseButtons[mouseButton] && prevMouseButtons[mouseButton]) { return true; }
 	return false;

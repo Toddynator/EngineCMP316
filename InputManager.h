@@ -1,4 +1,3 @@
-#include <SDL3/SDL.h>
 
 /*
 Provides a clean interface for handling user input from a keyboard and mouse via SDL.
@@ -16,29 +15,38 @@ HOW TO USE:
 */
 
 #pragma once
-class InputManager
-{
-public:
-	static const int NUM_MOUSE_BUTTONS = 5;
+#include "Manager.h"
+#include <SDL3/SDL.h>
 
-	bool keys[SDL_SCANCODE_COUNT]; // Array to track the state of each key
-	bool prevKeys[SDL_SCANCODE_COUNT]; // Previous Frame
-	bool mouseButtons[NUM_MOUSE_BUTTONS]; // SDL_MouseButtonFlags
-	bool prevMouseButtons[NUM_MOUSE_BUTTONS];
+namespace CMP316engine {
+	class InputManager :
+		public Manager
+	{
+	public:
+		static const int NUM_MOUSE_BUTTONS = 5;
 
-public:
-	InputManager();
-	~InputManager() = default;
+		bool keys[SDL_SCANCODE_COUNT]; // Array to track the state of each key
+		bool prevKeys[SDL_SCANCODE_COUNT]; // Previous Frame
+		bool mouseButtons[NUM_MOUSE_BUTTONS]; // SDL_MouseButtonFlags
+		bool prevMouseButtons[NUM_MOUSE_BUTTONS];
 
-	void EndFrame();
-	void updateInputStates(const SDL_Event* event);
+	public:
+		InputManager();
+		~InputManager() = default;
 
-	bool IsKeyPressed(SDL_Scancode key);
-	bool IsKeyDown(SDL_Scancode key);
-	bool IsKeyReleased(SDL_Scancode key);
+		bool Initialize() { return true; }
+		void Shutdown() {}
 
-	bool IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton);
-	bool IsMouseButtonDown(SDL_MouseButtonFlags mouseButton);
-	bool IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton);
-};
+		void EndFrame();
+		void updateInputStates(const SDL_Event* event);
+
+		bool IsKeyPressed(SDL_Scancode key);
+		bool IsKeyDown(SDL_Scancode key);
+		bool IsKeyReleased(SDL_Scancode key);
+
+		bool IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton);
+		bool IsMouseButtonDown(SDL_MouseButtonFlags mouseButton);
+		bool IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton);
+	};
+}
 

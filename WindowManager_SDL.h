@@ -2,6 +2,11 @@
 #include "WindowManager.h"
 #include <SDL3/SDL.h>
 
+/*
+It is unlikely I will change out SDL for any other window creation, as SDL already handles abstraction for different platforms.
+I've created this thin wrapper just to provide some abstraction from the rest of the engine.
+*/
+
 namespace CMP316engine {
 	class WindowManager_SDL
 		: public WindowManager

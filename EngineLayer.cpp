@@ -1,28 +1,26 @@
 #include "EngineLayer.h"
 
-EngineLayer::EngineLayer()
-{
 
-}
 
 bool EngineLayer::Initialize()
 {
+	/////////////////////
 	/// EVENT MANAGER ///
 
 	eventManager = std::make_unique<CMP316engine::EventManager_SDL>();
 	eventManager->Initialize();
 
+	/////////////////////
 	/// TIME MANAGGER ///
 
-	timeManager = std::make_unique<TimeManager>();
+	timeManager = std::make_unique<CMP316engine::TimeManager>();
 
+	/////////////////////
 	/// INPUT MANAGER ///
 
-	inputManager = std::make_unique<InputManager>();
+	inputManager = std::make_unique<CMP316engine::InputManager>();
 
-	/// TEXTURES ///
-	char textureFilename[128];
-
+	//////////////
 	/// WINDOW ///
 
 	windowManager = std::make_unique<CMP316engine::WindowManager_SDL>();
@@ -31,40 +29,14 @@ bool EngineLayer::Initialize()
 	}
 	HWND hwnd = windowManager->GetHWND();
 
+	/////////////////
 	/// RENDERER  ///
 
 	if (!createRenderer(hwnd)) {
 		return false;
 	}
 
-	// Create the camera object.
-	camera = std::make_unique<CameraClass>();
-	// Set the initial position of the camera.
-	camera->SetPosition(0.0f, 0.0f, -5.0f);
-
-	// Create and initialize the model object.
-	model = std::make_unique<ModelClass>();
-
-	// Set the name of the texture file that we will be loading.
-	std::filesystem::path filepath = std::filesystem::current_path();
-	std::string assetFilepath = filepath.string() + "/data/stone01.tga";
-	strcpy_s(textureFilename, assetFilepath.c_str());
-
-	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create and initialize the texture shader object.
-	textureShader = std::make_unique<TextureShaderClass>();
-
-	if (!textureShader->Initialize(renderer->GetDevice(), hwnd))
-	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
-
+	/////////////
 	/// IMGUI ///
 
 	// Setup Dear ImGui context
@@ -78,6 +50,38 @@ bool EngineLayer::Initialize()
 	// Setup Platform/Renderer back-ends
 	ImGui_ImplSDL3_InitForD3D(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
 	ImGui_ImplDX11_Init(renderer->GetDevice(), renderer->GetDeviceContext());
+
+	/////////////
+	/// SCENE ///
+
+	// Create and initialize the texture shader object.
+	textureShader = std::make_unique<TextureShaderClass>();
+
+	if (!textureShader->Initialize(renderer->GetDevice(), hwnd))
+	{
+		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the camera object.
+	camera = std::make_unique<CameraClass>();
+	// Set the initial position of the camera.
+	camera->SetPosition(0.0f, 0.0f, -5.0f);
+
+	// Create and initialize the model object.
+	model = std::make_unique<ModelClass>();
+
+	// Set the name of the texture file that we will be loading.
+	char textureFilename[128];
+	std::filesystem::path filepath = std::filesystem::current_path();
+	std::string assetFilepath = filepath.string() + "/data/stone01.tga";
+	strcpy_s(textureFilename, assetFilepath.c_str());
+
+	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
+	{
+		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
+		return false;
+	}
 
 	return true;
 }
@@ -100,7 +104,6 @@ void EngineLayer::Run()
 		if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
 			windowManager->FullscreenWindow();
 		}
-
 		inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
 
 		///// IMGUI  

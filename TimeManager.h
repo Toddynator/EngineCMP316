@@ -1,18 +1,25 @@
 #pragma once
+#include "Manager.h"
 #include <chrono>
 
-class TimeManager
-{
-public:
-	TimeManager();
-	~TimeManager() = default;
+namespace CMP316engine {
+	class TimeManager
+		: public Manager
 
-	void Update();
+	{
+	public:
+		TimeManager();
+		~TimeManager() = default;
 
-	float getDeltaTime() { return deltaTime; }
+		bool Initialize() { return true; }
+		void Shutdown() {}
 
-private:
-	float deltaTime; // Time between frames in seconds
-	std::chrono::time_point<std::chrono::steady_clock> lastUpdateTime;
-};
+		void Update();
 
+		float getDeltaTime() { return deltaTime; }
+
+	private:
+		float deltaTime; // Time between frames in seconds
+		std::chrono::time_point<std::chrono::steady_clock> lastUpdateTime;
+	};
+}
