@@ -8,21 +8,11 @@ it can then individually translate each event in the engines core class so that 
 This way the eventManager does not need to know about what uses the events, and the managers don't need to know about the API.
 */
 
-namespace CMP316engine {
-	class EventManager : 
-		public Manager
-	{
-	public:
-		virtual bool PollEvent(Event& event) = 0;
-
-	private:
-		virtual Event translateEvent() = 0;
-	};
-
+namespace CMP316engine {	
 	typedef union Event
 	{
-		KeyboardEvent key;
-		WindowEvent window;
+		//KeyboardEvent key;
+		//WindowEvent window;
 	};
 
 	typedef struct KeyboardEvent
@@ -35,5 +25,14 @@ namespace CMP316engine {
 
 	};
 
+	class EventManager : 
+		public Manager
+	{
+	public:
+		virtual bool PollEvent(Event& event) = 0;
+
+	private:
+		virtual Event translateEvent() = 0;
+	};
 }
 

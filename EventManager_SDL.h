@@ -1,5 +1,6 @@
 #pragma once
 #include "EventManager.h"
+#include <SDL3/SDL.h>
 
 namespace CMP316engine {
 	class EventManager_SDL : 

@@ -1,5 +1,4 @@
 #include "EventManager_SDL.h"
-#include <SDL3/SDL.h>
 
 bool CMP316engine::EventManager_SDL::PollEvent(Event& event)
 {
@@ -13,5 +12,5 @@ bool CMP316engine::EventManager_SDL::PollEvent(Event& event)
 
 CMP316engine::Event CMP316engine::EventManager_SDL::translateEvent()
 {
-	
+	return CMP316engine::Event();
 }
