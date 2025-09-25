@@ -1,26 +1,39 @@
 #pragma once
 #include "Manager.h"
 
+/*
+Abstracts API events from engine events.
+This event manager design will utilize the API's own event queue through the pollEvents() function,
+it can then individually translate each event in the engines core class so that managers can then call their own processEvent functions.
+This way the eventManager does not need to know about what uses the events, and the managers don't need to know about the API.
+*/
+
 namespace CMP316engine {
 	class EventManager : 
 		public Manager
 	{
 	public:
-		virtual bool processEvents() = 0;
+		virtual bool PollEvent(Event& event) = 0;
+
+	private:
+		virtual Event translateEvent() = 0;
 	};
 
-	enum SystemEvent_Type
+	typedef union Event
 	{
-		/// TODO GROUP INTO CATEGORIES, E.g. INPUT,WINDOW,SYSTEM,ETC ~ Look at game programming patterns page on events, might show a way to abstract this cleanly.
-		// May instead want this in specific managers / systems. e.g. window events.
-		// For now I can maybe just define only the events I currently need.
-
-		
+		KeyboardEvent key;
+		WindowEvent window;
 	};
 
-	struct SystemEvents
+	typedef struct KeyboardEvent
 	{
-		SystemEvent_Type type;
+
 	};
+
+	typedef struct WindowEvent
+	{
+
+	};
+
 }
 

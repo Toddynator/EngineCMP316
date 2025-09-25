@@ -1,18 +1,17 @@
 #include "EventManager_SDL.h"
+#include <SDL3/SDL.h>
 
-bool CMP316engine::EventManager_SDL::Initialize()
+bool CMP316engine::EventManager_SDL::PollEvent(Event& event)
 {
-	return true;
+	if (SDL_PollEvent(&sdlEvent))
+	{
+		translateEvent();
+		return true;
+	}
+	return false;
 }
 
-void CMP316engine::EventManager_SDL::Shutdown()
+CMP316engine::Event CMP316engine::EventManager_SDL::translateEvent()
 {
-
-}
-
-bool CMP316engine::EventManager_SDL::processEvents()
-{
-	// NOTE: Need to setup my own event definitions for the engine in EventManager.h
-
-	return true;
+	
 }

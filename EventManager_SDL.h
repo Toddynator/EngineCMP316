@@ -6,10 +6,16 @@ namespace CMP316engine {
 		public EventManager
 	{
 	public:
-		bool Initialize();
-		void Shutdown();
+		bool Initialize() { return true; }
+		void Shutdown() {}
 
-		bool processEvents();
+		bool PollEvent(Event& event) override;
+
+	private:
+		Event translateEvent() override;
+
+	private:
+		SDL_Event sdlEvent;
 	};
 }
 

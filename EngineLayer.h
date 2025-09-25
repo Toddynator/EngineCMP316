@@ -37,8 +37,11 @@ public:
 	void Shutdown();
 
 private:
-	/// STUFF TO MOVE TO MANAGERS
 	bool processEvents();
+	void Update();
+	void Render();
+
+	/// STUFF TO MOVE TO MANAGERS
 	bool createRenderer(HWND hwnd); // Note: In the future this may need carefully handled by a platformManager of sorts, as HWND won't be relevant to non-windows OS platforms.
 
 private:

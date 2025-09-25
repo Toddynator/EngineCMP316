@@ -90,63 +90,9 @@ void EngineLayer::Run()
 {
 	while (true)
 	{
-		///// EVENTS
-
-		if (!processEvents()) { return; } //// TEMP, setup eventManager!
-		if (!eventManager->processEvents()) { return; }
-
-		///// TIME
-
-		timeManager->Update();
-
-		///// INPUT
-
-		if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
-			windowManager->FullscreenWindow();
-		}
-		inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
-
-		///// IMGUI  
-
-		ImGui_ImplDX11_NewFrame();
-		ImGui_ImplSDL3_NewFrame();
-		ImGui::NewFrame();
-		ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport*)0, ImGuiDockNodeFlags_PassthruCentralNode); // Supports docking windows to the viewport, must be rendered before other ImGui Windows
-		ImGui::ShowDemoWindow();
-
-		/////
-
-		XMMATRIX viewMatrix, projectionMatrix;
-		renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
-
-		/////
-
-		// Generate the view matrix based on the camera's position.
-		camera->Render();
-
-		// Get the view, and projection matrices from the camera and d3d objects.
-		camera->GetViewMatrix(viewMatrix);
-		renderer->GetProjectionMatrix(projectionMatrix);
-
-		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-		// CALL THIS FOR EACH OBJECT IN THE SCENE
-		model->Render(renderer->GetDeviceContext());
-
-		// Render the model using the texture shader.
-		// CALL THIS FOR EACH OBJECT IN THE SCENE
-		if (!textureShader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTexture()))
-		{
-			return;
-		}
-
-		/////
-
-		ImGui::Render();
-		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-		/////
-
-		renderer->EndScene();
+		if (!processEvents()) { return; }
+		Update();
+		Render();
 	}
 }
 
@@ -214,6 +160,67 @@ bool EngineLayer::processEvents()
 		inputManager->updateInputStates(&event);
 	}
 	return true;
+}
+
+void EngineLayer::Update()
+{
+	///// TIME
+
+	timeManager->Update();
+
+	///// INPUT
+
+	if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
+		windowManager->FullscreenWindow();
+	}
+	inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
+
+	///// IMGUI  
+
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplSDL3_NewFrame();
+	ImGui::NewFrame();
+	ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport*)0, ImGuiDockNodeFlags_PassthruCentralNode); // Supports docking windows to the viewport, must be rendered before other ImGui Windows
+	ImGui::ShowDemoWindow();
+
+	///// SCENE
+
+	//TODO // Some sort of application/game layer
+}
+
+void EngineLayer::Render()
+{
+	XMMATRIX viewMatrix, projectionMatrix;
+	renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
+
+	///// SCENE
+
+	// Generate the view matrix based on the camera's position.
+	camera->Render();
+
+	// Get the view, and projection matrices from the camera and d3d objects.
+	camera->GetViewMatrix(viewMatrix);
+	renderer->GetProjectionMatrix(projectionMatrix);
+
+	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
+	// CALL THIS FOR EACH OBJECT IN THE SCENE
+	model->Render(renderer->GetDeviceContext());
+
+	// Render the model using the texture shader.
+	// CALL THIS FOR EACH OBJECT IN THE SCENE
+	if (!textureShader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTexture()))
+	{
+		return;
+	}
+
+	///// IMGUI
+
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	/////
+
+	renderer->EndScene();
 }
 
 bool EngineLayer::createRenderer(HWND hwnd)
