@@ -37,27 +37,26 @@ public:
 	void Shutdown();
 
 private:
-	// STUFF TO MOVE TO MANAGERS
+	/// STUFF TO MOVE TO MANAGERS
 	bool processEvents();
 	bool createRenderer(HWND hwnd); // Note: In the future this may need carefully handled by a platformManager of sorts, as HWND won't be relevant to non-windows OS platforms.
 
 private:
-	// Managers
-	InputManager* inputManager = nullptr;
-	TimeManager* timeManager = nullptr;
+	/// Managers
+	std::unique_ptr<InputManager> inputManager = nullptr;
+	std::unique_ptr<TimeManager> timeManager = nullptr;
 	std::unique_ptr<CMP316engine::EventManager> eventManager = nullptr;
 	std::unique_ptr<CMP316engine::WindowManager> windowManager = nullptr;
 	//rendererManager
 
-	D3DClass* renderer = nullptr;
+	/// Graphics
+	std::unique_ptr<D3DClass> renderer = nullptr;
+	std::unique_ptr<ColorShaderClass> colorShader = nullptr;
+	std::unique_ptr<TextureShaderClass> textureShader = nullptr;
 
-	// Graphics
-	ColorShaderClass* m_ColorShader = nullptr;
-	TextureShaderClass* m_TextureShader = nullptr;
-
-	// Scene objects
-	CameraClass* m_Camera = nullptr;
-	ModelClass* m_Model = nullptr;	
+	/// Scene objects
+	std::unique_ptr<CameraClass> camera = nullptr;
+	std::unique_ptr<ModelClass> model = nullptr;
 
 	const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
 	const float SCREEN_DEPTH = 1000.0f;

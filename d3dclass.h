@@ -41,6 +41,9 @@ public:
     void HandleWindowResize(int width, int height, float screenNear, float screenDepth);
 
 private:
+	XMMATRIX m_projectionMatrix;
+	XMMATRIX m_orthoMatrix;
+
     bool m_vsync_enabled;
     int m_videoCardMemory;
     char m_videoCardDescription[128];
@@ -52,8 +55,6 @@ private:
     ID3D11DepthStencilState* m_depthStencilState;
     ID3D11DepthStencilView* m_depthStencilView;
     ID3D11RasterizerState* m_rasterState;
-    XMMATRIX m_projectionMatrix;
-    XMMATRIX m_orthoMatrix;
     D3D11_VIEWPORT m_viewport;
 };
 

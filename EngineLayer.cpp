@@ -14,11 +14,11 @@ bool EngineLayer::Initialize()
 
 	/// TIME MANAGGER ///
 
-	timeManager = new TimeManager{};
+	timeManager = std::make_unique<TimeManager>();
 
 	/// INPUT MANAGER ///
 
-	inputManager = new InputManager{};
+	inputManager = std::make_unique<InputManager>();
 
 	/// TEXTURES ///
 	char textureFilename[128];
@@ -38,28 +38,28 @@ bool EngineLayer::Initialize()
 	}
 
 	// Create the camera object.
-	m_Camera = new CameraClass;
+	camera = std::make_unique<CameraClass>();
 	// Set the initial position of the camera.
-	m_Camera->SetPosition(0.0f, 0.0f, -5.0f);
+	camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	// Create and initialize the model object.
-	m_Model = new ModelClass;
+	model = std::make_unique<ModelClass>();
 
 	// Set the name of the texture file that we will be loading.
 	std::filesystem::path filepath = std::filesystem::current_path();
 	std::string assetFilepath = filepath.string() + "/data/stone01.tga";
 	strcpy_s(textureFilename, assetFilepath.c_str());
 
-	if (!m_Model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
+	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
 	}
 
 	// Create and initialize the texture shader object.
-	m_TextureShader = new TextureShaderClass;
+	textureShader = std::make_unique<TextureShaderClass>();
 
-	if (!m_TextureShader->Initialize(renderer->GetDevice(), hwnd))
+	if (!textureShader->Initialize(renderer->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
@@ -94,18 +94,12 @@ void EngineLayer::Run()
 		///// TIME
 
 		timeManager->Update();
-		//std::cout << "\nDeltaTime: " << timeManager->getDeltaTime() << " seconds"; //// TEST
 
 		///// INPUT
 
 		if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
 			windowManager->FullscreenWindow();
 		}
-		// TEST INPUTS ///
-		if (inputManager->IsKeyPressed(SDL_SCANCODE_LSHIFT)) { std::cout << "\nShift was pressed, inputManager did its job!!"; }
-		if (inputManager->IsMouseButtonPressed(SDL_BUTTON_LEFT)) { std::cout << "\nLeft Mouse was pressed, inputManager did its job!!"; }
-		if (inputManager->IsMouseButtonReleased(SDL_BUTTON_LEFT)) { std::cout << "\nLeft Mouse was released, inputManager did its job!!"; }
-		// TEST INPUTS ///
 
 		inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
 
@@ -125,19 +119,19 @@ void EngineLayer::Run()
 		/////
 
 		// Generate the view matrix based on the camera's position.
-		m_Camera->Render();
+		camera->Render();
 
 		// Get the view, and projection matrices from the camera and d3d objects.
-		m_Camera->GetViewMatrix(viewMatrix);
+		camera->GetViewMatrix(viewMatrix);
 		renderer->GetProjectionMatrix(projectionMatrix);
 
 		// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		// CALL THIS FOR EACH OBJECT IN THE SCENE
-		m_Model->Render(renderer->GetDeviceContext());
+		model->Render(renderer->GetDeviceContext());
 
 		// Render the model using the texture shader.
 		// CALL THIS FOR EACH OBJECT IN THE SCENE
-		if (!m_TextureShader->Render(renderer->GetDeviceContext(), m_Model->GetIndexCount(), m_Model->GetWorldMatrix(), viewMatrix, projectionMatrix, m_Model->GetTexture()))
+		if (!textureShader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTexture()))
 		{
 			return;
 		}
@@ -155,52 +149,28 @@ void EngineLayer::Run()
 
 void EngineLayer::Shutdown()
 {
-	if (inputManager)
-	{
-		delete inputManager;
-	}
-
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
 
-	// Release the texture shader object.
-	if (m_TextureShader)
+	if (textureShader)
 	{
-		m_TextureShader->Shutdown();
-		delete m_TextureShader;
-		m_TextureShader = NULL;
+		textureShader->Shutdown();
 	}
 
-	// Release the color shader object.
-	if (m_ColorShader)
+	if (colorShader)
 	{
-		m_ColorShader->Shutdown();
-		delete m_ColorShader;
-		m_ColorShader = NULL;
+		colorShader->Shutdown();
 	}
 
-	// Release the model object.
-	if (m_Model)
+	if (model)
 	{
-		m_Model->Shutdown();
-		delete m_Model;
-		m_Model = NULL;
+		model->Shutdown();
 	}
 
-	// Release the camera object.
-	if (m_Camera)
-	{
-		delete m_Camera;
-		m_Camera = NULL;
-	}
-
-	// Release the Direct3D object.
 	if (renderer)
 	{
 		renderer->Shutdown();
-		delete renderer;
-		renderer = NULL;
 	}
 
 	if (windowManager)
@@ -245,7 +215,7 @@ bool EngineLayer::processEvents()
 
 bool EngineLayer::createRenderer(HWND hwnd)
 {
-	renderer = new D3DClass;
+	renderer = std::make_unique<D3DClass>();
 
 	int screenWidth, screenHeight;
 	screenWidth = 0; screenHeight = 0;
