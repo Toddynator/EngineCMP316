@@ -25,17 +25,11 @@ bool EngineLayer::Initialize()
 
 	/// WINDOW ///
 
-	if (!createWindow()) {
-		return false;
-	}
-	SDL_PropertiesID props = SDL_GetWindowProperties(window);
-	HWND hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, NULL);
-
-	/*windowManager = std::make_unique<CMP316engine::WindowManager_SDL>();
+	windowManager = std::make_unique<CMP316engine::WindowManager_SDL>();
 	if (!windowManager->Initialize()) {
 		return false;
 	}
-	HWND hwnd = windowManager->getHWND();*/
+	HWND hwnd = windowManager->GetHWND();
 
 	/// RENDERER  ///
 
@@ -82,7 +76,7 @@ bool EngineLayer::Initialize()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
 	// Setup Platform/Renderer back-ends
-	ImGui_ImplSDL3_InitForD3D(window);
+	ImGui_ImplSDL3_InitForD3D(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
 	ImGui_ImplDX11_Init(renderer->GetDevice(), renderer->GetDeviceContext());
 
 	return true;
@@ -105,8 +99,7 @@ void EngineLayer::Run()
 		///// INPUT
 
 		if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
-			FULL_SCREEN = !FULL_SCREEN;
-			SDL_SetWindowFullscreen(window, FULL_SCREEN);
+			windowManager->FullscreenWindow();
 		}
 		// TEST INPUTS ///
 		if (inputManager->IsKeyPressed(SDL_SCANCODE_LSHIFT)) { std::cout << "\nShift was pressed, inputManager did its job!!"; }
@@ -210,11 +203,10 @@ void EngineLayer::Shutdown()
 		renderer = NULL;
 	}
 
-	/*if (windowManager)
+	if (windowManager)
 	{
 		windowManager->Shutdown();
-	}*/
-	SDL_DestroyWindow(window);
+	}
 }
 
 bool EngineLayer::processEvents()
@@ -238,7 +230,7 @@ bool EngineLayer::processEvents()
 		{
 			// Have to update the renderer when the window resizes, otherwise the scene will appear distorted/stretched.
 			int screenWidth, screenHeight;
-			SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+			windowManager->GetWindowSize(screenWidth, screenHeight);
 			renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 		}
 
@@ -251,31 +243,15 @@ bool EngineLayer::processEvents()
 	return true;
 }
 
-bool EngineLayer::createWindow()
-{
-	/// FLAGS: https://wiki.libsdl.org/SDL3/SDL_WindowFlags
-	SDL_WindowFlags flags{};
-	flags |= SDL_WINDOW_RESIZABLE;
-	if (FULL_SCREEN) { flags |= SDL_WINDOW_FULLSCREEN; }
-	///
-	window = SDL_CreateWindow("CMP316 Engine", 800, 600, flags);
-	if (!window) {
-		SDL_Log("Couldn't create window: %s", SDL_GetError());
-		return false;
-	}
-
-	return true;
-}
-
 bool EngineLayer::createRenderer(HWND hwnd)
 {
 	renderer = new D3DClass;
 
 	int screenWidth, screenHeight;
 	screenWidth = 0; screenHeight = 0;
-	SDL_GetWindowSize(window, &screenWidth, &screenHeight);
+	windowManager->GetWindowSize(screenWidth, screenHeight);
 
-	if (!renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR))
+	if (!renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, windowManager->IsFullscreen(), SCREEN_DEPTH, SCREEN_NEAR))
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
 		return false;

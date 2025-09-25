@@ -39,7 +39,6 @@ public:
 private:
 	// STUFF TO MOVE TO MANAGERS
 	bool processEvents();
-	bool createWindow();
 	bool createRenderer(HWND hwnd); // Note: In the future this may need carefully handled by a platformManager of sorts, as HWND won't be relevant to non-windows OS platforms.
 
 private:
@@ -47,10 +46,9 @@ private:
 	InputManager* inputManager = nullptr;
 	TimeManager* timeManager = nullptr;
 	std::unique_ptr<CMP316engine::EventManager> eventManager = nullptr;
-	//std::unique_ptr<CMP316engine::WindowManager> windowManager = nullptr;
+	std::unique_ptr<CMP316engine::WindowManager> windowManager = nullptr;
 	//rendererManager
 
-	SDL_Window* window = nullptr;
 	D3DClass* renderer = nullptr;
 
 	// Graphics
@@ -61,7 +59,6 @@ private:
 	CameraClass* m_Camera = nullptr;
 	ModelClass* m_Model = nullptr;	
 
-	bool FULL_SCREEN = false;
 	const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
 	const float SCREEN_DEPTH = 1000.0f;
 	const float SCREEN_NEAR = 0.3f;

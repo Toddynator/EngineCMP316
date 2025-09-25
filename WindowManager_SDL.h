@@ -9,11 +9,13 @@ namespace CMP316engine {
 		bool Initialize() override;
 		void Shutdown() override;
 
-		bool createWindow() override;
+		bool createWindow(const WindowProperties windowProperties = WindowProperties()) override;
 
-		void fullscreenWindow() override;
+		void FullscreenWindow() override;
+		virtual void GetWindowSize(int& width, int& height);
 
-		HWND getHWND() override;
+		void* GetNativeWindow() const override { return window; }
+		HWND GetHWND() const override;
 
 	private:
 		SDL_Window* window;
