@@ -9,21 +9,7 @@ This way the eventManager does not need to know about what uses the events, and 
 */
 
 namespace CMP316engine {	
-	typedef union Event
-	{
-		//KeyboardEvent key;
-		//WindowEvent window;
-	};
-
-	typedef struct KeyboardEvent
-	{
-
-	};
-
-	typedef struct WindowEvent
-	{
-
-	};
+	struct Event {};
 
 	class EventManager : 
 		public Manager

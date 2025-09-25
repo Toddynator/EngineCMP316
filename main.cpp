@@ -6,13 +6,12 @@ MANAGERS TODO:
 * Should be able to modify the window, e.g. resizeWindow() or fullscreenWindow()
 
 TODO:
-- Use CMP316engine Namespace around all the managers.
-- Make all raw pointers in EngineLayer a smart pointer / unique pointer.
+- Create Application class
+- Start making simple game (Model that moves using inputs).
+
+- Create RendererManager so that the renderer logic is abstracted and the engine is not Dependant on DirectX11.
 - Create unified shader class that supports texture and colour, colour should multiply the colour of the texture.
 * Remove texture and colour shader class after this is complete.
-- Create WindowManager so that the window logic is abstracted and the engine is not Dependant on SDL.
-- Create EventManager so that the event logic is no longer Dependant on SDL.
-- Create RendererManager so that the renderer logic is abstracted and the engine is not Dependant on DirectX11.
 - Create helper for matrix transformations (Translation, Rotation, Scale)
 - Create Base Object class that has position, rotation and scale. ModelClass should only handle the model data and rendering ~ REMOVE TRANSFORMS FROM MODEL CLASS, remember to remove the test transforms in the render() function.
 - Go through the core files and add comments / documentation explaining purpose of each class and function, and what they can be used for.

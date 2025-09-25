@@ -1,3 +1,8 @@
+
+/*
+Currently unused until I figure out if I actually want to abstract events from SDL.
+*/
+
 #pragma once
 #include "EventManager.h"
 #include <SDL3/SDL.h>
