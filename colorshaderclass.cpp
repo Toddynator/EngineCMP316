@@ -3,10 +3,10 @@
 
 ColorShaderClass::ColorShaderClass()
 {
-	m_vertexShader = 0;
-	m_pixelShader = 0;
-	m_layout = 0;
-	m_matrixBuffer = 0;
+	vertexShader = 0;
+	pixelShader = 0;
+	layout = 0;
+	matrixBuffer = 0;
 }
 
 
@@ -146,14 +146,14 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 	}
 
 	// Create the vertex shader from the buffer.
-	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &m_vertexShader);
+	result = device->CreateVertexShader(vertexShaderBuffer->GetBufferPointer(), vertexShaderBuffer->GetBufferSize(), NULL, &vertexShader);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Create the pixel shader from the buffer.
-	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &m_pixelShader);
+	result = device->CreatePixelShader(pixelShaderBuffer->GetBufferPointer(), pixelShaderBuffer->GetBufferSize(), NULL, &pixelShader);
 	if (FAILED(result))
 	{
 		return false;
@@ -182,7 +182,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 
 	// Create the vertex input layout.
 	result = device->CreateInputLayout(polygonLayout, numElements, vertexShaderBuffer->GetBufferPointer(),
-		vertexShaderBuffer->GetBufferSize(), &m_layout);
+		vertexShaderBuffer->GetBufferSize(), &layout);
 	if (FAILED(result))
 	{
 		return false;
@@ -208,7 +208,7 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 	matrixBufferDesc.StructureByteStride = 0;
 
 	// Create the constant buffer pointer so we can access the vertex shader constant buffer from within this class.
-	result = device->CreateBuffer(&matrixBufferDesc, NULL, &m_matrixBuffer);
+	result = device->CreateBuffer(&matrixBufferDesc, NULL, &matrixBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -220,31 +220,31 @@ bool ColorShaderClass::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* 
 void ColorShaderClass::ShutdownShader()
 {
 	// Release the matrix constant buffer.
-	if (m_matrixBuffer)
+	if (matrixBuffer)
 	{
-		m_matrixBuffer->Release();
-		m_matrixBuffer = 0;
+		matrixBuffer->Release();
+		matrixBuffer = 0;
 	}
 
 	// Release the layout.
-	if (m_layout)
+	if (layout)
 	{
-		m_layout->Release();
-		m_layout = 0;
+		layout->Release();
+		layout = 0;
 	}
 
 	// Release the pixel shader.
-	if (m_pixelShader)
+	if (pixelShader)
 	{
-		m_pixelShader->Release();
-		m_pixelShader = 0;
+		pixelShader->Release();
+		pixelShader = 0;
 	}
 
 	// Release the vertex shader.
-	if (m_vertexShader)
+	if (vertexShader)
 	{
-		m_vertexShader->Release();
-		m_vertexShader = 0;
+		vertexShader->Release();
+		vertexShader = 0;
 	}
 
 	return;
@@ -309,7 +309,7 @@ bool ColorShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 	projectionMatrix = XMMatrixTranspose(projectionMatrix);
 
 	// Lock the constant buffer so it can be written to.
-	result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	result = deviceContext->Map(matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	if (FAILED(result))
 	{
 		return false;
@@ -324,13 +324,13 @@ bool ColorShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 	dataPtr->projection = projectionMatrix;
 
 	// Unlock the constant buffer.
-	deviceContext->Unmap(m_matrixBuffer, 0);
+	deviceContext->Unmap(matrixBuffer, 0);
 
 	// Set the position of the constant buffer in the vertex shader.
 	bufferNumber = 0;
 
 	// Finanly set the constant buffer in the vertex shader with the updated values.
-	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &m_matrixBuffer);
+	deviceContext->VSSetConstantBuffers(bufferNumber, 1, &matrixBuffer);
 
 	return true;
 }
@@ -338,11 +338,11 @@ bool ColorShaderClass::SetShaderParameters(ID3D11DeviceContext* deviceContext, X
 void ColorShaderClass::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 {
 	// Set the vertex input layout.
-	deviceContext->IASetInputLayout(m_layout);
+	deviceContext->IASetInputLayout(layout);
 
 	// Set the vertex and pixel shaders that will be used to render this triangle.
-	deviceContext->VSSetShader(m_vertexShader, NULL, 0);
-	deviceContext->PSSetShader(m_pixelShader, NULL, 0);
+	deviceContext->VSSetShader(vertexShader, NULL, 0);
+	deviceContext->PSSetShader(pixelShader, NULL, 0);
 
 	// Render the triangle.
 	deviceContext->DrawIndexed(indexCount, 0, 0);

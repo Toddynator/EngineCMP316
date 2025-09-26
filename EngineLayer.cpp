@@ -189,8 +189,8 @@ void EngineLayer::Render()
 	camera->Render();
 
 	// Get the view, and projection matrices from the camera and d3d objects.
-	camera->GetViewMatrix(viewMatrix);
-	renderer->GetProjectionMatrix(projectionMatrix);
+	viewMatrix = camera->GetViewMatrix();
+	projectionMatrix = renderer->GetProjectionMatrix();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	// CALL THIS FOR EACH OBJECT IN THE SCENE

@@ -4,13 +4,13 @@ CameraClass::CameraClass()
 {
 	// Initialize the camera to the origin of the scene.
 
-	m_positionX = 0.0f;
-	m_positionY = 0.0f;
-	m_positionZ = 0.0f;
+	positionX = 0.0f;
+	positionY = 0.0f;
+	positionZ = 0.0f;
 
-	m_rotationX = 0.0f;
-	m_rotationY = 0.0f;
-	m_rotationZ = 0.0f;
+	rotationX = 0.0f;
+	rotationY = 0.0f;
+	rotationZ = 0.0f;
 }
 
 
@@ -25,30 +25,30 @@ CameraClass::~CameraClass()
 
 void CameraClass::SetPosition(float x, float y, float z)
 {
-	m_positionX = x;
-	m_positionY = y;
-	m_positionZ = z;
+	positionX = x;
+	positionY = y;
+	positionZ = z;
 	return;
 }
 
 
 void CameraClass::SetRotation(float x, float y, float z)
 {
-	m_rotationX = x;
-	m_rotationY = y;
-	m_rotationZ = z;
+	rotationX = x;
+	rotationY = y;
+	rotationZ = z;
 	return;
 }
 
 XMFLOAT3 CameraClass::GetPosition()
 {
-	return XMFLOAT3(m_positionX, m_positionY, m_positionZ);
+	return XMFLOAT3(positionX, positionY, positionZ);
 }
 
 
 XMFLOAT3 CameraClass::GetRotation()
 {
-	return XMFLOAT3(m_rotationX, m_rotationY, m_rotationZ);
+	return XMFLOAT3(rotationX, rotationY, rotationZ);
 }
 
 void CameraClass::Render()
@@ -72,9 +72,9 @@ void CameraClass::Render()
 	upVector = XMLoadFloat3(&up);
 
 	// Setup the position of the camera in the world.
-	position.x = m_positionX;
-	position.y = m_positionY;
-	position.z = m_positionZ;
+	position.x = positionX;
+	position.y = positionY;
+	position.z = positionZ;
 
 	// Load it into a XMVECTOR structure.
 	positionVector = XMLoadFloat3(&position);
@@ -88,9 +88,9 @@ void CameraClass::Render()
 	lookAtVector = XMLoadFloat3(&lookAt);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-	pitch = m_rotationX * 0.0174532925f;
-	yaw = m_rotationY * 0.0174532925f;
-	roll = m_rotationZ * 0.0174532925f;
+	pitch = rotationX * 0.0174532925f;
+	yaw = rotationY * 0.0174532925f;
+	roll = rotationZ * 0.0174532925f;
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
 	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
@@ -103,13 +103,12 @@ void CameraClass::Render()
 	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
 
 	// Finally create the view matrix from the three updated vectors.
-	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
+	viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
 	return;
 }
 
-void CameraClass::GetViewMatrix(XMMATRIX& viewMatrix)
+XMMATRIX CameraClass::GetViewMatrix()
 {
-	viewMatrix = m_viewMatrix;
-	return;
+	return viewMatrix;
 }

@@ -47,10 +47,10 @@ private:
 	bool LoadTarga24Bit(char*);
 
 private:
-	unsigned char* m_targaData; // Data read in from the targa file.
-	ID3D11Texture2D* m_texture; // The structured data that the renderer will use.
-	ID3D11ShaderResourceView* m_textureView; // What the shader will use to access the texture when drawing.
-	int m_width, m_height;
+	unsigned char* targaData; // Data read in from the targa file.
+	ID3D11Texture2D* texture; // The structured data that the renderer will use.
+	ID3D11ShaderResourceView* textureView; // What the shader will use to access the texture when drawing.
+	int width, height;
 };
 
 #endif

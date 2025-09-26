@@ -45,10 +45,10 @@ private:
 	void ReleaseTexture();
 
 private:
-	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
-	int m_vertexCount, m_indexCount;
+	ID3D11Buffer* vertexBuffer, * indexBuffer;
+	int vertexCount, indexCount;
 
-	TextureClass* m_Texture;
+	TextureClass* texture;
 
 	XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
 	// Probably should move this to a 'Transform Object' class later.
