@@ -28,7 +28,240 @@ D3DClass::~D3DClass()
 
 bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
-	HRESULT result;
+	// Store the vsync setting.
+	m_vsync_enabled = vsync;
+
+	/// SWAP CHAIN  + DEVICE CREATION ///
+	if (!initializeSwapChain(screenWidth, screenHeight, hwnd, fullscreen)) { return false; }
+
+	/// DEPTH BUFFER ///
+	if (!initializeDepthBuffer(screenWidth, screenHeight)) { return false; }
+	
+	/// DEPTH STENCIL ///
+	// Used for Motion blur, volumetric shadows, etc.
+	if (!initializeDepthStencil()) { return false; }
+
+	/// RASTERIZER ///
+	// Notably Dx11 has a default implementation, but implementing it myself gives more control.
+	if (!initializeRasterizer()) { return false; }
+	
+	/// VIEWPORT ///
+	if (!initializeViewport(screenWidth, screenHeight)) { return false; }
+
+	/// MATRICES ///
+	// Projection matrix is required for converting the 3d coordinates of the scene into the 2d screen coordinates for rendering.
+	// The orthographic matrix is used for 2d rendering, such as for menus and HUDs.
+	// Normally you would have a view matrix too, but this is more relevant for a camera system and so it has been left out of this class.
+	if (!initializeMatrices(screenWidth, screenHeight, screenDepth, screenNear)) { return false; }
+	
+	return true;
+}
+
+void D3DClass::Shutdown()
+{
+	// Before shutting down set to windowed mode otherwise when you release the swap chain it will throw an exception.
+	if (m_swapChain)
+	{
+		m_swapChain->SetFullscreenState(false, NULL);
+	}
+
+	if (m_rasterState)
+	{
+		m_rasterState->Release();
+		m_rasterState = 0;
+	}
+
+	if (m_depthStencilView)
+	{
+		m_depthStencilView->Release();
+		m_depthStencilView = 0;
+	}
+
+	if (m_depthStencilState)
+	{
+		m_depthStencilState->Release();
+		m_depthStencilState = 0;
+	}
+
+	if (m_depthStencilBuffer)
+	{
+		m_depthStencilBuffer->Release();
+		m_depthStencilBuffer = 0;
+	}
+
+	if (m_renderTargetView)
+	{
+		m_renderTargetView->Release();
+		m_renderTargetView = 0;
+	}
+
+	if (m_deviceContext)
+	{
+		m_deviceContext->Release();
+		m_deviceContext = 0;
+	}
+
+	if (m_device)
+	{
+		m_device->Release();
+		m_device = 0;
+	}
+
+	if (m_swapChain)
+	{
+		m_swapChain->Release();
+		m_swapChain = 0;
+	}
+
+	return;
+}
+
+// Parameters are a color to clear the screen to at the beginning of each frame.
+void D3DClass::BeginScene(float red, float green, float blue, float alpha)
+{
+	/*
+	Helper function, call at the beginning of each frame.
+	Initializes buffers to ensure they are blank at the beginning of each frame. (Otherwise you get leftover data / ghosting from the last frame)
+	*/
+
+	float color[4];
+
+	// Setup the color to clear the buffer to.
+	color[0] = red;
+	color[1] = green;
+	color[2] = blue;
+	color[3] = alpha;
+
+	// Clear the back buffer.
+	m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
+
+	// Clear the depth buffer.
+	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+	return;
+}
+
+void D3DClass::EndScene()
+{
+	/*
+	Helper function, call at the end of each frame.
+	It tells the swap chain to display the scene once drawing is complete.
+	*/
+
+	// Present the back buffer to the screen since rendering is complete.
+	if (m_vsync_enabled)
+	{
+		// Lock to screen refresh rate.
+		m_swapChain->Present(1, 0);
+	}
+	else
+	{
+		// Present as fast as possible.
+		m_swapChain->Present(0, 0);
+	}
+
+	return;
+}
+
+ID3D11Device* D3DClass::GetDevice()
+{
+	return m_device;
+}
+
+ID3D11DeviceContext* D3DClass::GetDeviceContext()
+{
+	return m_deviceContext;
+}
+
+void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
+{
+	projectionMatrix = m_projectionMatrix;
+	return;
+}
+
+void D3DClass::GetOrthoMatrix(XMMATRIX& orthoMatrix)
+{
+	orthoMatrix = m_orthoMatrix;
+	return;
+}
+
+// Returns by reference the name and memory of the video card.
+void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
+{
+	strcpy_s(cardName, 128, m_videoCardDescription);
+	memory = m_videoCardMemory;
+	return;
+}
+
+void D3DClass::SetBackBufferRenderTarget()
+{
+	// Bind the render target view and depth stencil buffer to the output render pipeline.
+	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
+
+	return;
+}
+
+void D3DClass::ResetViewport()
+{
+	// Set the viewport.
+	m_deviceContext->RSSetViewports(1, &m_viewport);
+
+	return;
+}
+
+void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear, float screenDepth)
+{
+	//https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing
+
+	if (m_swapChain)
+	{
+		m_deviceContext->OMSetRenderTargets(0, 0, 0);
+
+		// Release all outstanding references to the swap chain's buffers.
+		m_renderTargetView->Release();
+
+		HRESULT hr;
+		// Preserve the existing buffer count and format.
+		// Automatically choose the width and height to match the client rect for HWNDs.
+		hr = m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
+
+		// Perform error handling here!
+
+		// Get buffer and create a render-target-view.
+		ID3D11Texture2D* pBuffer;
+		hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+			(void**)&pBuffer);
+		// Perform error handling here!
+
+		hr = m_device->CreateRenderTargetView(pBuffer, NULL,
+			&m_renderTargetView);
+		// Perform error handling here!
+		pBuffer->Release();
+
+		m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, NULL);
+
+		// Set up the viewport.
+		D3D11_VIEWPORT vp;
+		vp.Width = static_cast<float>(newWidth);
+		vp.Height = static_cast<float>(newHeight);
+		vp.MinDepth = 0.0f;
+		vp.MaxDepth = 1.0f;
+		vp.TopLeftX = 0;
+		vp.TopLeftY = 0;
+		m_deviceContext->RSSetViewports(1, &vp);
+
+		/// UPDATE PROJECTION MATRIX
+
+		float screenAspect = static_cast<float>(newWidth) / static_cast<float>(newHeight);
+		float fieldOfView = 3.141592654f / 4.0f;
+
+		// Update the projection matrix otherwise the scene will be stretched.
+		m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+	}
+}
+
+bool D3DClass::initializeSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
+{
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
 	IDXGIOutput* adapterOutput;
@@ -38,20 +271,11 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	DXGI_ADAPTER_DESC adapterDesc;
 	int error;
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	D3D_FEATURE_LEVEL featureLevel;
 	ID3D11Texture2D* backBufferPtr;
-	D3D11_TEXTURE2D_DESC depthBufferDesc;
-	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
-	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-	D3D11_RASTERIZER_DESC rasterDesc;
-	float fieldOfView, screenAspect;
-
-
-	// Store the vsync setting.
-	m_vsync_enabled = vsync;
+	D3D_FEATURE_LEVEL featureLevel;
 
 	// Create a DirectX graphics interface factory.
-	result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
+	HRESULT result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
 	if (FAILED(result))
 	{
 		return false;
@@ -139,7 +363,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	factory->Release();
 	factory = 0;
 
-	/// SWAP CHAIN  + DEVICE CREATION ///
+	/// SWAP CHAIN ///
 
 	// Initialize the swap chain description.
 	ZeroMemory(&swapChainDesc, sizeof(swapChainDesc));
@@ -172,7 +396,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// Set the handle for the window to render to.
 	swapChainDesc.OutputWindow = hwnd;
 
-	// Turn multisampling off.
+	// Turn multi-sampling off.
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.SampleDesc.Quality = 0;
 
@@ -200,7 +424,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
 
 	// Create the swap chain, Direct3D device, and Direct3D device context.
-	// If you are on a computer that doesn't have a Dx11 compatible graphis card, then you can swap HARDWARE with 'D3D_DRIVER_TYPE_REFERENCE ' to use the CPU instead (Much slower).
+	// If you are on a computer that doesn't have a Dx11 compatible graphics card, then you can swap HARDWARE with 'D3D_DRIVER_TYPE_REFERENCE' to use the CPU instead (Much slower).
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1,
 		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
 	if (FAILED(result))
@@ -226,7 +450,12 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	backBufferPtr->Release();
 	backBufferPtr = 0;
 
-	/// DEPTH BUFFER ///
+	return true;
+}
+
+bool D3DClass::initializeDepthBuffer(int screenWidth, int screenHeight)
+{
+	D3D11_TEXTURE2D_DESC depthBufferDesc;
 
 	// Initialize the description of the depth buffer.
 	ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
@@ -245,17 +474,22 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	depthBufferDesc.MiscFlags = 0;
 
 	// Create the texture for the depth buffer using the filled out description.
-	result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
+	HRESULT result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &m_depthStencilBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
+	return true;
+}
+
+bool D3DClass::initializeDepthStencil()
+{
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
+
 	// Initialize the description of the stencil state.
 	ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
-
-	/// DEPTH STENCIL ///
-	// Used for Motion blur, volumetric shadows, etc.
 
 	// Set up the description of the stencil state.
 	depthStencilDesc.DepthEnable = true;
@@ -279,7 +513,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 	// Create the depth stencil state.
-	result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
+	HRESULT result = m_device->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
 	if (FAILED(result))
 	{
 		return false;
@@ -306,23 +540,27 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
 
-	/// RASTERIZER ///
-	// Notably Dx11 has a default implementation, but implementing it myself gives more control. May be worth encapsulating this.
+	return true;
+}
+
+bool D3DClass::initializeRasterizer()
+{
+	D3D11_RASTERIZER_DESC rasterizerDescription;
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
-	rasterDesc.AntialiasedLineEnable = false;
-	rasterDesc.CullMode = D3D11_CULL_BACK;
-	rasterDesc.DepthBias = 0;
-	rasterDesc.DepthBiasClamp = 0.0f;
-	rasterDesc.DepthClipEnable = true;
-	rasterDesc.FillMode = D3D11_FILL_SOLID;
-	rasterDesc.FrontCounterClockwise = false;
-	rasterDesc.MultisampleEnable = false;
-	rasterDesc.ScissorEnable = false;
-	rasterDesc.SlopeScaledDepthBias = 0.0f;
+	rasterizerDescription.AntialiasedLineEnable = false;
+	rasterizerDescription.CullMode = D3D11_CULL_BACK;
+	rasterizerDescription.DepthBias = 0;
+	rasterizerDescription.DepthBiasClamp = 0.0f;
+	rasterizerDescription.DepthClipEnable = true;
+	rasterizerDescription.FillMode = D3D11_FILL_SOLID;
+	rasterizerDescription.FrontCounterClockwise = false;
+	rasterizerDescription.MultisampleEnable = false;
+	rasterizerDescription.ScissorEnable = false;
+	rasterizerDescription.SlopeScaledDepthBias = 0.0f;
 
 	// Create the rasterizer state from the description we just filled out.
-	result = m_device->CreateRasterizerState(&rasterDesc, &m_rasterState);
+	HRESULT result = m_device->CreateRasterizerState(&rasterizerDescription, &m_rasterState);
 	if (FAILED(result))
 	{
 		return false;
@@ -331,11 +569,14 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// Now set the rasterizer state.
 	m_deviceContext->RSSetState(m_rasterState);
 
-	/// VIEWPORT ///
+	return true;
+}
 
+bool D3DClass::initializeViewport(int screenWidth, int screenHeight)
+{
 	// Setup the viewport for rendering.
-	m_viewport.Width = (float)screenWidth;
-	m_viewport.Height = (float)screenHeight;
+	m_viewport.Width = static_cast<float>(screenWidth);
+	m_viewport.Height = static_cast<float>(screenHeight);
 	m_viewport.MinDepth = 0.0f;
 	m_viewport.MaxDepth = 1.0f;
 	m_viewport.TopLeftX = 0.0f;
@@ -344,239 +585,18 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// Create the viewport.
 	m_deviceContext->RSSetViewports(1, &m_viewport);
 
-	// Setup the projection matrix.
-	fieldOfView = 3.141592654f / 4.0f;
-	screenAspect = (float)screenWidth / (float)screenHeight;
-
-	/// MATRICES ///
-	// Projection matrix is required for converting the 3d coordinates of the scene into the 2d screen coordinates for rendering.
-	// The orthographic matrix is used for 2d rendering, such as for menus and HUDs.
-	// Normally you would have a view matrix too, but this is more relevant for a camera system and so it has been left out of this class.
-
-	// Create the projection matrix for 3D rendering.
-	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-
-	// Create an orthographic projection matrix for 2D rendering.
-	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
-
-
-	//////////// TEST ////////////////////////////////////////////////////
-	char videoCardName[128];
-	int videoCardMemory = 0;
-	GetVideoCardInfo(videoCardName, videoCardMemory);
-	//std::cout << "Video Card: " << videoCardName << " with " << videoCardMemory << " MB of memory." << '\n';
-	
-	std::ofstream debugLogFile("debugLog.txt");
-	debugLogFile << "Video Card Name: " << videoCardName << '\n' << "Video Card Memory: " << videoCardMemory << " MB of memory";
-	debugLogFile.close();
-	/////////////////////////////////////////////////////////////////////
-
-
 	return true;
 }
 
-void D3DClass::Shutdown()
+bool D3DClass::initializeMatrices(int screenWidth, int screenHeight, float screenDepth, float screenNear)
 {
-	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
-	if (m_swapChain)
-	{
-		m_swapChain->SetFullscreenState(false, NULL);
-	}
-
-	if (m_rasterState)
-	{
-		m_rasterState->Release();
-		m_rasterState = 0;
-	}
-
-	if (m_depthStencilView)
-	{
-		m_depthStencilView->Release();
-		m_depthStencilView = 0;
-	}
-
-	if (m_depthStencilState)
-	{
-		m_depthStencilState->Release();
-		m_depthStencilState = 0;
-	}
-
-	if (m_depthStencilBuffer)
-	{
-		m_depthStencilBuffer->Release();
-		m_depthStencilBuffer = 0;
-	}
-
-	if (m_renderTargetView)
-	{
-		m_renderTargetView->Release();
-		m_renderTargetView = 0;
-	}
-
-	if (m_deviceContext)
-	{
-		m_deviceContext->Release();
-		m_deviceContext = 0;
-	}
-
-	if (m_device)
-	{
-		m_device->Release();
-		m_device = 0;
-	}
-
-	if (m_swapChain)
-	{
-		m_swapChain->Release();
-		m_swapChain = 0;
-	}
-
-	return;
-}
-
-// Parameters are a color to clear the screen to at the beginning of each frame.
-void D3DClass::BeginScene(float red, float green, float blue, float alpha)
-{
-	/*
-	Helper function, call at the beginning of each frame.
-	Initializes buffers to ensure they are blank at the beginning of each frame. (Otherwise you get leftover data / ghosting from the last frame)
-	*/
-
-	float color[4];
-
-	// Setup the color to clear the buffer to.
-	color[0] = red;
-	color[1] = green;
-	color[2] = blue;
-	color[3] = alpha;
-
-	// Clear the back buffer.
-	m_deviceContext->ClearRenderTargetView(m_renderTargetView, color);
-
-	// Clear the depth buffer.
-	m_deviceContext->ClearDepthStencilView(m_depthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-	return;
-}
-
-
-void D3DClass::EndScene()
-{
-	/*
-	Helper function, call at the end of each frame.
-	It tells the swap chain to display the scene once drawing is complete.
-	*/
-
-	// Present the back buffer to the screen since rendering is complete.
-	if (m_vsync_enabled)
-	{
-		// Lock to screen refresh rate.
-		m_swapChain->Present(1, 0);
-	}
-	else
-	{
-		// Present as fast as possible.
-		m_swapChain->Present(0, 0);
-	}
-
-	return;
-}
-
-ID3D11Device* D3DClass::GetDevice()
-{
-	return m_device;
-}
-
-
-ID3D11DeviceContext* D3DClass::GetDeviceContext()
-{
-	return m_deviceContext;
-}
-
-void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
-{
-	projectionMatrix = m_projectionMatrix;
-	return;
-}
-
-void D3DClass::GetOrthoMatrix(XMMATRIX& orthoMatrix)
-{
-	orthoMatrix = m_orthoMatrix;
-	return;
-}
-
-// Returns by reference the name and memory of the video card.
-void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
-{
-	strcpy_s(cardName, 128, m_videoCardDescription);
-	memory = m_videoCardMemory;
-	return;
-}
-
-void D3DClass::SetBackBufferRenderTarget()
-{
-	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView);
-
-	return;
-}
-
-
-void D3DClass::ResetViewport()
-{
-	// Set the viewport.
-	m_deviceContext->RSSetViewports(1, &m_viewport);
-
-	return;
-}
-
-void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear, float screenDepth)
-{
-	//https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing
-
-	if (m_swapChain)
-	{
-		m_deviceContext->OMSetRenderTargets(0, 0, 0);
-
-		// Release all outstanding references to the swap chain's buffers.
-		m_renderTargetView->Release();
-
-		HRESULT hr;
-		// Preserve the existing buffer count and format.
-		// Automatically choose the width and height to match the client rect for HWNDs.
-		hr = m_swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-
-		// Perform error handling here!
-
-		// Get buffer and create a render-target-view.
-		ID3D11Texture2D* pBuffer;
-		hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
-			(void**)&pBuffer);
-		// Perform error handling here!
-
-		hr = m_device->CreateRenderTargetView(pBuffer, NULL,
-			&m_renderTargetView);
-		// Perform error handling here!
-		pBuffer->Release();
-
-		m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, NULL);
-
-		// Set up the viewport.
-		D3D11_VIEWPORT vp;
-		vp.Width = static_cast<float>(newWidth);
-		vp.Height = static_cast<float>(newHeight);
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		m_deviceContext->RSSetViewports(1, &vp);
-
-		/// UPDATE PROJECTION MATRIX
-
-		float screenAspect = static_cast<float>(newWidth) / static_cast<float>(newHeight);
-		float fieldOfView = 3.141592654f / 4.0f;
-
-		// Update the projection matrix otherwise the scene will be stretched.
-		m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-	}
+	// Setup the projection matrix.
+	float fieldOfView = 3.141592654f / 4.0f;
+	float screenAspect = static_cast<float>(screenWidth) / static_cast<float>(screenHeight);
+	// Create the projection matrix for 3D rendering.
+	m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+	// Create an orthographic projection matrix for 2D rendering.
+	m_orthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
+	
+	return true;
 }

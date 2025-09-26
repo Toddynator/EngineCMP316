@@ -21,7 +21,7 @@ public:
     D3DClass(const D3DClass&);
     ~D3DClass();
 
-    bool Initialize(int, int, bool, HWND, bool, float, float);
+    bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
     void Shutdown();
 
     void BeginScene(float, float, float, float);
@@ -29,16 +29,21 @@ public:
 
     ID3D11Device* GetDevice();
     ID3D11DeviceContext* GetDeviceContext();
-
     void GetProjectionMatrix(XMMATRIX&);
     void GetOrthoMatrix(XMMATRIX&);
-
     void GetVideoCardInfo(char*, int&);
 
     void SetBackBufferRenderTarget();
     void ResetViewport();
-
     void HandleWindowResize(int width, int height, float screenNear, float screenDepth);
+
+private:
+    bool initializeSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
+    bool initializeDepthBuffer(int screenWidth, int screenHeight);
+    bool initializeDepthStencil();
+    bool initializeRasterizer();
+    bool initializeViewport(int screenWidth, int screenHeight);
+    bool initializeMatrices(int screenWidth, int screenHeight, float screenDepth, float screenNear);
 
 private:
 	XMMATRIX m_projectionMatrix;
