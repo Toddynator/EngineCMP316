@@ -4,6 +4,12 @@
 
 bool EngineLayer::Initialize()
 {
+	///////////////////
+	/// APPLICATION ///
+
+	application = std::make_unique<TempApplication>();
+	if (!application->Initialize()) { return false; }
+
 	/////////////////////
 	/// EVENT MANAGER ///
 
@@ -24,9 +30,7 @@ bool EngineLayer::Initialize()
 	/// WINDOW ///
 
 	windowManager = std::make_unique<CMP316engine::WindowManager_SDL>();
-	if (!windowManager->Initialize()) {
-		return false;
-	}
+	if (!windowManager->Initialize()) { return false; }
 	HWND hwnd = windowManager->GetHWND();
 
 	/////////////////
@@ -55,9 +59,9 @@ bool EngineLayer::Initialize()
 	/// SCENE ///
 
 	// Create and initialize the texture shader object.
-	textureShader = std::make_unique<TextureShaderClass>();
+	shader = std::make_unique<TextureShaderClass>();
 
-	if (!textureShader->Initialize(renderer->GetDevice(), hwnd))
+	if (!shader->Initialize(renderer->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
 		return false;
@@ -102,30 +106,11 @@ void EngineLayer::Shutdown()
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
 
-	if (textureShader)
-	{
-		textureShader->Shutdown();
-	}
-
-	if (colorShader)
-	{
-		colorShader->Shutdown();
-	}
-
-	if (model)
-	{
-		model->Shutdown();
-	}
-
-	if (renderer)
-	{
-		renderer->Shutdown();
-	}
-
-	if (windowManager)
-	{
-		windowManager->Shutdown();
-	}
+	if (application) { application->Shutdown(); }
+	if (shader) { shader->Shutdown(); }
+	if (model) { model->Shutdown(); }
+	if (renderer) { renderer->Shutdown(); }
+	if (windowManager) { windowManager->Shutdown(); }
 }
 
 bool EngineLayer::processEvents()
@@ -170,6 +155,7 @@ void EngineLayer::Update()
 
 	///// INPUT
 
+	// TODO: Make a global inputs function for encapsulating application input
 	if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
 		windowManager->FullscreenWindow();
 	}
@@ -185,7 +171,9 @@ void EngineLayer::Update()
 
 	///// SCENE
 
-	//TODO // Some sort of application/game layer
+	application->HandleInput();
+	application->HandleImgui();
+	application->Update(timeManager->getDeltaTime());
 }
 
 void EngineLayer::Render()
@@ -194,6 +182,8 @@ void EngineLayer::Render()
 	renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
 
 	///// SCENE
+
+	application->Render();
 
 	// Generate the view matrix based on the camera's position.
 	camera->Render();
@@ -208,7 +198,7 @@ void EngineLayer::Render()
 
 	// Render the model using the texture shader.
 	// CALL THIS FOR EACH OBJECT IN THE SCENE
-	if (!textureShader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTexture()))
+	if (!shader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTexture()))
 	{
 		return;
 	}

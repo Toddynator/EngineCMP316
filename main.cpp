@@ -23,6 +23,14 @@ INPUTMANAGER TODO:
 - Abstract from SDL, map SDL scan codes to my own input enum, use my own event system for updating the key states.
 - Add Mouse Functionality.
 - Unit Test & Profiling.
+
+
+NOTES:
+- All math uses directX's math library, which seemingly works on a large multitude of platforms and isn't directly tied to directX11's api
+- All events use SDL, which also supports a large multitude of platforms.
+- Window creation is handled by SDL
+- Rendering is handled by DirectX11, currently HIGHLY COUPLED and as a result the engine can only support windows at the moment.
+
 */
 
 ///

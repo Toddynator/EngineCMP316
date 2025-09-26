@@ -12,6 +12,9 @@ namespace CMP316engine {
 		Application() {}
 		~Application() = default;
 
+		virtual bool Initialize() = 0;
+		virtual void Shutdown() = 0;
+
 		virtual void HandleInput() = 0;
 		virtual void HandleImgui() = 0;
 		virtual void Update(float deltaTime) = 0;

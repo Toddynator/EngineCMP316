@@ -4,6 +4,9 @@
 #include <filesystem>
 #include <memory.h>
 
+#include "Application.h"
+#include "TempApplication.h"
+
 #include "InputManager.h"
 #include "TimeManager.h"
 #include "EventManager.h"
@@ -21,7 +24,6 @@
 #include "d3dclass.h" // RENDERER
 #include "cameraclass.h"
 #include "modelclass.h"
-#include "colorshaderclass.h"
 #include "textureshaderclass.h"
 
 /// WINDOW SETTINGS ///
@@ -46,6 +48,8 @@ private:
 	bool createRenderer(HWND hwnd); // Note: In the future this may need carefully handled by a platformManager of sorts, as HWND won't be relevant to non-windows OS platforms.
 
 private:
+	std::unique_ptr<CMP316engine::Application> application = nullptr; // The actual game
+
 	/// Managers
 	std::unique_ptr<CMP316engine::InputManager> inputManager = nullptr;
 	std::unique_ptr<CMP316engine::TimeManager> timeManager = nullptr;
@@ -55,8 +59,7 @@ private:
 
 	/// Graphics
 	std::unique_ptr<D3DClass> renderer = nullptr;
-	std::unique_ptr<ColorShaderClass> colorShader = nullptr;
-	std::unique_ptr<TextureShaderClass> textureShader = nullptr;
+	std::unique_ptr<TextureShaderClass> shader = nullptr;
 
 	/// Scene objects
 	std::unique_ptr<CameraClass> camera = nullptr;

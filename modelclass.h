@@ -11,11 +11,13 @@ class ModelClass
 {
 private:
 	// Definition of the vertex type that will be used with the vertex buffer.
-	// MUST match the layout in the ColorShaderClass.
-	struct VertexType
+	// MUST match the layout in the ShaderClass.
+	struct Vertex
 	{
 		XMFLOAT3 position;
-		XMFLOAT2 texture;
+		XMFLOAT2 uv; // Texture coord's between 0 and 1
+		//XMFLOAT4 colour = XMFLOAT3(1.f, 1.f, 1.f, 1.f); // Multiples the texture colour
+		//XMFLOAT3 normal;
 	};
 
 public:
@@ -49,6 +51,7 @@ private:
 	TextureClass* m_Texture;
 
 	XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
+	// Probably should move this to a 'Transform Object' class later.
 };
 
 #endif

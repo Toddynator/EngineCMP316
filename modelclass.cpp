@@ -81,7 +81,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	NOTE: Currently set to always draw a single triangle
 	*/
 
-	VertexType* vertices;
+	Vertex* vertices;
 	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
@@ -94,7 +94,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	m_indexCount = 6;
 
 	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new Vertex[m_vertexCount];
 	if (!vertices)
 	{
 		return false;
@@ -121,10 +121,10 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	//vertices[2].color = vertexColour;
 	//vertices[3].color = vertexColour;
 
-	vertices[0].texture = XMFLOAT2(0.0f, 0.0f);
-	vertices[1].texture = XMFLOAT2(1.0f, 0.0f);
-	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
-	vertices[3].texture = XMFLOAT2(0.0f, 1.0f);
+	vertices[0].uv = XMFLOAT2(0.0f, 0.0f);
+	vertices[1].uv = XMFLOAT2(1.0f, 0.0f);
+	vertices[2].uv = XMFLOAT2(1.0f, 1.0f);
+	vertices[3].uv = XMFLOAT2(0.0f, 1.0f);
 
 	// Load the index array with data.
 	// Triangle 1
@@ -138,7 +138,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -218,7 +218,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 
 	// Set vertex buffer stride and offset.
-	stride = sizeof(VertexType);
+	stride = sizeof(Vertex);
 	offset = 0;
 
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
