@@ -154,6 +154,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="textureclass.cpp" />
     <ClCompile Include="textureshaderclass.cpp" />
     <ClCompile Include="TimeManager.cpp" />
@@ -184,6 +185,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="RenderManager.h" />
     <ClInclude Include="textureclass.h" />
     <ClInclude Include="textureshaderclass.h" />
     <ClInclude Include="TimeManager.h" />

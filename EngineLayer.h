@@ -10,6 +10,7 @@
 #include "EventManager_SDL.h"
 #include "WindowManager.h"
 #include "WindowManager_SDL.h"
+#include "RenderManager.h"
 
 #include <SDL3/SDL.h>
 
@@ -50,7 +51,7 @@ private:
 	std::unique_ptr<CMP316engine::TimeManager> timeManager = nullptr;
 	std::unique_ptr<CMP316engine::EventManager> eventManager = nullptr;
 	std::unique_ptr<CMP316engine::WindowManager> windowManager = nullptr;
-	//rendererManager
+	//std::unique_ptr<CMP316engine::RenderManager> renderManager = nullptr;
 
 	/// Graphics
 	std::unique_ptr<D3DClass> renderer = nullptr;
