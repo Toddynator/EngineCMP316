@@ -81,6 +81,8 @@ bool EngineLayer::Initialize()
 	std::string assetFilepath = filepath.string() + "/data/stone01.tga";
 	strcpy_s(textureFilename, assetFilepath.c_str());
 
+	/// TODO: Detach texture from the initialize of models, this should be handled later anyway OR be an option / overload constructor.
+
 	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
@@ -193,17 +195,9 @@ void EngineLayer::Render()
 	projectionMatrix = renderer->GetProjectionMatrix();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	// CALL THIS FOR EACH OBJECT IN THE SCENE
-	model->Render(renderer->GetDeviceContext());
-
-	// Render the model using the texture shader.
-	// CALL THIS FOR EACH OBJECT IN THE SCENE
-	// NOTE: Maybe I can combine them, so that one shader is used for all models?
-	if (!shader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTextureView(0)))
-	{
-		return;
-	}
-
+	// CALL THIS FOR EACH RENDERABLE OBJECT IN THE SCENE
+	model->Render(shader.get(), renderer->GetDeviceContext(), viewMatrix, projectionMatrix);
+	
 	///// IMGUI
 
 	ImGui::Render();

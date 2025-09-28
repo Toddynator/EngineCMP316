@@ -72,7 +72,7 @@ void Shader::Shutdown()
 }
 
 bool Shader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture)
+	XMMATRIX projectionMatrix, ID3D11ShaderResourceView* texture, int indexOffset)
 {
 	bool result;
 
@@ -85,7 +85,7 @@ bool Shader::Render(ID3D11DeviceContext* deviceContext, int indexCount, XMMATRIX
 	}
 
 	// Now render the prepared buffers with the shader.
-	RenderShader(deviceContext, indexCount);
+	RenderShader(deviceContext, indexCount, indexOffset);
 
 	return true;
 }
@@ -373,7 +373,7 @@ bool Shader::SetShaderParameters(ID3D11DeviceContext* deviceContext, XMMATRIX wo
 	return true;
 }
 
-void Shader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
+void Shader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexOffset)
 {
 	// Set the vertex input layout.
 	deviceContext->IASetInputLayout(layout);
@@ -385,8 +385,8 @@ void Shader::RenderShader(ID3D11DeviceContext* deviceContext, int indexCount)
 	// Set the sampler state in the pixel shader.
 	deviceContext->PSSetSamplers(0, 1, &sampleState);
 
-	// Render the triangle.
-	deviceContext->DrawIndexed(indexCount, 0, 0);
+	// Render the mesh.
+	deviceContext->DrawIndexed(indexCount, indexOffset, 0);
 
 	return;
 }

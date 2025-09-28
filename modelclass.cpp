@@ -53,12 +53,25 @@ void CMP316engine::ModelClass::Shutdown()
 	return;
 }
 
-void CMP316engine::ModelClass::Render(ID3D11DeviceContext* deviceContext)
+bool CMP316engine::ModelClass::Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
 
-	return;
+	// Render each mesh using the shader
+	// Compared to buffers this needs explicitly handled for each mesh as to handle different textures.
+	int meshVertexOffset = 0;
+	for (auto& mesh : meshes)
+	{
+		if (!shader->Render(deviceContext, mesh.indices.size(), worldMatrix, viewMatrix, projectionMatrix, textures[0]->GetTextureView(), meshVertexOffset))
+		{
+			return false;
+		}
+
+		meshVertexOffset += mesh.indices.size();
+	}
+
+	return true;
 }
 
 int CMP316engine::ModelClass::GetIndexCount()
@@ -157,7 +170,10 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	std::vector<CMP316engine::Vertex> allVertices;
 	std::vector<unsigned long> allIndices;
 
-	// Pack vertices and indices from all meshes into a combined container to put into the buffer
+	/*
+	This packs all the vertices and indices from each mesh into a single vertex and index buffer.
+	In Theory this should be more performance friendly?
+	*/
 	int meshVertexOffset = 0;
 	for (auto& mesh : meshes)
 	{

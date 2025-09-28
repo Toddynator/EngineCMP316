@@ -23,7 +23,8 @@ public:
 
 	bool Initialize(ID3D11Device*, HWND);
 	void Shutdown();
-	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
+	// indexOffset only applies if multiple meshes share the same buffer
+	bool Render(ID3D11DeviceContext*, int, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*, int indexOffset = 0);
 
 private:
 	bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
@@ -31,7 +32,8 @@ private:
 	void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
 	bool SetShaderParameters(ID3D11DeviceContext*, XMMATRIX, XMMATRIX, XMMATRIX, ID3D11ShaderResourceView*);
-	void RenderShader(ID3D11DeviceContext*, int);
+	// Index Offset applies if a buffer was shared between meshes
+	void RenderShader(ID3D11DeviceContext* deviceContext, int indexCount, int indexOffset = 0);
 
 private:
 	ID3D11VertexShader* vertexShader;
