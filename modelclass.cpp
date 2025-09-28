@@ -1,6 +1,7 @@
 #include "modelclass.h"
 #include "OBJ_Loader.h"
 #include <filesystem>
+#include "TextureLoader.h"
 
 CMP316engine::ModelClass::ModelClass()
 {
@@ -78,11 +79,9 @@ int CMP316engine::ModelClass::GetVertexCount()
 	return total;
 }
 
-ID3D11ShaderResourceView* CMP316engine::ModelClass::GetTexture()
+ID3D11ShaderResourceView* CMP316engine::ModelClass::GetTextureView(int textureNum)
 {
-	//// TODO : Make it take an int to get a specific texture, or return a vector of shader resources
-
-	return textures[0].GetTexture();
+	return textures[textureNum]->GetTextureView();
 }
 
 bool CMP316engine::ModelClass::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
@@ -268,17 +267,8 @@ void CMP316engine::ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 
 bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilepath)
 {
-	bool result;
-
-
-	// Create and initialize the texture object.
-	textures.push_back(TextureClass());
-
-	result = textures.back().Initialize(device, deviceContext, textureFilepath);
-	if (!result)
-	{
-		return false;
-	}
+	Texture* texture = TextureLoader::LoadTexture(textureFilepath, device, deviceContext);
+	textures.push_back(texture);
 
 	return true;
 }
@@ -288,7 +278,7 @@ void CMP316engine::ModelClass::ReleaseTexture()
 	// Release the texture objects.
 	for (auto& texture : textures)
 	{
-		texture.Shutdown();
+		texture->Shutdown();
 	}	
 
 	return;

@@ -137,7 +137,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
-    <ClCompile Include="AssetManager_D3D.cpp" />
+    <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="EngineLayer.cpp" />
@@ -159,7 +159,7 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="TempApplication.cpp" />
     <ClCompile Include="TestScene.cpp" />
-    <ClCompile Include="textureclass.cpp" />
+    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
     <ClCompile Include="TimeManager.cpp" />
@@ -173,7 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="AssetManager_D3D.h" />
+    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="EngineLayer.h" />
@@ -197,7 +197,7 @@
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TempApplication.h" />
     <ClInclude Include="TestScene.h" />
-    <ClInclude Include="textureclass.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="TextureLoader.h" />
     <ClInclude Include="TimeManager.h" />

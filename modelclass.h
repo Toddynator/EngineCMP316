@@ -4,7 +4,7 @@
 #include <directxmath.h>
 using namespace DirectX;
 
-#include "textureclass.h"
+#include "Texture.h"
 #include "Mesh.h"
 
 namespace CMP316engine {
@@ -25,7 +25,7 @@ namespace CMP316engine {
 		int GetIndexCount();
 		int GetVertexCount();
 
-		ID3D11ShaderResourceView* GetTexture();
+		ID3D11ShaderResourceView* GetTextureView(int textureNum);
 
 		XMMATRIX GetWorldMatrix() { return worldMatrix; }
 
@@ -44,7 +44,7 @@ namespace CMP316engine {
 		std::vector<Mesh> meshes;
 		ID3D11Buffer* vertexBuffer;
 		ID3D11Buffer* indexBuffer;
-		std::vector<TextureClass> textures;
+		std::vector<Texture*> textures; // Later replace with strings, as the model should not hold the actual texture, an asset manager should be doing this so that it prevents duplicates of a texture.
 
 		XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
 		// Probably should move this to a 'Transform Object' class later.

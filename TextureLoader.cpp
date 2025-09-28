@@ -3,8 +3,10 @@
 #include "stb_image.h"
 
 
-ID3D11ShaderResourceView* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
+	Texture* texture = new Texture;
+
 	// stbi_load reads all images as pixels stored as unsigned char.
 	// The engine now has to translate this into something the renderer can use.
 	int width, height, channels;
@@ -25,8 +27,8 @@ ID3D11ShaderResourceView* TextureLoader::LoadTexture(const char* filepath, ID3D1
 	textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
 	// Create the empty texture.
-	ID3D11Texture2D* texture;
-	HRESULT hResult = device->CreateTexture2D(&textureDesc, NULL, &texture);
+	ID3D11Texture2D* textureResource;
+	HRESULT hResult = device->CreateTexture2D(&textureDesc, NULL, &textureResource);
 	if (FAILED(hResult))
 	{
 		return NULL;
@@ -34,7 +36,7 @@ ID3D11ShaderResourceView* TextureLoader::LoadTexture(const char* filepath, ID3D1
 
 	// Copy the image data into the texture.
 	unsigned int rowPitch = width * channels; // bytes per row
-	deviceContext->UpdateSubresource(texture, 0, NULL, pixels, rowPitch, 0);
+	deviceContext->UpdateSubresource(textureResource, 0, NULL, pixels, rowPitch, 0);
 
 	// Setup the shader resource view description.
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -45,7 +47,7 @@ ID3D11ShaderResourceView* TextureLoader::LoadTexture(const char* filepath, ID3D1
 
 	// Create the shader resource view for the texture.
 	ID3D11ShaderResourceView* textureView;
-	hResult = device->CreateShaderResourceView(texture, &srvDesc, &textureView);
+	hResult = device->CreateShaderResourceView(textureResource, &srvDesc, &textureView);
 	if (FAILED(hResult))
 	{
 		return NULL;
@@ -54,14 +56,22 @@ ID3D11ShaderResourceView* TextureLoader::LoadTexture(const char* filepath, ID3D1
 	// Generate mipmaps for this texture.
 	deviceContext->GenerateMips(textureView);
 
-	return textureView;
+	texture->width = width;
+	texture->height = height;
+	texture->texture = textureResource;
+	texture->textureView = textureView;
+
+	return texture;
 }
 
-
-void TextureLoader::ReleaseTexture(ID3D11ShaderResourceView* texture)
+void TextureLoader::ReleaseTexture(Texture* texture)
 {
-	texture->Release();
+	texture->Shutdown();
 }
+
+
+
+
 
 //unsigned char* TextureLoader::LoadImage(const char* filename, int* w, int* h, int* channels)
 //{

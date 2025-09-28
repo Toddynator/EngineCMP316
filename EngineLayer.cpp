@@ -199,7 +199,7 @@ void EngineLayer::Render()
 	// Render the model using the texture shader.
 	// CALL THIS FOR EACH OBJECT IN THE SCENE
 	// NOTE: Maybe I can combine them, so that one shader is used for all models?
-	if (!shader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTexture()))
+	if (!shader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTextureView(0)))
 	{
 		return;
 	}
