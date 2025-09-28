@@ -75,15 +75,7 @@ bool EngineLayer::Initialize()
 	// Create and initialize the model object.
 	model = std::make_unique<CMP316engine::ModelClass>();
 
-	// Set the name of the texture file that we will be loading.
-	char textureFilename[128];
-	std::filesystem::path filepath = std::filesystem::current_path();
-	std::string assetFilepath = filepath.string() + "/data/stone01.tga";
-	strcpy_s(textureFilename, assetFilepath.c_str());
-
-	/// TODO: Detach texture from the initialize of models, this should be handled later anyway OR be an option / overload constructor.
-
-	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext(), textureFilename))
+	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext()))
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;

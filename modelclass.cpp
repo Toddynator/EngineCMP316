@@ -21,19 +21,12 @@ CMP316engine::ModelClass::~ModelClass()
 {
 }
 
-bool CMP316engine::ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
+bool CMP316engine::ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	bool result;
 
 	// Initialize the vertex and index buffers.
 	result = generateVerticesAndIndices(device, deviceContext);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Load the texture for this model.
-	result = LoadTexture(device, deviceContext, textureFilename);
 	if (!result)
 	{
 		return false;
@@ -63,7 +56,7 @@ bool CMP316engine::ModelClass::Render(Shader* shader, ID3D11DeviceContext* devic
 	int meshVertexOffset = 0;
 	for (auto& mesh : meshes)
 	{
-		if (!shader->Render(deviceContext, mesh.indices.size(), worldMatrix, viewMatrix, projectionMatrix, textures[0]->GetTextureView(), meshVertexOffset))
+		if (!shader->Render(deviceContext, mesh.indices.size(), worldMatrix, viewMatrix, projectionMatrix, textures[mesh.textureName]->GetTextureView(), meshVertexOffset))
 		{
 			return false;
 		}
@@ -92,16 +85,21 @@ int CMP316engine::ModelClass::GetVertexCount()
 	return total;
 }
 
-ID3D11ShaderResourceView* CMP316engine::ModelClass::GetTextureView(int textureNum)
-{
-	return textures[textureNum]->GetTextureView();
-}
-
 bool CMP316engine::ModelClass::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	/*
 	NOTE: Currently hard coded to draw a specific model, should instead have this handled by derived classes or a file model loader
 	*/
+
+	/// TEMP DEFAULT TEXTURE
+	// TODO: Should have this handled by an assetManager later
+	char textureFilepath[128];
+	std::filesystem::path filepath = std::filesystem::current_path();
+	std::string assetFilepath = filepath.string() + "/data/stone01.tga";
+	strcpy_s(textureFilepath, assetFilepath.c_str());
+	Texture* defaultTexture = TextureLoader::LoadTexture(textureFilepath, device, deviceContext);
+	textures.insert({ "", defaultTexture });
+	///
 
 	//loadModel("data/box_stack.obj");
 	if (!loadModel(device, deviceContext, "data/Dug/Dug.obj")) { return false; }
@@ -281,18 +279,10 @@ void CMP316engine::ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilepath)
-{
-	Texture* texture = TextureLoader::LoadTexture(textureFilepath, device, deviceContext);
-	textures.push_back(texture);
-
-	return true;
-}
-
 void CMP316engine::ModelClass::ReleaseTexture()
 {
 	// Release the texture objects.
-	for (auto& texture : textures)
+	for (auto& [key,texture] : textures)
 	{
 		texture->Shutdown();
 	}	
@@ -331,7 +321,7 @@ bool CMP316engine::ModelClass::loadModel(ID3D11Device* device, ID3D11DeviceConte
 		for (auto& index : loadedMesh.Indices) {
 			mesh.indices.push_back(index);
 		}
-		//std::reverse(mesh->indices.begin(), mesh->indices.end());
+		//std::reverse(mesh.indices.begin(), mesh.indices.end());
 
 		//// MATERIALS
 		std::cout << "\nMaterial Name: " << loadedMesh.MeshMaterial.name; // TEST
@@ -355,7 +345,9 @@ bool CMP316engine::ModelClass::loadModel(ID3D11Device* device, ID3D11DeviceConte
 
 		char textureFilepathChar[128];
 		strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
-		//LoadTexture(device, deviceContext, textureFilepathChar);
+		Texture* texture = TextureLoader::LoadTexture(textureFilepathChar, device, deviceContext);
+		textures.insert({ textureName, texture });
+		mesh.textureName = textureName;
 	}
 
 	return true;

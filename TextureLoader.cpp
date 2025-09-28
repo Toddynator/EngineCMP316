@@ -1,4 +1,5 @@
 #include "TextureLoader.h"
+#include <iostream>
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -31,6 +32,7 @@ Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, 
 	HRESULT hResult = device->CreateTexture2D(&textureDesc, NULL, &textureResource);
 	if (FAILED(hResult))
 	{
+		std::cout << "\nFailed to create texture from file: ", filepath;
 		return NULL;
 	}
 
@@ -50,6 +52,7 @@ Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, 
 	hResult = device->CreateShaderResourceView(textureResource, &srvDesc, &textureView);
 	if (FAILED(hResult))
 	{
+		std::cout << "\nFailed to create texture from file: ", filepath;
 		return NULL;
 	}
 

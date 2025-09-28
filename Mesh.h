@@ -20,6 +20,6 @@ namespace CMP316engine {
 		std::string name = "Unnamed Mesh";
 		std::vector<CMP316engine::Vertex> vertices;
 		std::vector<unsigned long> indices;
-		std::string textureName = ""; // Default nothing, engine should have handling for this
+		std::string textureName = ""; // Default nothing, engine should have handling for this / a default texture to load, e.g. white pixel so that colour property has control
 	};
 }

@@ -7,6 +7,7 @@ using namespace DirectX;
 #include "Texture.h"
 #include "Mesh.h"
 #include "Shader.h"
+#include <unordered_map>
 
 namespace CMP316engine {
 	class ModelClass
@@ -18,15 +19,13 @@ namespace CMP316engine {
 		ModelClass(const ModelClass&);
 		~ModelClass();
 
-		bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilepath);
+		bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 		void Shutdown();
 		// Puts the model geometry onto the video card to prepare for drawing then draws using the shader.
 		bool Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
 
 		int GetIndexCount();
 		int GetVertexCount();
-
-		ID3D11ShaderResourceView* GetTextureView(int textureNum);
 
 		XMMATRIX GetWorldMatrix() { return worldMatrix; }
 
@@ -36,7 +35,7 @@ namespace CMP316engine {
 		void ShutdownBuffers();
 		void RenderBuffers(ID3D11DeviceContext*);
 
-		bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
+		bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*, std::string textureName);
 		void ReleaseTexture();
 
 		bool loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath);
@@ -45,7 +44,7 @@ namespace CMP316engine {
 		std::vector<Mesh> meshes;
 		ID3D11Buffer* vertexBuffer;
 		ID3D11Buffer* indexBuffer;
-		std::vector<Texture*> textures; // Later replace with strings, as the model should not hold the actual texture, an asset manager should be doing this so that it prevents duplicates of a texture.
+		std::unordered_map<std::string, Texture*> textures; // TODO: Remove once AssetManager is created, mesh struct holds texture name, it looks up texture in unordered map (which will be in assetManager at some point)
 
 		XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
 		// Probably should move this to a 'Transform Object' class later.
