@@ -331,7 +331,7 @@ bool CMP316engine::ModelClass::loadModel(ID3D11Device* device, ID3D11DeviceConte
 			vertex.uv = XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);
 
 			mesh.vertices.push_back(vertex);
-			//mesh->vertices.back().uv.y = 1 - mesh->vertices.back().uv.y;
+			mesh.vertices.back().uv.y = 1 - mesh.vertices.back().uv.y;
 			//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal);
 			//mesh.vertices.back().Normal *= -1;
 		}
@@ -339,7 +339,7 @@ bool CMP316engine::ModelClass::loadModel(ID3D11Device* device, ID3D11DeviceConte
 		for (auto& index : loadedMesh.Indices) {
 			mesh.indices.push_back(index);
 		}
-		//std::reverse(mesh.indices.begin(), mesh.indices.end());
+		std::reverse(mesh.indices.begin(), mesh.indices.end());
 
 		//// MATERIALS
 		std::cout << "\nMaterial Name: " << loadedMesh.MeshMaterial.name; // TEST
