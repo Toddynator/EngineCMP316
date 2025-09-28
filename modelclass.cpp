@@ -99,11 +99,11 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	mesh->vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
 	mesh->vertices[3].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
 
-	//XMFLOAT4 vertexColour = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f); // RED
-	//vertices[0].color = vertexColour;
-	//vertices[1].color = vertexColour;
-	//vertices[2].color = vertexColour;
-	//vertices[3].color = vertexColour;
+	XMFLOAT4 vertexColour = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f); // RED
+	/*mesh->vertices[0].colour = vertexColour;
+	mesh->vertices[1].colour = vertexColour;
+	mesh->vertices[2].colour = vertexColour;
+	mesh->vertices[3].colour = vertexColour;*/
 
 	mesh->vertices[0].uv = XMFLOAT2(0.0f, 0.0f);
 	mesh->vertices[1].uv = XMFLOAT2(1.0f, 0.0f);

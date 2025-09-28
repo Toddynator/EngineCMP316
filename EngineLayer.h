@@ -24,7 +24,7 @@
 #include "d3dclass.h" // RENDERER
 #include "cameraclass.h"
 #include "modelclass.h"
-#include "textureshaderclass.h"
+#include "Shader.h"
 
 /// WINDOW SETTINGS ///
 
@@ -59,7 +59,7 @@ private:
 
 	/// Graphics
 	std::unique_ptr<D3DClass> renderer = nullptr;
-	std::unique_ptr<TextureShaderClass> shader = nullptr;
+	std::unique_ptr<Shader> shader = nullptr;
 
 	/// Scene objects
 	std::unique_ptr<CameraClass> camera = nullptr;

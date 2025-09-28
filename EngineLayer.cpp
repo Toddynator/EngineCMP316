@@ -59,11 +59,11 @@ bool EngineLayer::Initialize()
 	/// SCENE ///
 
 	// Create and initialize the texture shader object.
-	shader = std::make_unique<TextureShaderClass>();
+	shader = std::make_unique<Shader>();
 
 	if (!shader->Initialize(renderer->GetDevice(), hwnd))
 	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		MessageBox(hwnd, L"Could not initialize the shader object.", L"Error", MB_OK);
 		return false;
 	}
 

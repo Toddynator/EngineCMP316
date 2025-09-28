@@ -84,13 +84,10 @@
     <ClCompile Include="cameraclass.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="colorshaderclass.cpp">
-      <Filter>Source Files\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="textureclass.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="textureshaderclass.cpp">
+    <ClCompile Include="Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="modelclass.cpp">
@@ -173,9 +170,6 @@
     <ClInclude Include="cameraclass.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="colorshaderclass.h">
-      <Filter>Header Files\Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="d3dclass.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
@@ -185,7 +179,7 @@
     <ClInclude Include="textureclass.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="textureshaderclass.h">
+    <ClInclude Include="Shader.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
@@ -235,16 +229,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\color_ps.hlsl">
+    <None Include="Shaders\shader_vs.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
-    <None Include="Shaders\color_vs.hlsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\texture_vs.hlsl">
-      <Filter>Source Files\Shaders</Filter>
-    </None>
-    <None Include="Shaders\texture_ps.hlsl">
+    <None Include="Shaders\shader_ps.hlsl">
       <Filter>Source Files\Shaders</Filter>
     </None>
   </ItemGroup>

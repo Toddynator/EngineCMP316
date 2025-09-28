@@ -10,9 +10,9 @@ namespace CMP316engine {
 	struct Vertex
 	{
 		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 uv; // Texture coord's between 0 and 1
-		//XMFLOAT4 colour = XMFLOAT3(1.f, 1.f, 1.f, 1.f); // Multiples the texture colour
-		//XMFLOAT3 normal;
+		DirectX::XMFLOAT2 uv; // Texture coordinates between 0 and 1
+		DirectX::XMFLOAT4 colour = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f); // Multiples the texture colour
+		DirectX::XMFLOAT3 normal = DirectX::XMFLOAT3(1.f, 1.f, 1.f);
 	};
 
 	struct Mesh
