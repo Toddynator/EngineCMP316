@@ -1,4 +1,5 @@
 #include "textureclass.h"
+#include "TextureLoader.h"
 
 TextureClass::TextureClass()
 {
@@ -86,6 +87,8 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	// Release the targa image data now that the image data has been loaded into the texture.
 	delete[] targaData;
 	targaData = 0;
+
+	//textureView = TextureLoader::LoadTexture(filename, device, deviceContext);
 
 	return true;
 }
