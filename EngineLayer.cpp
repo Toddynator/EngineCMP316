@@ -163,6 +163,12 @@ void EngineLayer::Update()
 	ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport*)0, ImGuiDockNodeFlags_PassthruCentralNode); // Supports docking windows to the viewport, must be rendered before other ImGui Windows
 	ImGui::ShowDemoWindow();
 
+	// TEST
+	ImGui::Begin("Testing");
+	model->RenderImGuiControls();
+	ImGui::End();
+	// TEST
+
 	///// SCENE
 
 	application->HandleInput();

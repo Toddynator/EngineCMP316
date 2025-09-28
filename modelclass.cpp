@@ -2,6 +2,7 @@
 #include "OBJ_Loader.h"
 #include <filesystem>
 #include "TextureLoader.h"
+#include "imgui.h"
 
 CMP316engine::ModelClass::ModelClass()
 {
@@ -83,6 +84,23 @@ int CMP316engine::ModelClass::GetVertexCount()
 		total += mesh.vertices.size();
 	}
 	return total;
+}
+
+void CMP316engine::ModelClass::RenderImGuiControls()
+{	
+	if (ImGui::InputFloat3("Position", &position.x))
+	{
+		XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+		XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x,rotation.y,rotation.z);
+		worldMatrix = translationMatrix * rotationMatrix;
+	}
+
+	if (ImGui::InputFloat3("Rotation", &rotation.x))
+	{
+		XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+		XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+		worldMatrix = translationMatrix * rotationMatrix;
+	}
 }
 
 bool CMP316engine::ModelClass::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
