@@ -24,6 +24,7 @@ namespace CMP316engine {
 		void Render(ID3D11DeviceContext*);
 
 		int GetIndexCount();
+		int GetVertexCount();
 
 		ID3D11ShaderResourceView* GetTexture();
 
@@ -40,11 +41,10 @@ namespace CMP316engine {
 		bool loadModel(std::string filepath);
 
 	private:
-		Mesh* mesh;
+		std::vector<Mesh> meshes;
 		ID3D11Buffer* vertexBuffer;
 		ID3D11Buffer* indexBuffer;
-
-		TextureClass* texture;
+		std::vector<TextureClass> textures;
 
 		XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
 		// Probably should move this to a 'Transform Object' class later.

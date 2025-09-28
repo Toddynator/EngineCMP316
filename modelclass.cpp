@@ -3,9 +3,9 @@
 
 CMP316engine::ModelClass::ModelClass()
 {
-	vertexBuffer = NULL;
-	indexBuffer = NULL;
-	texture = NULL;
+	//vertexBuffer = NULL;
+	//indexBuffer = NULL;
+	//texture = NULL;
 	worldMatrix = XMMatrixIdentity();
 }
 
@@ -49,8 +49,6 @@ void CMP316engine::ModelClass::Shutdown()
 	// Shutdown the vertex and index buffers.
 	ShutdownBuffers();
 
-	delete mesh;
-
 	return;
 }
 
@@ -64,12 +62,27 @@ void CMP316engine::ModelClass::Render(ID3D11DeviceContext* deviceContext)
 
 int CMP316engine::ModelClass::GetIndexCount()
 {
-	return static_cast<int>(mesh->indices.size());
+	int total = 0;
+	for (auto& mesh : meshes) {
+		total += mesh.indices.size();
+	}
+	return total;
+}
+
+int CMP316engine::ModelClass::GetVertexCount()
+{
+	int total = 0;
+	for (auto& mesh : meshes) {
+		total += mesh.vertices.size();
+	}
+	return total;
 }
 
 ID3D11ShaderResourceView* CMP316engine::ModelClass::GetTexture()
 {
-	return texture->GetTexture();
+	//// TODO : Make it take an int to get a specific texture, or return a vector of shader resources
+
+	return textures[0].GetTexture();
 }
 
 bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
@@ -88,7 +101,7 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
 	worldMatrix = translationMatrix * rotationMatrix;*/
 
-	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, -3.0f, 0.0f);
+	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, -1.0f, 2.0f);
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
 	worldMatrix = translationMatrix * rotationMatrix;
 	///
@@ -135,16 +148,36 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	*/
 
+	std::vector<CMP316engine::Vertex> allVertices;
+	std::vector<unsigned long> allIndices;
+
+	// Pack vertices and indices from all meshes into a combined container to put into the buffer
+	int meshVertexOffset = 0;
+	for (auto& mesh : meshes)
+	{
+		allVertices.insert(allVertices.end(), mesh.vertices.begin(), mesh.vertices.end());	
+
+		// Need to adjust indices for each mesh passed in
+		for (auto i : mesh.indices)
+		{
+			allIndices.push_back(i + meshVertexOffset);
+		}
+
+		meshVertexOffset = allVertices.size();
+	}
+
+	/// VERTEX BUFFER ///
+
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * static_cast<UINT>(mesh->vertices.size());
+	vertexBufferDesc.ByteWidth = sizeof(Vertex) * static_cast<UINT>(GetVertexCount());
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = mesh->vertices.data();
+	vertexData.pSysMem = allVertices.data();
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -155,16 +188,18 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 		return false;
 	}
 
+	/// INDEX BUFFER ///
+
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * static_cast<UINT>(mesh->indices.size());
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * static_cast<UINT>(GetIndexCount());
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = mesh->indices.data();
+	indexData.pSysMem = allIndices.data();
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -200,14 +235,13 @@ void CMP316engine::ModelClass::ShutdownBuffers()
 void CMP316engine::ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	/*
-	Purpose of the function is to set the vertex and index buffer as active on the input asembler in the GPU.
+	Purpose of the function is to set the vertex and index buffer as active on the input assembler in the GPU.
 	Once the GPU has an active vertex buffer it can use the shader to render that buffer. 
 	This function also defines how the buffers should be drawn such as triangles, lines, etc.
 	*/
 
 	unsigned int stride;
 	unsigned int offset;
-
 
 	// Set vertex buffer stride and offset.
 	stride = sizeof(Vertex);
@@ -231,9 +265,9 @@ bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceCon
 
 
 	// Create and initialize the texture object.
-	texture = new TextureClass;
+	textures.push_back(TextureClass());
 
-	result = texture->Initialize(device, deviceContext, filename);
+	result = textures.back().Initialize(device, deviceContext, filename);
 	if (!result)
 	{
 		return false;
@@ -244,20 +278,18 @@ bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceCon
 
 void CMP316engine::ModelClass::ReleaseTexture()
 {
-	// Release the texture object.
-	if (texture)
+	// Release the texture objects.
+	for (auto& texture : textures)
 	{
-		texture->Shutdown();
-		delete texture;
-		texture = 0;
-	}
+		texture.Shutdown();
+	}	
 
 	return;
 }
 
 bool CMP316engine::ModelClass::loadModel(std::string filepath)
 {
-	mesh = new Mesh();
+	meshes.clear();
 
 	objl::Loader objLoader;
 	bool success = objLoader.LoadFile(filepath);
@@ -265,9 +297,9 @@ bool CMP316engine::ModelClass::loadModel(std::string filepath)
 
 	for (auto& loadedMesh : objLoader.LoadedMeshes)
 	{
-		//meshes.push_back(CORE::Mesh());
-		//auto& mesh = meshes.back();
-		mesh->name = loadedMesh.MeshName;
+		meshes.push_back(CMP316engine::Mesh());
+		auto& mesh = meshes.back();
+		mesh.name = loadedMesh.MeshName;
 
 		//// VERTICES
 		for (auto& loadedVertex : loadedMesh.Vertices) {
@@ -276,14 +308,14 @@ bool CMP316engine::ModelClass::loadModel(std::string filepath)
 			vertex.normal = XMFLOAT3(loadedVertex.Normal.X, loadedVertex.Normal.Y, loadedVertex.Normal.Z);
 			vertex.uv = XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);
 
-			mesh->vertices.push_back(vertex);
+			mesh.vertices.push_back(vertex);
 			//mesh->vertices.back().uv.y = 1 - mesh->vertices.back().uv.y;
 			//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal);
 			//mesh.vertices.back().Normal *= -1;
 		}
 		//// INDICES
 		for (auto& index : loadedMesh.Indices) {
-			mesh->indices.push_back(index);
+			mesh.indices.push_back(index);
 		}
 		//std::reverse(mesh->indices.begin(), mesh->indices.end());
 
