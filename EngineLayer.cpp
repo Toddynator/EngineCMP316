@@ -73,7 +73,7 @@ bool EngineLayer::Initialize()
 	camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	// Create and initialize the model object.
-	model = std::make_unique<ModelClass>();
+	model = std::make_unique<CMP316engine::ModelClass>();
 
 	// Set the name of the texture file that we will be loading.
 	char textureFilename[128];
@@ -198,6 +198,7 @@ void EngineLayer::Render()
 
 	// Render the model using the texture shader.
 	// CALL THIS FOR EACH OBJECT IN THE SCENE
+	// NOTE: Maybe I can combine them, so that one shader is used for all models?
 	if (!shader->Render(renderer->GetDeviceContext(), model->GetIndexCount(), model->GetWorldMatrix(), viewMatrix, projectionMatrix, model->GetTexture()))
 	{
 		return;

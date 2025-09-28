@@ -1,6 +1,9 @@
 
 /*
 DirectX11 Renderer
+https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11
+https://learn.microsoft.com/en-us/windows/win32/direct3d11/dx-graphics-overviews
+
 */
 
 #ifndef _D3DCLASS_H_
@@ -38,7 +41,7 @@ public:
     void HandleWindowResize(int width, int height, float screenNear, float screenDepth);
 
 private:
-    bool initializeSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
+    bool initializeDeviceAndSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
     bool initializeDepthBuffer(int screenWidth, int screenHeight);
     bool initializeDepthStencil();
     bool initializeRasterizer();

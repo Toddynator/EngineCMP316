@@ -1,6 +1,6 @@
 #include "modelclass.h"
 
-ModelClass::ModelClass()
+CMP316engine::ModelClass::ModelClass()
 {
 	vertexBuffer = NULL;
 	indexBuffer = NULL;
@@ -9,16 +9,16 @@ ModelClass::ModelClass()
 }
 
 
-ModelClass::ModelClass(const ModelClass& other)
+CMP316engine::ModelClass::ModelClass(const ModelClass& other)
 {
 }
 
 
-ModelClass::~ModelClass()
+CMP316engine::ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
+bool CMP316engine::ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
 {
 	bool result;
 
@@ -40,7 +40,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	return true;
 }
 
-void ModelClass::Shutdown()
+void CMP316engine::ModelClass::Shutdown()
 {
 	// Release the model texture.
 	ReleaseTexture();
@@ -48,10 +48,12 @@ void ModelClass::Shutdown()
 	// Shutdown the vertex and index buffers.
 	ShutdownBuffers();
 
+	delete mesh;
+
 	return;
 }
 
-void ModelClass::Render(ID3D11DeviceContext* deviceContext)
+void CMP316engine::ModelClass::Render(ID3D11DeviceContext* deviceContext)
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
@@ -65,92 +67,79 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-int ModelClass::GetIndexCount()
+int CMP316engine::ModelClass::GetIndexCount()
 {
-	return indexCount;
+	return static_cast<int>(mesh->indices.size());
 }
 
-ID3D11ShaderResourceView* ModelClass::GetTexture()
+ID3D11ShaderResourceView* CMP316engine::ModelClass::GetTexture()
 {
 	return texture->GetTexture();
 }
 
-bool ModelClass::InitializeBuffers(ID3D11Device* device)
+bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 {
 	/*
-	NOTE: Currently set to always draw a single triangle
+	NOTE: Currently set to always draw a single quad, should instead have this handled by derived classes or a file model loader 
 	*/
 
-	Vertex* vertices;
-	unsigned long* indices;
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-	HRESULT result;
 
-	// Set the number of vertices in the vertex array.
-	vertexCount = 4;
+	mesh = new Mesh();
 
-	// Set the number of indices in the index array.
-	indexCount = 6;
-
-	// Create the vertex array.
-	vertices = new Vertex[vertexCount];
-	if (!vertices)
-	{
-		return false;
+	/// VERTICES ///
+	
+	for (int i = 0; i < 4; i++) {
+		mesh->vertices.push_back(CMP316engine::Vertex());
 	}
 
-	// Create the index array.
-	indices = new unsigned long[indexCount];
-	if (!indices)
-	{
-		return false;
-	}
+	mesh->vertices[0].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
+	mesh->vertices[1].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top right.
+	mesh->vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
+	mesh->vertices[3].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
 
-	XMFLOAT4 vertexColour = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f); // RED
-
-	// Load the vertex array with data.
-
-	vertices[0].position = XMFLOAT3(-1.0f, 1.0f, 0.0f);  // Top left.
-	vertices[1].position = XMFLOAT3(1.0f, 1.0f, 0.0f);  // Top right.
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[3].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-
+	//XMFLOAT4 vertexColour = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f); // RED
 	//vertices[0].color = vertexColour;
 	//vertices[1].color = vertexColour;
 	//vertices[2].color = vertexColour;
 	//vertices[3].color = vertexColour;
 
-	vertices[0].uv = XMFLOAT2(0.0f, 0.0f);
-	vertices[1].uv = XMFLOAT2(1.0f, 0.0f);
-	vertices[2].uv = XMFLOAT2(1.0f, 1.0f);
-	vertices[3].uv = XMFLOAT2(0.0f, 1.0f);
+	mesh->vertices[0].uv = XMFLOAT2(0.0f, 0.0f);
+	mesh->vertices[1].uv = XMFLOAT2(1.0f, 0.0f);
+	mesh->vertices[2].uv = XMFLOAT2(1.0f, 1.0f);
+	mesh->vertices[3].uv = XMFLOAT2(0.0f, 1.0f);
 
-	// Load the index array with data.
+	/// INDICES ///
+
+	for (int i = 0; i < 6; i++) {
+		mesh->indices.push_back(unsigned long());
+	}
+
 	// Triangle 1
-	indices[0] = 0;  // Top left.
-	indices[1] = 1;  // Top Right.
-	indices[2] = 2;  // Bottom right.
+	mesh->indices[0] = 0;  // Top left.
+	mesh->indices[1] = 1;  // Top Right.
+	mesh->indices[2] = 2;  // Bottom right.
 	// Triangle 2
-	indices[3] = 2;  // Bottom right.
-	indices[4] = 3;  // Bottom left
-	indices[5] = 0;  // Top left.
+	mesh->indices[3] = 2;  // Bottom right.
+	mesh->indices[4] = 3;  // Bottom left
+	mesh->indices[5] = 0;  // Top left.
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(Vertex) * static_cast<UINT>(mesh->vertices.size());
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = vertices;
+	vertexData.pSysMem = mesh->vertices.data();
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
+	HRESULT result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -158,14 +147,14 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(unsigned long) * indexCount;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * static_cast<UINT>(mesh->indices.size());
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	indexBufferDesc.CPUAccessFlags = 0;
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-	indexData.pSysMem = indices;
+	indexData.pSysMem = mesh->indices.data();
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -176,17 +165,10 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 		return false;
 	}
 
-	// Release the arrays now that the vertex and index buffers have been created and loaded.
-	delete[] vertices;
-	vertices = 0;
-
-	delete[] indices;
-	indices = 0;
-
 	return true;
 }
 
-void ModelClass::ShutdownBuffers()
+void CMP316engine::ModelClass::ShutdownBuffers()
 {
 	// Release the index buffer.
 	if (indexBuffer)
@@ -205,7 +187,7 @@ void ModelClass::ShutdownBuffers()
 	return;
 }
 
-void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void CMP316engine::ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	/*
 	Purpose of the function is to set the vertex and index buffer as active on the input asembler in the GPU.
@@ -233,7 +215,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
+bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
 {
 	bool result;
 
@@ -250,7 +232,7 @@ bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCo
 	return true;
 }
 
-void ModelClass::ReleaseTexture()
+void CMP316engine::ModelClass::ReleaseTexture()
 {
 	// Release the texture object.
 	if (texture)

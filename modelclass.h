@@ -6,52 +6,46 @@
 using namespace DirectX;
 
 #include "textureclass.h"
+#include "Mesh.h"
 
-class ModelClass
-{
-private:
-	// Definition of the vertex type that will be used with the vertex buffer.
-	// MUST match the layout in the ShaderClass.
-	struct Vertex
+namespace CMP316engine {
+	class ModelClass
 	{
-		XMFLOAT3 position;
-		XMFLOAT2 uv; // Texture coord's between 0 and 1
-		//XMFLOAT4 colour = XMFLOAT3(1.f, 1.f, 1.f, 1.f); // Multiples the texture colour
-		//XMFLOAT3 normal;
+	private:
+
+	public:
+		ModelClass();
+		ModelClass(const ModelClass&);
+		~ModelClass();
+
+		bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
+		void Shutdown();
+		// Puts the model geometry onto the video card to prepare it for drawing by the color shader.
+		void Render(ID3D11DeviceContext*);
+
+		int GetIndexCount();
+
+		ID3D11ShaderResourceView* GetTexture();
+
+		XMMATRIX GetWorldMatrix() { return worldMatrix; }
+
+	private:
+		bool InitializeBuffers(ID3D11Device*);
+		void ShutdownBuffers();
+		void RenderBuffers(ID3D11DeviceContext*);
+
+		bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
+		void ReleaseTexture();
+
+	private:
+		Mesh* mesh;
+		ID3D11Buffer* vertexBuffer;
+		ID3D11Buffer* indexBuffer;
+
+		TextureClass* texture;
+
+		XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
+		// Probably should move this to a 'Transform Object' class later.
 	};
-
-public:
-	ModelClass();
-	ModelClass(const ModelClass&);
-	~ModelClass();
-
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
-	void Shutdown();
-	// Puts the model geometry onto the video card to prepare it for drawing by the color shader.
-	void Render(ID3D11DeviceContext*);
-
-	int GetIndexCount();
-
-	ID3D11ShaderResourceView* GetTexture();
-
-	XMMATRIX GetWorldMatrix() { return worldMatrix; }
-
-private:
-	bool InitializeBuffers(ID3D11Device*);
-	void ShutdownBuffers();
-	void RenderBuffers(ID3D11DeviceContext*);
-
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
-	void ReleaseTexture();
-
-private:
-	ID3D11Buffer* vertexBuffer, * indexBuffer;
-	int vertexCount, indexCount;
-
-	TextureClass* texture;
-
-	XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
-	// Probably should move this to a 'Transform Object' class later.
-};
-
+}
 #endif

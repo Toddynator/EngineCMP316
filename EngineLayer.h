@@ -63,7 +63,7 @@ private:
 
 	/// Scene objects
 	std::unique_ptr<CameraClass> camera = nullptr;
-	std::unique_ptr<ModelClass> model = nullptr;
+	std::unique_ptr<CMP316engine::ModelClass> model = nullptr;
 
 	const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
 	const float SCREEN_DEPTH = 1000.0f;

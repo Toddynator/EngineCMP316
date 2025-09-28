@@ -23,8 +23,8 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	// Store the vsync setting.
 	vsyncEnabled = vsync;
 
-	/// SWAP CHAIN  + DEVICE CREATION ///
-	if (!initializeSwapChain(screenWidth, screenHeight, hwnd, fullscreen)) { return false; }
+	/// SWAP CHAIN + DEVICE CREATION ///
+	if (!initializeDeviceAndSwapChain(screenWidth, screenHeight, hwnd, fullscreen)) { return false; }
 
 	/// DEPTH BUFFER ///
 	if (!initializeDepthBuffer(screenWidth, screenHeight)) { return false; }
@@ -250,7 +250,7 @@ void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear,
 	}
 }
 
-bool D3DClass::initializeSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
+bool D3DClass::initializeDeviceAndSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
 {
 	IDXGIFactory* factory;
 	IDXGIAdapter* adapter;
