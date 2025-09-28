@@ -18,7 +18,7 @@ namespace CMP316engine {
 		ModelClass(const ModelClass&);
 		~ModelClass();
 
-		bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
+		bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilepath);
 		void Shutdown();
 		// Puts the model geometry onto the video card to prepare it for drawing by the color shader.
 		void Render(ID3D11DeviceContext*);
@@ -31,6 +31,7 @@ namespace CMP316engine {
 		XMMATRIX GetWorldMatrix() { return worldMatrix; }
 
 	private:
+		bool generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 		bool InitializeBuffers(ID3D11Device*);
 		void ShutdownBuffers();
 		void RenderBuffers(ID3D11DeviceContext*);
@@ -38,7 +39,7 @@ namespace CMP316engine {
 		bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
 		void ReleaseTexture();
 
-		bool loadModel(std::string filepath);
+		bool loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath);
 
 	private:
 		std::vector<Mesh> meshes;

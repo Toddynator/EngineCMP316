@@ -1,5 +1,6 @@
 #include "modelclass.h"
 #include "OBJ_Loader.h"
+#include <filesystem>
 
 CMP316engine::ModelClass::ModelClass()
 {
@@ -23,9 +24,8 @@ bool CMP316engine::ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceCont
 {
 	bool result;
 
-
 	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device);
+	result = generateVerticesAndIndices(device, deviceContext);
 	if (!result)
 	{
 		return false;
@@ -85,16 +85,14 @@ ID3D11ShaderResourceView* CMP316engine::ModelClass::GetTexture()
 	return textures[0].GetTexture();
 }
 
-bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
+bool CMP316engine::ModelClass::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	/*
-	NOTE: Currently hard coded to draw a specific model, should instead have this handled by derived classes or a file model loader 
+	NOTE: Currently hard coded to draw a specific model, should instead have this handled by derived classes or a file model loader
 	*/
 
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
-
-	loadModel("data/box_stack.obj");
+	//loadModel("data/box_stack.obj");
+	if (!loadModel(device, deviceContext, "data/Dug/Dug.obj")) { return false; }
 
 	/// TEST TRANSFORMS ///
 	/*XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
@@ -110,7 +108,7 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	mesh = new Mesh();
 
 	/// VERTICES ///
-	
+
 	for (int i = 0; i < 4; i++) {
 		mesh->vertices.push_back(CMP316engine::Vertex());
 	}
@@ -145,8 +143,17 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	mesh->indices[3] = 2;  // Bottom right.
 	mesh->indices[4] = 3;  // Bottom left
 	mesh->indices[5] = 0;  // Top left.
-
 	*/
+
+	if (!InitializeBuffers(device)) { return false; }
+
+	return true;
+}
+
+bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
+{
+	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
 	std::vector<CMP316engine::Vertex> allVertices;
 	std::vector<unsigned long> allIndices;
@@ -259,7 +266,7 @@ void CMP316engine::ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
+bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilepath)
 {
 	bool result;
 
@@ -267,7 +274,7 @@ bool CMP316engine::ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceCon
 	// Create and initialize the texture object.
 	textures.push_back(TextureClass());
 
-	result = textures.back().Initialize(device, deviceContext, filename);
+	result = textures.back().Initialize(device, deviceContext, textureFilepath);
 	if (!result)
 	{
 		return false;
@@ -287,9 +294,10 @@ void CMP316engine::ModelClass::ReleaseTexture()
 	return;
 }
 
-bool CMP316engine::ModelClass::loadModel(std::string filepath)
+bool CMP316engine::ModelClass::loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath)
 {
 	meshes.clear();
+	textures.clear();
 
 	objl::Loader objLoader;
 	bool success = objLoader.LoadFile(filepath);
@@ -327,6 +335,21 @@ bool CMP316engine::ModelClass::loadModel(std::string filepath)
 		std::cout << "\nMaterial mapKd: " << loadedMesh.MeshMaterial.map_Kd; // TEST
 		std::cout << "\nMaterial mapKs: " << loadedMesh.MeshMaterial.map_Ks; // TEST
 		std::cout << "\nMaterial mapNs: " << loadedMesh.MeshMaterial.map_Ns; // TEST
+
+		//// TEXTURES
+		
+		const std::string textureName = loadedMesh.MeshMaterial.map_Kd;
+
+		/// Get Model filepath, then replace obj name with texture name
+		std::filesystem::path projectFilepath = std::filesystem::current_path();
+		std::filesystem::path modelFilepath = filepath;
+		std::filesystem::path modelDirectory = modelFilepath.parent_path();
+		std::filesystem::path textureFilepath = modelDirectory / textureName;
+		std::wcout << L"\nTexture Filepath: " << textureFilepath; // DEBUG
+
+		char textureFilepathChar[128];
+		strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
+		//LoadTexture(device, deviceContext, textureFilepathChar);
 	}
 
 	return true;
