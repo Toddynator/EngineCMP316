@@ -37,6 +37,8 @@ namespace CMP316engine {
 		bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
 		void ReleaseTexture();
 
+		bool loadModel(std::string filepath);
+
 	private:
 		Mesh* mesh;
 		ID3D11Buffer* vertexBuffer;

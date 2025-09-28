@@ -1,4 +1,5 @@
 #include "modelclass.h"
+#include "OBJ_Loader.h"
 
 CMP316engine::ModelClass::ModelClass()
 {
@@ -58,12 +59,6 @@ void CMP316engine::ModelClass::Render(ID3D11DeviceContext* deviceContext)
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
 
-	/// TEST TRANSFORMS ///
-	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
-	worldMatrix = translationMatrix * rotationMatrix;
-	///
-
 	return;
 }
 
@@ -80,12 +75,25 @@ ID3D11ShaderResourceView* CMP316engine::ModelClass::GetTexture()
 bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 {
 	/*
-	NOTE: Currently set to always draw a single quad, should instead have this handled by derived classes or a file model loader 
+	NOTE: Currently hard coded to draw a specific model, should instead have this handled by derived classes or a file model loader 
 	*/
 
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 
+	loadModel("data/box_stack.obj");
+
+	/// TEST TRANSFORMS ///
+	/*XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
+	worldMatrix = translationMatrix * rotationMatrix;*/
+
+	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, -3.0f, 0.0f);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
+	worldMatrix = translationMatrix * rotationMatrix;
+	///
+
+	/* //// MANUALLY DEFINING THE MODEL
 	mesh = new Mesh();
 
 	/// VERTICES ///
@@ -100,10 +108,10 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	mesh->vertices[3].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
 
 	XMFLOAT4 vertexColour = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f); // RED
-	/*mesh->vertices[0].colour = vertexColour;
+	mesh->vertices[0].colour = vertexColour;
 	mesh->vertices[1].colour = vertexColour;
 	mesh->vertices[2].colour = vertexColour;
-	mesh->vertices[3].colour = vertexColour;*/
+	mesh->vertices[3].colour = vertexColour;
 
 	mesh->vertices[0].uv = XMFLOAT2(0.0f, 0.0f);
 	mesh->vertices[1].uv = XMFLOAT2(1.0f, 0.0f);
@@ -124,6 +132,8 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	mesh->indices[3] = 2;  // Bottom right.
 	mesh->indices[4] = 3;  // Bottom left
 	mesh->indices[5] = 0;  // Top left.
+
+	*/
 
 	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -243,4 +253,49 @@ void CMP316engine::ModelClass::ReleaseTexture()
 	}
 
 	return;
+}
+
+bool CMP316engine::ModelClass::loadModel(std::string filepath)
+{
+	mesh = new Mesh();
+
+	objl::Loader objLoader;
+	bool success = objLoader.LoadFile(filepath);
+	if (!success) { return false; }
+
+	for (auto& loadedMesh : objLoader.LoadedMeshes)
+	{
+		//meshes.push_back(CORE::Mesh());
+		//auto& mesh = meshes.back();
+		mesh->name = loadedMesh.MeshName;
+
+		//// VERTICES
+		for (auto& loadedVertex : loadedMesh.Vertices) {
+			CMP316engine::Vertex vertex;
+			vertex.position = XMFLOAT3(loadedVertex.Position.X, loadedVertex.Position.Y, loadedVertex.Position.Z);
+			vertex.normal = XMFLOAT3(loadedVertex.Normal.X, loadedVertex.Normal.Y, loadedVertex.Normal.Z);
+			vertex.uv = XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);
+
+			mesh->vertices.push_back(vertex);
+			//mesh->vertices.back().uv.y = 1 - mesh->vertices.back().uv.y;
+			//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal);
+			//mesh.vertices.back().Normal *= -1;
+		}
+		//// INDICES
+		for (auto& index : loadedMesh.Indices) {
+			mesh->indices.push_back(index);
+		}
+		//std::reverse(mesh->indices.begin(), mesh->indices.end());
+
+		//// MATERIALS
+		std::cout << "\nMaterial Name: " << loadedMesh.MeshMaterial.name; // TEST
+		std::cout << "\nMaterial mapb: " << loadedMesh.MeshMaterial.map_bump; // TEST
+		std::cout << "\nMaterial mapd: " << loadedMesh.MeshMaterial.map_d; // TEST
+		std::cout << "\nMaterial mapKa: " << loadedMesh.MeshMaterial.map_Ka; // TEST
+		std::cout << "\nMaterial mapKd: " << loadedMesh.MeshMaterial.map_Kd; // TEST
+		std::cout << "\nMaterial mapKs: " << loadedMesh.MeshMaterial.map_Ks; // TEST
+		std::cout << "\nMaterial mapNs: " << loadedMesh.MeshMaterial.map_Ns; // TEST
+	}
+
+	return true;
 }

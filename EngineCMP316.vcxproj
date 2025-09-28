@@ -190,6 +190,7 @@
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="modelclass.h" />
+    <ClInclude Include="OBJ_Loader.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="TempApplication.h" />
