@@ -1,6 +1,5 @@
-#ifndef _MODELCLASS_H_
-#define _MODELCLASS_H_
 
+#pragma once
 #include <d3d11.h>
 #include <directxmath.h>
 using namespace DirectX;
@@ -51,4 +50,3 @@ namespace CMP316engine {
 		// Probably should move this to a 'Transform Object' class later.
 	};
 }
-#endif

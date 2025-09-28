@@ -6,9 +6,7 @@ https://learn.microsoft.com/en-us/windows/win32/direct3d11/dx-graphics-overviews
 
 */
 
-#ifndef _D3DCLASS_H_
-#define _D3DCLASS_H_
-
+#pragma once
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -65,6 +63,4 @@ private:
     ID3D11RasterizerState* rasterState = nullptr;
     D3D11_VIEWPORT viewport;
 };
-
-#endif
 

@@ -55,6 +55,12 @@
     <Filter Include="Source Files\GameObjects">
       <UniqueIdentifier>{f45052d0-a4ab-4b0b-acf5-7826aa99d23f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ResourceLoading">
+      <UniqueIdentifier>{2caaa29e-18b7-4e61-90f2-a9b221f572fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ResourceLoading">
+      <UniqueIdentifier>{6fa71818-9a15-49f7-8078-f5d1c967e494}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImGui\imgui.cpp">
@@ -140,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Source Files\ResourceLoading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -228,7 +237,13 @@
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="OBJ_Loader.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\ResourceLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\ResourceLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Header Files\ResourceLoading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

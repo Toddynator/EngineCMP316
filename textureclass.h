@@ -8,9 +8,7 @@ NOTE:
 - Targa Loading functions are due a refactoring, currently some unnecessary code duplication.
 */
 
-#ifndef _TEXTURECLASS_H_
-#define _TEXTURECLASS_H_
-
+#pragma once
 #include <d3d11.h>
 #include <stdio.h>
 
@@ -52,5 +50,3 @@ private:
 	ID3D11ShaderResourceView* textureView; // What the shader will use to access the texture when drawing.
 	int width, height;
 };
-
-#endif
