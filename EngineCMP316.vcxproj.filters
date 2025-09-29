@@ -141,6 +141,9 @@
     <ClCompile Include="TextureLoader.cpp">
       <Filter>Source Files\ResourceLoading</Filter>
     </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGui\imstb_truetype.h">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="TextureLoader.h">
       <Filter>Header Files\ResourceLoading</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

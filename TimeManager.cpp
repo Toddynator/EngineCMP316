@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "TimeManager.h"
 
 CMP316engine::TimeManager::TimeManager()

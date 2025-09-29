@@ -1,8 +1,5 @@
+#include "pch.h"
 #include "d3dclass.h"
-
-#include <string>
-#include <iostream>
-#include <fstream>
 
 D3DClass::D3DClass()
 {

@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "Scene.h"
 
 void CMP316engine::Scene::HandleInput()

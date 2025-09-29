@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "InputManager.h"
-#include <iostream>
 
 CMP316engine::InputManager::InputManager()
 {

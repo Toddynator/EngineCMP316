@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "WindowManager_SDL.h"
 
 bool CMP316engine::WindowManager_SDL::Initialize()
