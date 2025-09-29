@@ -27,6 +27,23 @@
 #include "Model.h"
 #include "Shader.h"
 
+// Jolt Includes
+#include "Jolt/Jolt.h" // Must be included anytime other jolt libraries are included ~ Recommended to be in the precompiled header
+#include <Jolt/RegisterTypes.h>
+#include <Jolt/Core/Factory.h>
+#include <Jolt/Core/TempAllocator.h>
+#include <Jolt/Core/JobSystemThreadPool.h>
+#include <Jolt/Physics/PhysicsSettings.h>
+#include <Jolt/Physics/PhysicsSystem.h>
+#include <Jolt/Physics/Collision/Shape/BoxShape.h>
+#include <Jolt/Physics/Collision/Shape/SphereShape.h>
+#include <Jolt/Physics/Body/BodyCreationSettings.h>
+#include <Jolt/Physics/Body/BodyActivationListener.h>
+//#include <Jolt/Physics/Collision/Shape/ConvexShape.h> // I added this in an attempt to fix a linker issue, not sure if it helps
+// JOLT STL Includes // Probably redundant but playing it safe here.
+#include <iostream>
+#include <cstdarg>
+#include <thread>
 
 
 class EngineLayer

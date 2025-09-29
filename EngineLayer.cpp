@@ -188,6 +188,58 @@ void EngineLayer::Update()
 		audioManager->SetAudioLoop(audioHandle, true);
 	}
 	///
+	
+	/// TEST PHYSICS
+	// We need a temp allocator for temporary allocations during the physics update. We're
+	// pre-allocating 10 MB to avoid having to do allocations during the physics update.
+	// B.t.w. 10 MB is way too much for this example but it is a typical value you can use.
+	// If you don't want to pre-allocate you can also use TempAllocatorMalloc to fall back to
+	// malloc / free.
+	//JPH::TempAllocatorImpl temp_allocator(10 * 1024 * 1024);
+
+	// We need a job system that will execute physics jobs on multiple threads. Typically
+	// you would implement the JobSystem interface yourself and let Jolt Physics run on top
+	// of your own job scheduler. JobSystemThreadPool is an example implementation.
+	//JPH::JobSystemThreadPool job_system(2048, 8, thread::hardware_concurrency() - 1);
+
+	//JPH::PhysicsSystem physics_system;
+	// The main way to interact with the bodies in the physics system is through the body interface. There is a locking and a non-locking
+	// variant of this. We're going to use the locking version (even though we're not planning to access bodies from multiple threads)
+	//JPH::BodyInterface& body_interface = physics_system.GetBodyInterface();
+
+	// Now create a dynamic body to bounce on the floor
+	// Note that this uses the shorthand version of creating and adding a body to the world
+	//JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 2.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
+	//JPH::BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
+	/*
+	// Now you can interact with the dynamic body, in this case we're going to give it a velocity.
+	// (note that if we had used CreateBody then we could have set the velocity straight on the body before adding it to the physics system)
+	body_interface.SetLinearVelocity(sphere_id, JPH::Vec3(0.0f, -5.0f, 0.0f));
+
+	JPH::uint step = 0;
+	while (body_interface.IsActive(sphere_id))
+	{
+		// Next step
+		++step;
+
+		// Output current position and velocity of the sphere
+		JPH::RVec3 position = body_interface.GetCenterOfMassPosition(sphere_id);
+		JPH::Vec3 velocity = body_interface.GetLinearVelocity(sphere_id);
+		cout << "Step " << step << ": Position = (" << position.GetX() << ", " << position.GetY() << ", " << position.GetZ() << "), Velocity = (" << velocity.GetX() << ", " << velocity.GetY() << ", " << velocity.GetZ() << ")" << endl;
+
+		// If you take larger steps than 1 / 60th of a second you need to do multiple collision steps in order to keep the simulation stable. Do 1 collision step per 1 / 60th of a second (round up).
+		const int cCollisionSteps = 1;
+
+		// Step the world
+		//physics_system.Update(timeManager->getDeltaTime(), cCollisionSteps, &temp_allocator, &job_system);
+	}
+
+	// Remove the sphere from the physics system. Note that the sphere itself keeps all of its state and can be re-added at any time.
+	body_interface.RemoveBody(sphere_id);
+
+	// Destroy the sphere. After this the sphere ID is no longer valid.
+	body_interface.DestroyBody(sphere_id);*/
+	//
 }
 
 void EngineLayer::Render()
