@@ -37,9 +37,6 @@
     <Filter Include="Header Files\Managers\Window">
       <UniqueIdentifier>{d6f124d1-16d3-4a1a-b4b3-494f091f0fbd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Managers\Event">
-      <UniqueIdentifier>{61784b7e-0ab7-422b-aa45-603b9184bd02}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Core">
       <UniqueIdentifier>{014840cd-5ecc-4fe4-86c7-f781748c8694}</UniqueIdentifier>
     </Filter>
@@ -57,6 +54,12 @@
     </Filter>
     <Filter Include="Source Files\ResourceLoading">
       <UniqueIdentifier>{6fa71818-9a15-49f7-8078-f5d1c967e494}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Managers\Audio">
+      <UniqueIdentifier>{3186ecd9-3083-4708-a6c0-27bfda585e46}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Managers\Audio">
+      <UniqueIdentifier>{ac3a366f-f61b-42c0-9d91-d814546f7cd7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +146,12 @@
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Source Files\Managers\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager_SoLoud.cpp">
+      <Filter>Source Files\Managers\Audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +244,12 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Header Files\Managers\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager_SoLoud.h">
+      <Filter>Header Files\Managers\Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

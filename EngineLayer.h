@@ -10,6 +10,8 @@
 
 #include "InputManager.h"
 #include "TimeManager.h"
+#include "AudioManager.h"
+#include "AudioManager_SoLoud.h"
 #include "WindowManager.h"
 #include "WindowManager_SDL.h"
 #include "RenderManager.h"
@@ -55,6 +57,7 @@ private:
 	std::unique_ptr<CMP316engine::InputManager> inputManager = nullptr;
 	std::unique_ptr<CMP316engine::TimeManager> timeManager = nullptr;
 	std::unique_ptr<CMP316engine::WindowManager> windowManager = nullptr;
+	std::unique_ptr<CMP316engine::AudioManager> audioManager = nullptr;
 	//std::unique_ptr<CMP316engine::RenderManager> renderManager = nullptr;
 
 	/// Graphics

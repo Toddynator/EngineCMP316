@@ -21,6 +21,12 @@ bool EngineLayer::Initialize()
 
 	inputManager = std::make_unique<CMP316engine::InputManager>();
 
+	/////////////////////
+	/// AUDIO MANAGER ///
+
+	/*audioManager = std::make_unique<CMP316engine::AudioManager_SoLoud>();
+	audioManager->Initialize();*/
+
 	//////////////
 	/// WINDOW ///
 
@@ -77,10 +83,14 @@ bool EngineLayer::Initialize()
 	}
 
 	/// SOUND ///
+
+	// Init audio library
 	SoLoud::result result;
 	result = soloud.init();
 	if (result != 0) { std::cout << "\nAudio Init Error Result: " << result; return false; }
-	std::string audioFilepathString = "C:/UniversityWork/CMP316/EngineCMP316/data/Audio/9 (102 BPM)_Seq02.wav";
+
+	// Load Audio Files
+	std::string audioFilepathString = std::filesystem::current_path().string() + "/data/Audio/9 (102 BPM)_Seq02.wav";
 	result = sample.load(audioFilepathString.c_str());
 	if (result != 0) { std::cout << "\nAudio Wav Load Error Result: " << result; return false; }
 
@@ -187,8 +197,9 @@ void EngineLayer::Update()
 	/// TEST AUDIO
 	if (!audioPlayed) {
 		audioPlayed = true;
-		SoLoud::handle audioHandle = soloud.play(sample);
-		soloud.setLooping(audioHandle, true);
+		/*SoLoud::handle audioHandle = soloud.play(sample);
+		soloud.setLooping(audioHandle, true);*/
+		//audioManager->Play("MyJam");
 	}
 	///
 }
