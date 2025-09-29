@@ -24,8 +24,8 @@ bool EngineLayer::Initialize()
 	/////////////////////
 	/// AUDIO MANAGER ///
 
-	/*audioManager = std::make_unique<CMP316engine::AudioManager_SoLoud>();
-	audioManager->Initialize();*/
+	audioManager = std::make_unique<CMP316engine::AudioManager_SoLoud>();
+	audioManager->Initialize();
 
 	//////////////
 	/// WINDOW ///
@@ -82,18 +82,6 @@ bool EngineLayer::Initialize()
 		return false;
 	}
 
-	/// SOUND ///
-
-	// Init audio library
-	SoLoud::result result;
-	result = soloud.init();
-	if (result != 0) { std::cout << "\nAudio Init Error Result: " << result; return false; }
-
-	// Load Audio Files
-	std::string audioFilepathString = std::filesystem::current_path().string() + "/data/Audio/9 (102 BPM)_Seq02.wav";
-	result = sample.load(audioFilepathString.c_str());
-	if (result != 0) { std::cout << "\nAudio Wav Load Error Result: " << result; return false; }
-
 	return true;
 }
 
@@ -109,8 +97,6 @@ void EngineLayer::Run()
 
 void EngineLayer::Shutdown()
 {
-	soloud.deinit();
-
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
@@ -120,6 +106,7 @@ void EngineLayer::Shutdown()
 	if (model) { model->Shutdown(); }
 	if (renderer) { renderer->Shutdown(); }
 	if (windowManager) { windowManager->Shutdown(); }
+	if (audioManager) { audioManager->Shutdown(); }
 }
 
 bool EngineLayer::processEvents()
@@ -197,9 +184,8 @@ void EngineLayer::Update()
 	/// TEST AUDIO
 	if (!audioPlayed) {
 		audioPlayed = true;
-		/*SoLoud::handle audioHandle = soloud.play(sample);
-		soloud.setLooping(audioHandle, true);*/
-		//audioManager->Play("MyJam");
+		int audioHandle = audioManager->Play("MyJam");
+		audioManager->SetAudioLoop(audioHandle, true);
 	}
 	///
 }

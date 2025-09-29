@@ -23,7 +23,7 @@ namespace CMP316engine {
 		virtual void Seek(int audioHandle, float time) = 0;
 		virtual void SetAudioLoop(int audioHandle, bool loop) = 0;
 		virtual void StopAll() = 0;		
-		// Volume from 0 to 100%
+		// Volume from 0 to 1
 		virtual void SetVolume(int audioHandle, float volume) = 0;
 		virtual float GetVolume(int audioHandle) = 0;
 	};

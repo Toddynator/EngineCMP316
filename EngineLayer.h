@@ -27,9 +27,6 @@
 #include "Model.h"
 #include "Shader.h"
 
-#include "soloud.h"
-#include "soloud_wav.h"
-
 
 
 class EngineLayer
@@ -53,24 +50,25 @@ private:
 private:
 	std::unique_ptr<CMP316engine::Application> application = nullptr; // The actual game
 
-	/// Managers
+	/// MANAGERS
 	std::unique_ptr<CMP316engine::InputManager> inputManager = nullptr;
 	std::unique_ptr<CMP316engine::TimeManager> timeManager = nullptr;
 	std::unique_ptr<CMP316engine::WindowManager> windowManager = nullptr;
 	std::unique_ptr<CMP316engine::AudioManager> audioManager = nullptr;
 	//std::unique_ptr<CMP316engine::RenderManager> renderManager = nullptr;
 
-	/// Graphics
+	/// GRAPHICS
+	// NOTE: Move to Application class?
 	std::unique_ptr<D3DClass> renderer = nullptr;
 	std::unique_ptr<Shader> shader = nullptr;
 
-	/// Scene objects
+	/// SCENE
+	// NOTE: Temp, should be in scene class only
 	std::unique_ptr<Camera> camera = nullptr;
 	std::unique_ptr<CMP316engine::Model> model = nullptr;
 
 	/// SOUND
-	SoLoud::Soloud soloud;
-	SoLoud::Wav sample;
+	// NOTE: Temp, just for testing
 	bool audioPlayed = false;
 
 	bool wireframeEnabled = false;
