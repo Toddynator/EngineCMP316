@@ -1,4 +1,5 @@
 
+#pragma once
 #include <iostream>
 #include <Windows.h>
 #include <filesystem>
@@ -24,9 +25,11 @@
 #include "Model.h"
 #include "Shader.h"
 
-/// WINDOW SETTINGS ///
+#include "soloud.h"
+#include "soloud_wav.h"
 
-#pragma once
+
+
 class EngineLayer
 {
 public:
@@ -61,6 +64,11 @@ private:
 	/// Scene objects
 	std::unique_ptr<Camera> camera = nullptr;
 	std::unique_ptr<CMP316engine::Model> model = nullptr;
+
+	/// SOUND
+	SoLoud::Soloud soloud;
+	SoLoud::Wav sample;
+	bool audioPlayed = false;
 
 	bool wireframeEnabled = false;
 	const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer

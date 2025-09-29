@@ -1,0 +1,37 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeCXXInformation.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeCommonLanguageInclude.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeGenericSystem.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeInitializeConfigs.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeLanguageInformation.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeRCInformation.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeSystemSpecificInformation.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CMakeSystemSpecificInitialize.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/CheckLibraryExists.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Compiler/CMakeCommonCompilerMacros.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Compiler/MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Compiler/MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/FindThreads.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Internal/CheckSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Platform/Windows-MSVC-C.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Platform/Windows-MSVC-CXX.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Platform/Windows-MSVC.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Platform/Windows.cmake
+C:/Program Files/CMake/share/cmake-3.21/Modules/Platform/WindowsPaths.cmake
+C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/3.21.1/CMakeCCompiler.cmake
+C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/3.21.1/CMakeCXXCompiler.cmake
+C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/3.21.1/CMakeRCCompiler.cmake
+C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/3.21.1/CMakeSystem.cmake
+C:/Users/toddy/Downloads/soloud20200207/contrib/CMakeLists.txt
+C:/Users/toddy/Downloads/soloud20200207/contrib/Configure.cmake
+C:/Users/toddy/Downloads/soloud20200207/contrib/cmake/FindSDL2.cmake
+C:/Users/toddy/Downloads/soloud20200207/contrib/cmake/Install.cmake
+C:/Users/toddy/Downloads/soloud20200207/contrib/cmake/InstallExport.cmake
+C:/Users/toddy/Downloads/soloud20200207/contrib/cmake/OptionDependentOnPackage.cmake
+C:/Users/toddy/Downloads/soloud20200207/contrib/cmake/PrintOptionStatus.cmake
+C:/Users/toddy/Downloads/soloud20200207/contrib/src.cmake

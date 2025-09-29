@@ -76,6 +76,14 @@ bool EngineLayer::Initialize()
 		return false;
 	}
 
+	/// SOUND ///
+	SoLoud::result result;
+	result = soloud.init();
+	if (result != 0) { std::cout << "\nAudio Init Error Result: " << result; return false; }
+	std::string audioFilepathString = "C:/UniversityWork/CMP316/EngineCMP316/data/Audio/9 (102 BPM)_Seq02.wav";
+	result = sample.load(audioFilepathString.c_str());
+	if (result != 0) { std::cout << "\nAudio Wav Load Error Result: " << result; return false; }
+
 	return true;
 }
 
@@ -91,6 +99,8 @@ void EngineLayer::Run()
 
 void EngineLayer::Shutdown()
 {
+	soloud.deinit();
+
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
@@ -173,6 +183,13 @@ void EngineLayer::Update()
 	application->HandleInput();
 	application->HandleImgui();
 	application->Update(timeManager->getDeltaTime());
+
+	/// TEST AUDIO
+	if (!audioPlayed) {
+		soloud.play(sample);
+		audioPlayed = true;
+	}
+	///
 }
 
 void EngineLayer::Render()
