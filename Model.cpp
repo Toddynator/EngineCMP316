@@ -1,10 +1,10 @@
 #include "pch.h"
-#include "modelclass.h"
+#include "Model.h"
 #include "OBJ_Loader.h"
 #include "TextureLoader.h"
 #include "imgui.h"
 
-CMP316engine::ModelClass::ModelClass()
+CMP316engine::Model::Model()
 {
 	//vertexBuffer = NULL;
 	//indexBuffer = NULL;
@@ -13,16 +13,16 @@ CMP316engine::ModelClass::ModelClass()
 }
 
 
-CMP316engine::ModelClass::ModelClass(const ModelClass& other)
+CMP316engine::Model::Model(const Model& other)
 {
 }
 
 
-CMP316engine::ModelClass::~ModelClass()
+CMP316engine::Model::~Model()
 {
 }
 
-bool CMP316engine::ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+bool CMP316engine::Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	bool result;
 
@@ -36,7 +36,7 @@ bool CMP316engine::ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceCont
 	return true;
 }
 
-void CMP316engine::ModelClass::Shutdown()
+void CMP316engine::Model::Shutdown()
 {
 	// Release the model texture.
 	ReleaseTexture();
@@ -47,7 +47,7 @@ void CMP316engine::ModelClass::Shutdown()
 	return;
 }
 
-bool CMP316engine::ModelClass::Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+bool CMP316engine::Model::Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
@@ -68,7 +68,7 @@ bool CMP316engine::ModelClass::Render(Shader* shader, ID3D11DeviceContext* devic
 	return true;
 }
 
-int CMP316engine::ModelClass::GetIndexCount()
+int CMP316engine::Model::GetIndexCount()
 {
 	int total = 0;
 	for (auto& mesh : meshes) {
@@ -77,7 +77,7 @@ int CMP316engine::ModelClass::GetIndexCount()
 	return total;
 }
 
-int CMP316engine::ModelClass::GetVertexCount()
+int CMP316engine::Model::GetVertexCount()
 {
 	int total = 0;
 	for (auto& mesh : meshes) {
@@ -86,7 +86,7 @@ int CMP316engine::ModelClass::GetVertexCount()
 	return total;
 }
 
-void CMP316engine::ModelClass::RenderImGuiControls()
+void CMP316engine::Model::RenderImGuiControls()
 {	
 	if (ImGui::InputFloat3("Position", &position.x))
 	{
@@ -95,7 +95,7 @@ void CMP316engine::ModelClass::RenderImGuiControls()
 		worldMatrix = translationMatrix * rotationMatrix;
 	}
 
-	if (ImGui::InputFloat3("Rotation", &rotation.x))
+	if (ImGui::SliderFloat3("Rotation", &rotation.x, 0, 6.3))
 	{
 		XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
 		XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
@@ -103,7 +103,7 @@ void CMP316engine::ModelClass::RenderImGuiControls()
 	}
 }
 
-bool CMP316engine::ModelClass::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+bool CMP316engine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	/*
 	NOTE: Currently hard coded to draw a specific model, should instead have this handled by derived classes or a file model loader
@@ -178,7 +178,7 @@ bool CMP316engine::ModelClass::generateVerticesAndIndices(ID3D11Device* device, 
 	return true;
 }
 
-bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
+bool CMP316engine::Model::InitializeBuffers(ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
@@ -251,7 +251,7 @@ bool CMP316engine::ModelClass::InitializeBuffers(ID3D11Device* device)
 	return true;
 }
 
-void CMP316engine::ModelClass::ShutdownBuffers()
+void CMP316engine::Model::ShutdownBuffers()
 {
 	// Release the index buffer.
 	if (indexBuffer)
@@ -270,7 +270,7 @@ void CMP316engine::ModelClass::ShutdownBuffers()
 	return;
 }
 
-void CMP316engine::ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void CMP316engine::Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	/*
 	Purpose of the function is to set the vertex and index buffer as active on the input assembler in the GPU.
@@ -297,7 +297,7 @@ void CMP316engine::ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-void CMP316engine::ModelClass::ReleaseTexture()
+void CMP316engine::Model::ReleaseTexture()
 {
 	// Release the texture objects.
 	for (auto& [key,texture] : textures)
@@ -308,7 +308,7 @@ void CMP316engine::ModelClass::ReleaseTexture()
 	return;
 }
 
-bool CMP316engine::ModelClass::loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath)
+bool CMP316engine::Model::loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath)
 {
 	meshes.clear();
 	textures.clear();

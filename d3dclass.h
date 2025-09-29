@@ -37,6 +37,7 @@ public:
     void SetBackBufferRenderTarget();
     void ResetViewport();
     void HandleWindowResize(int width, int height, float screenNear, float screenDepth);
+    void ToggleWireframe();
 
 private:
     bool initializeDeviceAndSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
@@ -50,6 +51,10 @@ private:
 	XMMATRIX projectionMatrix;
 	XMMATRIX orthoMatrix;
 
+    ID3D11RasterizerState* wireframeRasterizer = nullptr;
+    ID3D11RasterizerState* solidFillRasterizer = nullptr;
+
+    bool wireFrameEnabled = false;
     bool vsyncEnabled = false;
     int videoCardMemory;
     char videoCardDescription[128];
@@ -60,7 +65,6 @@ private:
     ID3D11Texture2D* depthStencilBuffer = nullptr;
     ID3D11DepthStencilState* depthStencilState = nullptr;
     ID3D11DepthStencilView* depthStencilView = nullptr;
-    ID3D11RasterizerState* rasterState = nullptr;
     D3D11_VIEWPORT viewport;
 };
 

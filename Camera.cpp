@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "cameraclass.h"
+#include "Camera.h"
 
-CameraClass::CameraClass()
+Camera::Camera()
 {
 	// Initialize the camera to the origin of the scene.
 
@@ -15,16 +15,16 @@ CameraClass::CameraClass()
 }
 
 
-CameraClass::CameraClass(const CameraClass& other)
+Camera::Camera(const Camera& other)
 {
 }
 
 
-CameraClass::~CameraClass()
+Camera::~Camera()
 {
 }
 
-void CameraClass::SetPosition(float x, float y, float z)
+void Camera::SetPosition(float x, float y, float z)
 {
 	positionX = x;
 	positionY = y;
@@ -33,7 +33,7 @@ void CameraClass::SetPosition(float x, float y, float z)
 }
 
 
-void CameraClass::SetRotation(float x, float y, float z)
+void Camera::SetRotation(float x, float y, float z)
 {
 	rotationX = x;
 	rotationY = y;
@@ -41,18 +41,18 @@ void CameraClass::SetRotation(float x, float y, float z)
 	return;
 }
 
-XMFLOAT3 CameraClass::GetPosition()
+XMFLOAT3 Camera::GetPosition()
 {
 	return XMFLOAT3(positionX, positionY, positionZ);
 }
 
 
-XMFLOAT3 CameraClass::GetRotation()
+XMFLOAT3 Camera::GetRotation()
 {
 	return XMFLOAT3(rotationX, rotationY, rotationZ);
 }
 
-void CameraClass::Render()
+void Camera::Render()
 {
 	/*
 	Builds and updates the view matrix.
@@ -109,7 +109,7 @@ void CameraClass::Render()
 	return;
 }
 
-XMMATRIX CameraClass::GetViewMatrix()
+XMMATRIX Camera::GetViewMatrix()
 {
 	return viewMatrix;
 }

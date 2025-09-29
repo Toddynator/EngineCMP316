@@ -8,12 +8,12 @@ This class will store the position and rotation of the camera, and generate a vi
 #include <directxmath.h>
 using namespace DirectX;
 
-class CameraClass
+class Camera
 {
 public:
-	CameraClass();
-	CameraClass(const CameraClass&);
-	~CameraClass();
+	Camera();
+	Camera(const Camera&);
+	~Camera();
 
 	void SetPosition(float, float, float);
 	void SetRotation(float, float, float);

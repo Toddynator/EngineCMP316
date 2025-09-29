@@ -20,8 +20,8 @@
 #include "ImGui/imgui_impl_dx11.h"
 
 #include "d3dclass.h" // RENDERER
-#include "cameraclass.h"
-#include "modelclass.h"
+#include "Camera.h"
+#include "Model.h"
 #include "Shader.h"
 
 /// WINDOW SETTINGS ///
@@ -59,9 +59,10 @@ private:
 	std::unique_ptr<Shader> shader = nullptr;
 
 	/// Scene objects
-	std::unique_ptr<CameraClass> camera = nullptr;
-	std::unique_ptr<CMP316engine::ModelClass> model = nullptr;
+	std::unique_ptr<Camera> camera = nullptr;
+	std::unique_ptr<CMP316engine::Model> model = nullptr;
 
+	bool wireframeEnabled = false;
 	const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
 	const float SCREEN_DEPTH = 1000.0f;
 	const float SCREEN_NEAR = 0.3f;

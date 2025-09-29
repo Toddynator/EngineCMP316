@@ -10,14 +10,14 @@ using namespace DirectX;
 #include <unordered_map>
 
 namespace CMP316engine {
-	class ModelClass
+	class Model
 	{
 	private:
 
 	public:
-		ModelClass();
-		ModelClass(const ModelClass&);
-		~ModelClass();
+		Model();
+		Model(const Model&);
+		~Model();
 
 		bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 		void Shutdown();

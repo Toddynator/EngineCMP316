@@ -32,6 +32,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
 	/// RASTERIZER ///
 	// Notably Dx11 has a default implementation, but implementing it myself gives more control.
+	// Defines fill mode, e.g. wireframe or solid faces, also culling (Removing back face, etc).
 	if (!initializeRasterizer()) { return false; }
 	
 	/// VIEWPORT ///
@@ -52,12 +53,6 @@ void D3DClass::Shutdown()
 	if (swapChain)
 	{
 		swapChain->SetFullscreenState(false, NULL);
-	}
-
-	if (rasterState)
-	{
-		rasterState->Release();
-		rasterState = 0;
 	}
 
 	if (depthStencilView)
@@ -100,6 +95,18 @@ void D3DClass::Shutdown()
 	{
 		swapChain->Release();
 		swapChain = 0;
+	}
+
+	if (wireframeRasterizer)
+	{
+		wireframeRasterizer->Release();
+		wireframeRasterizer = NULL;
+	}
+
+	if (solidFillRasterizer)
+	{
+		solidFillRasterizer->Release();
+		solidFillRasterizer = NULL;
 	}
 
 	return;
@@ -244,6 +251,18 @@ void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear,
 
 		// Update the projection matrix otherwise the scene will be stretched.
 		projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+	}
+}
+
+void D3DClass::ToggleWireframe()
+{	
+	wireFrameEnabled = !wireFrameEnabled;
+	if (wireFrameEnabled)
+	{
+		deviceContext->RSSetState(wireframeRasterizer);
+	}
+	else {
+		deviceContext->RSSetState(solidFillRasterizer);
 	}
 }
 
@@ -540,21 +559,35 @@ bool D3DClass::initializeRasterizer()
 	rasterizerDescription.DepthBias = 0;
 	rasterizerDescription.DepthBiasClamp = 0.0f;
 	rasterizerDescription.DepthClipEnable = true;
-	rasterizerDescription.FillMode = D3D11_FILL_SOLID;
+	rasterizerDescription.FillMode = D3D11_FILL_SOLID; //D3D11_FILL_WIREFRAME
 	rasterizerDescription.FrontCounterClockwise = false;
 	rasterizerDescription.MultisampleEnable = false;
 	rasterizerDescription.ScissorEnable = false;
 	rasterizerDescription.SlopeScaledDepthBias = 0.0f;
 
+	/// SOLID FILL
+
 	// Create the rasterizer state from the description we just filled out.
-	HRESULT result = device->CreateRasterizerState(&rasterizerDescription, &rasterState);
+	HRESULT result = device->CreateRasterizerState(&rasterizerDescription, &solidFillRasterizer);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
+	/// WIREFRAME 
+
+	rasterizerDescription.FillMode = D3D11_FILL_WIREFRAME;
+
+	result = device->CreateRasterizerState(&rasterizerDescription, &wireframeRasterizer);
+	if (FAILED(result))
+	{
+		return false;
+	}
+
+	/// STARTING STATE
+
 	// Now set the rasterizer state.
-	deviceContext->RSSetState(rasterState);
+	deviceContext->RSSetState(solidFillRasterizer);
 
 	return true;
 }

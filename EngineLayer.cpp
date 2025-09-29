@@ -63,12 +63,12 @@ bool EngineLayer::Initialize()
 	}
 
 	// Create the camera object.
-	camera = std::make_unique<CameraClass>();
+	camera = std::make_unique<Camera>();
 	// Set the initial position of the camera.
 	camera->SetPosition(0.0f, 0.0f, -5.0f);
 
 	// Create and initialize the model object.
-	model = std::make_unique<CMP316engine::ModelClass>();
+	model = std::make_unique<CMP316engine::Model>();
 
 	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext()))
 	{
@@ -160,6 +160,10 @@ void EngineLayer::Update()
 
 	// TEST
 	ImGui::Begin("Testing");
+	if (ImGui::Checkbox("Wireframe", &wireframeEnabled))
+	{
+		renderer->ToggleWireframe();
+	}
 	model->RenderImGuiControls();
 	ImGui::End();
 	// TEST
