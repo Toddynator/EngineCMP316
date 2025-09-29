@@ -1,15 +1,15 @@
 #include "pch.h"
 #include "d3dclass.h"
 
+
+
 D3DClass::D3DClass()
 {
 }
 
-
 D3DClass::D3DClass(const D3DClass& other)
 {
 }
-
 
 D3DClass::~D3DClass()
 {
@@ -209,48 +209,31 @@ void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear,
 
 	if (swapChain)
 	{
-		deviceContext->OMSetRenderTargets(0, 0, 0);
+		HRESULT result;
 
+		deviceContext->OMSetRenderTargets(0, 0, 0);
 		// Release all outstanding references to the swap chain's buffers.
 		renderTargetView->Release();
-
-		HRESULT hr;
+		
 		// Preserve the existing buffer count and format.
 		// Automatically choose the width and height to match the client rect for HWNDs.
-		hr = swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_UNKNOWN, 0);
-
-		// Perform error handling here!
+		result = swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 
 		// Get buffer and create a render-target-view.
 		ID3D11Texture2D* pBuffer;
-		hr = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+		result = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
 			(void**)&pBuffer);
-		// Perform error handling here!
-
-		hr = device->CreateRenderTargetView(pBuffer, NULL,
-			&renderTargetView);
-		// Perform error handling here!
+		result = device->CreateRenderTargetView(pBuffer, NULL, &renderTargetView);
 		pBuffer->Release();
 
-		deviceContext->OMSetRenderTargets(1, &renderTargetView, NULL);
-
+		initializeDepthBuffer(newWidth, newHeight); // Need to resize the depth buffer
+		initializeDepthStencil(); // Depth stencil uses the resized depth buffer, so reinitialize this as well!
+		// Bind Render Target View to the pipeline
+		SetBackBufferRenderTarget();
 		// Set up the viewport.
-		D3D11_VIEWPORT vp;
-		vp.Width = static_cast<float>(newWidth);
-		vp.Height = static_cast<float>(newHeight);
-		vp.MinDepth = 0.0f;
-		vp.MaxDepth = 1.0f;
-		vp.TopLeftX = 0;
-		vp.TopLeftY = 0;
-		deviceContext->RSSetViewports(1, &vp);
-
-		/// UPDATE PROJECTION MATRIX
-
-		float screenAspect = static_cast<float>(newWidth) / static_cast<float>(newHeight);
-		float fieldOfView = 3.141592654f / 4.0f;
-
-		// Update the projection matrix otherwise the scene will be stretched.
-		projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
+		initializeViewport(newWidth, newHeight);
+		// Update Projection Matrix
+		initializeMatrices(newWidth, newHeight, screenDepth, screenNear);
 	}
 }
 
@@ -444,14 +427,12 @@ bool D3DClass::initializeDeviceAndSwapChain(int screenWidth, int screenHeight, H
 	{
 		return false;
 	}
-
 	// Create the render target view with the back buffer pointer.
 	result = device->CreateRenderTargetView(backBufferPtr, NULL, &renderTargetView);
 	if (FAILED(result))
 	{
 		return false;
 	}
-
 	// Release pointer to the back buffer as we no longer need it.
 	backBufferPtr->Release();
 	backBufferPtr = 0;
