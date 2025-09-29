@@ -37,9 +37,6 @@
     <Filter Include="Header Files\Managers\Window">
       <UniqueIdentifier>{d6f124d1-16d3-4a1a-b4b3-494f091f0fbd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Managers\Event">
-      <UniqueIdentifier>{5a87f5d9-e12f-47f9-a01b-5cba5a151a25}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Managers\Event">
       <UniqueIdentifier>{61784b7e-0ab7-422b-aa45-603b9184bd02}</UniqueIdentifier>
     </Filter>
@@ -107,12 +104,6 @@
     </ClCompile>
     <ClCompile Include="Manager.cpp">
       <Filter>Source Files\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>Source Files\Managers\Event</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager_SDL.cpp">
-      <Filter>Source Files\Managers\Event</Filter>
     </ClCompile>
     <ClCompile Include="WindowManager.cpp">
       <Filter>Source Files\Managers\Window</Filter>
@@ -199,12 +190,6 @@
     </ClInclude>
     <ClInclude Include="Manager.h">
       <Filter>Header Files\Managers</Filter>
-    </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>Header Files\Managers\Event</Filter>
-    </ClInclude>
-    <ClInclude Include="EventManager_SDL.h">
-      <Filter>Header Files\Managers\Event</Filter>
     </ClInclude>
     <ClInclude Include="WindowManager.h">
       <Filter>Header Files\Managers\Window</Filter>

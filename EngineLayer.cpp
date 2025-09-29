@@ -11,12 +11,6 @@ bool EngineLayer::Initialize()
 	if (!application->Initialize()) { return false; }
 
 	/////////////////////
-	/// EVENT MANAGER ///
-
-	eventManager = std::make_unique<CMP316engine::EventManager_SDL>();
-	eventManager->Initialize();
-
-	/////////////////////
 	/// TIME MANAGGER ///
 
 	timeManager = std::make_unique<CMP316engine::TimeManager>();

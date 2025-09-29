@@ -41,6 +41,9 @@ NOTES:
 - Rendering is handled by DirectX11, currently HIGHLY COUPLED and as a result the engine can only support windows at the moment.
 
 ================================================================
+- Engine does not need to abstract SDL for events or windows, I can use SDL types directly. SDL already is an abstraction layer.
+- Renderer should ideally be abstracted. The directx math library types I can keep using but renderer specific stuff like shader texture view I should abstract.
+- My engine does not need to be multi-platform, I don't need any implementations for other platforms, but I should abstract stuff like the renderer anyway to have a good system architecture which technically then allows for the possibility of multi-platform.
 */
 
 ///

@@ -9,8 +9,6 @@
 
 #include "InputManager.h"
 #include "TimeManager.h"
-#include "EventManager.h"
-#include "EventManager_SDL.h"
 #include "WindowManager.h"
 #include "WindowManager_SDL.h"
 #include "RenderManager.h"
@@ -53,7 +51,6 @@ private:
 	/// Managers
 	std::unique_ptr<CMP316engine::InputManager> inputManager = nullptr;
 	std::unique_ptr<CMP316engine::TimeManager> timeManager = nullptr;
-	std::unique_ptr<CMP316engine::EventManager> eventManager = nullptr;
 	std::unique_ptr<CMP316engine::WindowManager> windowManager = nullptr;
 	//std::unique_ptr<CMP316engine::RenderManager> renderManager = nullptr;
 

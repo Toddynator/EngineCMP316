@@ -141,8 +141,6 @@
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="EngineLayer.cpp" />
-    <ClCompile Include="EventManager.cpp" />
-    <ClCompile Include="EventManager_SDL.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
@@ -177,8 +175,6 @@
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="EngineLayer.h" />
-    <ClInclude Include="EventManager.h" />
-    <ClInclude Include="EventManager_SDL.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
