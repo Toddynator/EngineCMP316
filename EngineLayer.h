@@ -84,9 +84,10 @@ private:
 	std::unique_ptr<Camera> camera = nullptr;
 	std::unique_ptr<CMP316engine::Model> model = nullptr;
 
-	/// SOUND
+	/// TESTING VARIABLES
 	// NOTE: Temp, just for testing
 	bool audioPlayed = false;
+	bool physicsTested = false;
 
 	bool wireframeEnabled = false;
 	const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
