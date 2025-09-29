@@ -186,8 +186,9 @@ void EngineLayer::Update()
 
 	/// TEST AUDIO
 	if (!audioPlayed) {
-		soloud.play(sample);
 		audioPlayed = true;
+		SoLoud::handle audioHandle = soloud.play(sample);
+		soloud.setLooping(audioHandle, true);
 	}
 	///
 }
