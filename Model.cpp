@@ -49,6 +49,12 @@ void CMP316engine::Model::Shutdown()
 
 bool CMP316engine::Model::Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
+	/// TEMP UPDATE TRANSFORMS
+	XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	worldMatrix = rotationMatrix * translationMatrix;
+	/// TEMP
+
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
 
@@ -92,14 +98,14 @@ void CMP316engine::Model::RenderImGuiControls()
 	{
 		XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
 		XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x,rotation.y,rotation.z);
-		worldMatrix = translationMatrix * rotationMatrix;
+		worldMatrix = rotationMatrix * translationMatrix;
 	}
 
 	if (ImGui::SliderFloat3("Rotation", &rotation.x, 0, 6.3))
 	{
 		XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
 		XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
-		worldMatrix = translationMatrix * rotationMatrix;
+		worldMatrix = rotationMatrix * translationMatrix;
 	}
 }
 
@@ -129,7 +135,7 @@ bool CMP316engine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D1
 
 	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, -1.0f, 2.0f);
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
-	worldMatrix = translationMatrix * rotationMatrix;
+	worldMatrix = rotationMatrix * translationMatrix;
 	///
 
 	/* //// MANUALLY DEFINING THE MODEL

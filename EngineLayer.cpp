@@ -41,6 +41,12 @@ bool EngineLayer::Initialize()
 		return false;
 	}
 
+	///////////////
+	/// PHYSICS ///
+
+	physicsManager = std::make_unique<CMP316engine::PhysicsManager>();
+	physicsManager->Initialize();
+
 	/////////////
 	/// IMGUI ///
 
@@ -82,6 +88,18 @@ bool EngineLayer::Initialize()
 		return false;
 	}
 
+
+	/// PHYSICS TEST ///
+	// We'll just associate this with our model for now
+	JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
+	modelPhysicsBodyID = physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
+	physicsManager->GetBodyInterface().SetLinearVelocity(modelPhysicsBodyID, JPH::Vec3(0.1f, 0.1f, 0.0f));
+
+	JPH::RVec3 position = physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
+	JPH::Vec3 velocity = physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
+	///
+
+
 	return true;
 }
 
@@ -101,6 +119,7 @@ void EngineLayer::Shutdown()
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
 
+	if (physicsManager) { physicsManager->Shutdown(); }
 	if (application) { application->Shutdown(); }
 	if (shader) { shader->Shutdown(); }
 	if (model) { model->Shutdown(); }
@@ -181,128 +200,22 @@ void EngineLayer::Update()
 	application->HandleImgui();
 	application->Update(timeManager->getDeltaTime());
 
-	/// TEST AUDIO
+	/// AUDIO TEST
 	if (!audioPlayed) {
 		audioPlayed = true;
 		int audioHandle = audioManager->Play("MyJam");
 		audioManager->SetAudioLoop(audioHandle, true);
 	}
 	///
-	
-	/// TEST PHYSICS
-	// copy and pasted stuff from Jolt's HelloWorld.cpp, see if it runs
-	if (!physicsTested)
-	{
-		physicsTested = true;
 
-		// Register allocation hook. In this example we'll just let Jolt use malloc / free but you can override these if you want (see Memory.h).
-		// This needs to be done before any other Jolt function is called.
-		JPH::RegisterDefaultAllocator();
+	/// PHYSICS TEST
 
-		// Create a factory, this class is responsible for creating instances of classes based on their name or hash and is mainly used for deserialization of saved data.
-		// It is not directly used in this example but still required.
-		JPH::Factory::sInstance = new JPH::Factory();
-		
-		// Register all physics types with the factory and install their collision handlers with the CollisionDispatch class.
-		// If you have your own custom shape types you probably need to register their handlers with the CollisionDispatch before calling this function.
-		// If you implement your own default material (PhysicsMaterial::sDefault) make sure to initialize it before this function or else this function will create one for you.
-		JPH::RegisterTypes();
-		
-		// We need a temp allocator for temporary allocations during the physics update. We're
-		// pre-allocating 10 MB to avoid having to do allocations during the physics update.
-		// B.t.w. 10 MB is way too much for this example but it is a typical value you can use.
-		// If you don't want to pre-allocate you can also use TempAllocatorMalloc to fall back to
-		// malloc / free.
-		JPH::TempAllocatorImpl temp_allocator(10 * 1024 * 1024);
+	physicsManager->Update(timeManager->getDeltaTime());
+	JPH::RVec3 position = physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
+	JPH::Vec3 velocity = physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
+	model->SetPosition(XMFLOAT3(position.GetX(), position.GetY(), position.GetZ()));
 
-		// We need a job system that will execute physics jobs on multiple threads. Typically
-		// you would implement the JobSystem interface yourself and let Jolt Physics run on top
-		// of your own job scheduler. JobSystemThreadPool is an example implementation.
-		JPH::JobSystemThreadPool job_system(2048, 8, thread::hardware_concurrency() - 1);
-
-		// This is the max amount of rigid bodies that you can add to the physics system. If you try to add more you'll get an error.
-	// Note: This value is low because this is a simple test. For a real project use something in the order of 65536.
-		const JPH::uint cMaxBodies = 1024;
-
-		// This determines how many mutexes to allocate to protect rigid bodies from concurrent access. Set it to 0 for the default settings.
-		const JPH::uint cNumBodyMutexes = 0;
-
-		// This is the max amount of body pairs that can be queued at any time (the broad phase will detect overlapping
-		// body pairs based on their bounding boxes and will insert them into a queue for the narrowphase). If you make this buffer
-		// too small the queue will fill up and the broad phase jobs will start to do narrow phase work. This is slightly less efficient.
-		// Note: This value is low because this is a simple test. For a real project use something in the order of 65536.
-		const JPH::uint cMaxBodyPairs = 1024;
-
-		// This is the maximum size of the contact constraint buffer. If more contacts (collisions between bodies) are detected than this
-		// number then these contacts will be ignored and bodies will start interpenetrating / fall through the world.
-		// Note: This value is low because this is a simple test. For a real project use something in the order of 10240.
-		const JPH::uint cMaxContactConstraints = 1024;
-
-		// Create mapping table from object layer to broadphase layer
-		// Note: As this is an interface, PhysicsSystem will take a reference to this so this instance needs to stay alive!
-		// Also have a look at BroadPhaseLayerInterfaceTable or BroadPhaseLayerInterfaceMask for a simpler interface.
-		BPLayerInterfaceImpl broad_phase_layer_interface; // NOTE:: I HAVE TO IMPLEMENT THIS, NOT JOLT
-
-		// Create class that filters object vs broadphase layers
-		// Note: As this is an interface, PhysicsSystem will take a reference to this so this instance needs to stay alive!
-		// Also have a look at ObjectVsBroadPhaseLayerFilterTable or ObjectVsBroadPhaseLayerFilterMask for a simpler interface.
-		ObjectVsBroadPhaseLayerFilterImpl object_vs_broadphase_layer_filter; // NOTE:: I HAVE TO IMPLEMENT THIS, NOT JOLT
-
-		// Create class that filters object vs object layers
-		// Note: As this is an interface, PhysicsSystem will take a reference to this so this instance needs to stay alive!
-		// Also have a look at ObjectLayerPairFilterTable or ObjectLayerPairFilterMask for a simpler interface.
-		ObjectLayerPairFilterImpl object_vs_object_layer_filter; // NOTE:: I HAVE TO IMPLEMENT THIS, NOT JOLT
-
-		JPH::PhysicsSystem physics_system;
-		physics_system.Init(1024, 0, 1024, 1024, broad_phase_layer_interface, object_vs_broadphase_layer_filter, object_vs_object_layer_filter);
-		
-		// The main way to interact with the bodies in the physics system is through the body interface. There is a locking and a non-locking
-		// variant of this. We're going to use the locking version (even though we're not planning to access bodies from multiple threads)
-		JPH::BodyInterface& body_interface = physics_system.GetBodyInterface();
-
-		// Now create a dynamic body to bounce on the floor
-		// Note that this uses the shorthand version of creating and adding a body to the world
-		JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 2.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
-		JPH::BodyID sphere_id = body_interface.CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
-
-		// Now you can interact with the dynamic body, in this case we're going to give it a velocity.
-		// (note that if we had used CreateBody then we could have set the velocity straight on the body before adding it to the physics system)
-		body_interface.SetLinearVelocity(sphere_id, JPH::Vec3(0.0f, -5.0f, 0.0f));
-
-		/*
-		JPH::uint step = 0;
-		while (body_interface.IsActive(sphere_id))
-		{
-			// Next step
-			++step;
-
-			// Output current position and velocity of the sphere
-			JPH::RVec3 position = body_interface.GetCenterOfMassPosition(sphere_id);
-			JPH::Vec3 velocity = body_interface.GetLinearVelocity(sphere_id);
-			cout << "Step " << step << ": Position = (" << position.GetX() << ", " << position.GetY() << ", " << position.GetZ() << "), Velocity = (" << velocity.GetX() << ", " << velocity.GetY() << ", " << velocity.GetZ() << ")" << endl;
-
-			// If you take larger steps than 1 / 60th of a second you need to do multiple collision steps in order to keep the simulation stable. Do 1 collision step per 1 / 60th of a second (round up).
-			const int cCollisionSteps = 1;
-
-			// Step the world
-			physics_system.Update(timeManager->getDeltaTime(), cCollisionSteps, &temp_allocator, &job_system);
-		}
-		*/
-
-		// Remove the sphere from the physics system. Note that the sphere itself keeps all of its state and can be re-added at any time.
-		body_interface.RemoveBody(sphere_id);
-
-		// Destroy the sphere. After this the sphere ID is no longer valid.
-		body_interface.DestroyBody(sphere_id);
-		
-		// Unregisters all types with the factory and cleans up the default material
-		JPH::UnregisterTypes();
-
-		// Destroy the factory
-		delete JPH::Factory::sInstance;
-		JPH::Factory::sInstance = nullptr;
-	}
-	//
+	///
 }
 
 void EngineLayer::Render()

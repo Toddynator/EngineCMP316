@@ -23,13 +23,12 @@ namespace CMP316engine {
 		void Shutdown();
 		// Puts the model geometry onto the video card to prepare for drawing then draws using the shader.
 		bool Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
+		void RenderImGuiControls();
 
 		int GetIndexCount();
 		int GetVertexCount();
-
 		XMMATRIX GetWorldMatrix() { return worldMatrix; }
-
-		void RenderImGuiControls();
+		void SetPosition(XMFLOAT3 newPosition) { position = newPosition; }
 
 	private:
 		bool generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
