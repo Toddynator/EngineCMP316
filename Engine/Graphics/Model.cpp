@@ -109,14 +109,14 @@ bool CMP316engine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D1
 	// TODO: Should have this handled by an assetManager later
 	char textureFilepath[128];
 	std::filesystem::path filepath = std::filesystem::current_path();
-	std::string assetFilepath = filepath.string() + "/data/stone01.tga";
+	std::string assetFilepath = filepath.string() + "/data/Textures/stone01.tga";
 	strcpy_s(textureFilepath, assetFilepath.c_str());
 	Texture* defaultTexture = TextureLoader::LoadTexture(textureFilepath, device, deviceContext);
 	textures.insert({ "", defaultTexture });
 	///
 
 	//loadModel("data/box_stack.obj");
-	if (!loadModel(device, deviceContext, "data/Dug/Dug.obj")) { return false; }
+	if (!loadModel(device, deviceContext, "data/Models/Dug/Dug.obj")) { return false; }
 
 	/// TEST TRANSFORMS ///
 	calculateWorldMatrix();

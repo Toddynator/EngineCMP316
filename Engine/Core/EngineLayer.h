@@ -8,28 +8,27 @@
 #include <filesystem>
 #include <memory.h>
 
-#include "Core/Application.h"
-#include "TempApplication.h"
+#include "Application.h"
 
-#include "Managers/InputManager.h"
-#include "Managers/TimeManager.h"
-#include "Managers/AudioManager.h"
-#include "Managers/AudioManager_SoLoud.h"
-#include "Managers/WindowManager.h"
-#include "Managers/WindowManager_SDL.h"
-#include "Managers/RenderManager.h"
-#include "Managers/PhysicsManager.h"
+#include "../Managers/InputManager.h"
+#include "../Managers/TimeManager.h"
+#include "../Managers/AudioManager.h"
+#include "../Managers/AudioManager_SoLoud.h"
+#include "../Managers/WindowManager.h"
+#include "../Managers/WindowManager_SDL.h"
+#include "../Managers/RenderManager.h"
+#include "../Managers/PhysicsManager.h"
 
 #include <SDL3/SDL.h>
 
 #include <ImGui.h>
-#include "ImGui/imgui_impl_sdl3.h"
-#include "ImGui/imgui_impl_dx11.h"
+#include "../ImGui/imgui_impl_sdl3.h"
+#include "../ImGui/imgui_impl_dx11.h"
 
-#include "Graphics/Renderer_DirectX11.h" // RENDERER
-#include "Graphics/Camera.h"
-#include "Graphics/Model.h"
-#include "Graphics/Shader.h"
+#include "../Graphics/Renderer_DirectX11.h" // RENDERER
+#include "../Graphics/Camera.h"
+#include "../Graphics/Model.h"
+#include "../Graphics/Shader.h"
 
 
 

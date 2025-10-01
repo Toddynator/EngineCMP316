@@ -102,10 +102,10 @@
     <ClCompile Include="Engine\Managers\WindowManager_SDL.cpp">
       <Filter>Source Files\Managers\Window</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EngineLayer.cpp">
+    <ClCompile Include="Engine\Core\EngineLayer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\main.cpp">
+    <ClCompile Include="Engine\Core\main.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Core\Application.cpp">
@@ -117,14 +117,8 @@
     <ClCompile Include="Engine\Managers\AssetManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\TempApplication.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Core\Scene.cpp">
       <Filter>Source Files\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\TestScene.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Mesh.cpp">
       <Filter>Source Files\Graphics</Filter>
@@ -191,7 +185,7 @@
     <ClInclude Include="Engine\Managers\WindowManager_SDL.h">
       <Filter>Header Files\Managers\Window</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EngineLayer.h">
+    <ClInclude Include="Engine\Core\EngineLayer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Core\Application.h">
@@ -203,14 +197,8 @@
     <ClInclude Include="Engine\Managers\AssetManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\TempApplication.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Core\Scene.h">
       <Filter>Header Files\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\TestScene.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Mesh.h">
       <Filter>Header Files\Graphics</Filter>

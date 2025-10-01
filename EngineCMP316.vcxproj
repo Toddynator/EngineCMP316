@@ -188,10 +188,10 @@
     <ClCompile Include="Engine\ImGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_impl_sdl3.cpp" />
     <ClCompile Include="Engine\Graphics\Renderer_DirectX11.cpp" />
-    <ClCompile Include="Engine\EngineLayer.cpp" />
+    <ClCompile Include="Engine\Core\EngineLayer.cpp" />
     <ClCompile Include="Engine\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Managers\InputManager.cpp" />
-    <ClCompile Include="Engine\main.cpp" />
+    <ClCompile Include="Engine\Core\main.cpp" />
     <ClCompile Include="Engine\Managers\Manager.cpp" />
     <ClCompile Include="Engine\Graphics\Mesh.cpp" />
     <ClCompile Include="Engine\Graphics\Model.cpp" />
@@ -202,8 +202,6 @@
     <ClCompile Include="Engine\Managers\PhysicsManager.cpp" />
     <ClCompile Include="Engine\Managers\RenderManager.cpp" />
     <ClCompile Include="Engine\Core\Scene.cpp" />
-    <ClCompile Include="Engine\TempApplication.cpp" />
-    <ClCompile Include="Engine\TestScene.cpp" />
     <ClCompile Include="Engine\Graphics\Texture.cpp" />
     <ClCompile Include="Engine\Graphics\Shader.cpp" />
     <ClCompile Include="Engine\ResourceLoading\TextureLoader.cpp" />
@@ -222,7 +220,7 @@
     <ClInclude Include="Engine\ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="Engine\ImGui\imgui_impl_sdl3.h" />
     <ClInclude Include="Engine\Graphics\Renderer_DirectX11.h" />
-    <ClInclude Include="Engine\EngineLayer.h" />
+    <ClInclude Include="Engine\Core\EngineLayer.h" />
     <ClInclude Include="Engine\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Managers\InputManager.h" />
     <ClInclude Include="Engine\Managers\Manager.h" />
@@ -234,8 +232,6 @@
     <ClInclude Include="Engine\Managers\RenderManager.h" />
     <ClInclude Include="Engine\Core\Scene.h" />
     <ClInclude Include="Engine\ResourceLoading\stb_image.h" />
-    <ClInclude Include="Engine\TempApplication.h" />
-    <ClInclude Include="Engine\TestScene.h" />
     <ClInclude Include="Engine\Graphics\Texture.h" />
     <ClInclude Include="Engine\Graphics\Shader.h" />
     <ClInclude Include="Engine\ResourceLoading\TextureLoader.h" />
