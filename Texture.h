@@ -15,19 +15,19 @@ class Texture
 {
 	friend class TextureLoader; // Let textureLoader set the Texture up
 public:
-	Texture() {};
+	Texture() = default;
 	~Texture() = default;
 
 	void Shutdown();
 
 	ID3D11ShaderResourceView* GetTextureView() { return textureView; }
-	int GetWidth() { return width; }
-	int GetHeight() { return height; }
+	int GetWidth() const { return width; }
+	int GetHeight() const { return height; }
 
 private:
-	int width;
-	int height;
-	unsigned char* pixels; // The raw data from the loaded texture
-	ID3D11Texture2D* texture; // The structured data that the renderer will use.
-	ID3D11ShaderResourceView* textureView; // What the shader will use to access the texture when drawing.
+	int width = 0;
+	int height = 0;
+	unsigned char* pixels = nullptr; // The raw data from the loaded texture
+	ID3D11Texture2D* texture = nullptr; // The structured data that the renderer will use.
+	ID3D11ShaderResourceView* textureView = nullptr; // What the shader will use to access the texture when drawing.
 };

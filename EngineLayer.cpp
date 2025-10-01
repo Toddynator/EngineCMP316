@@ -250,7 +250,7 @@ void EngineLayer::Render()
 
 bool EngineLayer::createRenderer(HWND hwnd)
 {
-	renderer = std::make_unique<D3DClass>();
+	renderer = std::make_unique<Renderer_DirectX11>();
 
 	int screenWidth, screenHeight;
 	screenWidth = 0; screenHeight = 0;

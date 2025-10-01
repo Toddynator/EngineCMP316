@@ -6,9 +6,6 @@
 
 CMP316engine::Model::Model()
 {
-	//vertexBuffer = NULL;
-	//indexBuffer = NULL;
-	//texture = NULL;
 	worldMatrix = XMMatrixIdentity();
 }
 
@@ -60,12 +57,12 @@ bool CMP316engine::Model::Render(Shader* shader, ID3D11DeviceContext* deviceCont
 	int meshVertexOffset = 0;
 	for (auto& mesh : meshes)
 	{
-		if (!shader->Render(deviceContext, mesh.indices.size(), worldMatrix, viewMatrix, projectionMatrix, textures[mesh.textureName]->GetTextureView(), meshVertexOffset))
+		if (!shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), worldMatrix, viewMatrix, projectionMatrix, textures[mesh.textureName]->GetTextureView(), meshVertexOffset))
 		{
 			return false;
 		}
 
-		meshVertexOffset += mesh.indices.size();
+		meshVertexOffset += static_cast<int>(mesh.indices.size());
 	}
 
 	return true;
@@ -75,7 +72,7 @@ int CMP316engine::Model::GetIndexCount()
 {
 	int total = 0;
 	for (auto& mesh : meshes) {
-		total += mesh.indices.size();
+		total += static_cast<int>(mesh.indices.size());
 	}
 	return total;
 }
@@ -84,7 +81,7 @@ int CMP316engine::Model::GetVertexCount()
 {
 	int total = 0;
 	for (auto& mesh : meshes) {
-		total += mesh.vertices.size();
+		total += static_cast<int>(mesh.vertices.size());
 	}
 	return total;
 }
@@ -96,7 +93,7 @@ void CMP316engine::Model::RenderImGuiControls()
 		//calculateWorldMatrix(); // NOTE: May just leave this to be handled by the Render() call.
 	}
 
-	if (ImGui::SliderFloat3("Rotation", &rotation.x, 0, 6.3))
+	if (ImGui::SliderFloat3("Rotation", &rotation.x, 0.f, 6.3f))
 	{
 		//calculateWorldMatrix();
 	}
@@ -180,8 +177,10 @@ void CMP316engine::Model::calculateWorldMatrix()
 
 bool CMP316engine::Model::InitializeBuffers(ID3D11Device* device)
 {
-	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-	D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	D3D11_BUFFER_DESC vertexBufferDesc{};
+	D3D11_BUFFER_DESC indexBufferDesc{};
+	D3D11_SUBRESOURCE_DATA vertexData{};
+	D3D11_SUBRESOURCE_DATA indexData{};
 
 	std::vector<CMP316engine::Vertex> allVertices;
 	std::vector<unsigned long> allIndices;
@@ -201,7 +200,7 @@ bool CMP316engine::Model::InitializeBuffers(ID3D11Device* device)
 			allIndices.push_back(i + meshVertexOffset);
 		}
 
-		meshVertexOffset = allVertices.size();
+		meshVertexOffset = static_cast<int>(allVertices.size());
 	}
 
 	/// VERTEX BUFFER ///

@@ -26,7 +26,7 @@
 #include "ImGui/imgui_impl_sdl3.h"
 #include "ImGui/imgui_impl_dx11.h"
 
-#include "d3dclass.h" // RENDERER
+#include "Renderer_DirectX11.h" // RENDERER
 #include "Camera.h"
 #include "Model.h"
 #include "Shader.h"
@@ -64,7 +64,7 @@ private:
 
 	/// GRAPHICS
 	// NOTE: Move to Application class?
-	std::unique_ptr<D3DClass> renderer = nullptr;
+	std::unique_ptr<Renderer_DirectX11> renderer = nullptr;
 	std::unique_ptr<Shader> shader = nullptr;
 
 	/// SCENE

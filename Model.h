@@ -27,7 +27,7 @@ namespace CMP316engine {
 
 		int GetIndexCount();
 		int GetVertexCount();
-		XMMATRIX GetWorldMatrix() { return worldMatrix; }
+		XMMATRIX GetWorldMatrix() const { return worldMatrix; }
 		void SetPosition(XMFLOAT3 newPosition) { position = newPosition; }
 
 	private:
@@ -37,20 +37,19 @@ namespace CMP316engine {
 		void ShutdownBuffers();
 		void RenderBuffers(ID3D11DeviceContext*);
 
-		bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*, std::string textureName);
 		void ReleaseTexture();
 
 		bool loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath);
 
 	private:
 		std::vector<Mesh> meshes;
-		ID3D11Buffer* vertexBuffer;
-		ID3D11Buffer* indexBuffer;
+		ID3D11Buffer* vertexBuffer = nullptr;
+		ID3D11Buffer* indexBuffer = nullptr;
 		std::unordered_map<std::string, Texture*> textures; // TODO: Remove once AssetManager is created, mesh struct holds texture name, it looks up texture in unordered map (which will be in assetManager at some point)
 
 		XMFLOAT3 position = { 0, 0, 0 };
 		XMFLOAT3 rotation = { 0, 0, 0 };
-		XMMATRIX worldMatrix; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
+		XMMATRIX worldMatrix{}; // The World matrix is used to define the position of objects in the 3d scene. (Scale, Rotation, Translation, etc)
 		// Probably should move this to a 'Transform Object' class later.
 	};
 }

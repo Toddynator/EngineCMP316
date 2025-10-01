@@ -740,7 +740,7 @@ namespace objl
 			for (int i = 0; i < int(sface.size()); i++)
 			{
 				// See What type the vertex is.
-				int vtype;
+				int vtype = 0;
 
 				algorithm::split(sface[i], svert, "/");
 
@@ -946,7 +946,7 @@ namespace objl
 					}
 
 					// If Vertex is not an interior vertex
-					float angle = math::AngleBetweenV3(pPrev.Position - pCur.Position, pNext.Position - pCur.Position) * (180 / 3.14159265359);
+					float angle = math::AngleBetweenV3(pPrev.Position - pCur.Position, pNext.Position - pCur.Position) * static_cast<float>(180.f / 3.14159265359);
 					if (angle <= 0 && angle >= 180)
 						continue;
 

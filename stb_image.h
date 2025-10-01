@@ -605,6 +605,7 @@ STBIDEF int   stbi_zlib_decode_noheader_buffer(char *obuffer, int olen, const ch
 
 #ifdef __cplusplus
 #define STBI_EXTERN extern "C"
+
 #else
 #define STBI_EXTERN extern
 #endif

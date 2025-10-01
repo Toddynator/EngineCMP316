@@ -34,7 +34,7 @@ public:
 
 /*
 This handles creating a clone on each derivation of component.
-Gets rid of the boilerplate for the most-part. However you still need to make each component inherit this.
+Gets rid of the boilerplate for the most-part. However you still need to make each component derivation inherit this.
 This uses CRTP https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
 In particular: Polymorphic Copy Construction
 

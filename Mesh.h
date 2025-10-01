@@ -9,8 +9,8 @@ namespace CMP316engine {
 	// MUST match the layout in the ShaderClass.
 	struct Vertex
 	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 uv; // Texture coordinates between 0 and 1
+		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT2 uv = DirectX::XMFLOAT2(0.f, 0.f);; // Texture coordinates between 0 and 1
 		DirectX::XMFLOAT4 colour = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f); // Multiples the texture colour
 		DirectX::XMFLOAT3 normal = DirectX::XMFLOAT3(1.f, 1.f, 1.f);
 	};

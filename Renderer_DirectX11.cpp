@@ -1,21 +1,21 @@
 #include "pch.h"
-#include "d3dclass.h"
+#include "Renderer_DirectX11.h"
 
 
 
-D3DClass::D3DClass()
+Renderer_DirectX11::Renderer_DirectX11()
 {
 }
 
-D3DClass::D3DClass(const D3DClass& other)
+Renderer_DirectX11::Renderer_DirectX11(const Renderer_DirectX11& other)
 {
 }
 
-D3DClass::~D3DClass()
+Renderer_DirectX11::~Renderer_DirectX11()
 {
 }
 
-bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+bool Renderer_DirectX11::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
 	// Store the vsync setting.
 	vsyncEnabled = vsync;
@@ -47,7 +47,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 	return true;
 }
 
-void D3DClass::Shutdown()
+void Renderer_DirectX11::Shutdown()
 {
 	// Before shutting down set to windowed mode otherwise when you release the swap chain it will throw an exception.
 	if (swapChain)
@@ -113,14 +113,14 @@ void D3DClass::Shutdown()
 }
 
 // Parameters are a color to clear the screen to at the beginning of each frame.
-void D3DClass::BeginScene(float red, float green, float blue, float alpha)
+void Renderer_DirectX11::BeginScene(float red, float green, float blue, float alpha)
 {
 	/*
 	Helper function, call at the beginning of each frame.
 	Initializes buffers to ensure they are blank at the beginning of each frame. (Otherwise you get leftover data / ghosting from the last frame)
 	*/
 
-	float color[4];
+	float color[4]{};
 
 	// Setup the color to clear the buffer to.
 	color[0] = red;
@@ -137,7 +137,7 @@ void D3DClass::BeginScene(float red, float green, float blue, float alpha)
 	return;
 }
 
-void D3DClass::EndScene()
+void Renderer_DirectX11::EndScene()
 {
 	/*
 	Helper function, call at the end of each frame.
@@ -159,35 +159,35 @@ void D3DClass::EndScene()
 	return;
 }
 
-ID3D11Device* D3DClass::GetDevice()
+ID3D11Device* Renderer_DirectX11::GetDevice()
 {
 	return device;
 }
 
-ID3D11DeviceContext* D3DClass::GetDeviceContext()
+ID3D11DeviceContext* Renderer_DirectX11::GetDeviceContext()
 {
 	return deviceContext;
 }
 
-XMMATRIX D3DClass::GetProjectionMatrix()
+XMMATRIX Renderer_DirectX11::GetProjectionMatrix() const
 {
 	return projectionMatrix;
 }
 
-XMMATRIX D3DClass::GetOrthoMatrix()
+XMMATRIX Renderer_DirectX11::GetOrthoMatrix() const
 { 
 	return orthoMatrix;
 }
 
 // Returns by reference the name and memory of the video card.
-void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
+void Renderer_DirectX11::GetVideoCardInfo(char* cardName, int& memory) const
 {
 	strcpy_s(cardName, 128, videoCardDescription);
 	memory = videoCardMemory;
 	return;
 }
 
-void D3DClass::SetBackBufferRenderTarget()
+void Renderer_DirectX11::SetBackBufferRenderTarget()
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView);
@@ -195,7 +195,7 @@ void D3DClass::SetBackBufferRenderTarget()
 	return;
 }
 
-void D3DClass::ResetViewport()
+void Renderer_DirectX11::ResetViewport()
 {
 	// Set the viewport.
 	deviceContext->RSSetViewports(1, &viewport);
@@ -203,7 +203,7 @@ void D3DClass::ResetViewport()
 	return;
 }
 
-void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear, float screenDepth)
+void Renderer_DirectX11::HandleWindowResize(int newWidth, int newHeight, float screenNear, float screenDepth)
 {
 	//https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/d3d10-graphics-programming-guide-dxgi#handling-window-resizing
 
@@ -220,7 +220,7 @@ void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear,
 		result = swapChain->ResizeBuffers(0, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
 
 		// Get buffer and create a render-target-view.
-		ID3D11Texture2D* pBuffer;
+		ID3D11Texture2D* pBuffer = nullptr;
 		result = swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D),
 			(void**)&pBuffer);
 		result = device->CreateRenderTargetView(pBuffer, NULL, &renderTargetView);
@@ -237,7 +237,7 @@ void D3DClass::HandleWindowResize(int newWidth, int newHeight, float screenNear,
 	}
 }
 
-void D3DClass::ToggleWireframe()
+void Renderer_DirectX11::ToggleWireframe()
 {	
 	wireFrameEnabled = !wireFrameEnabled;
 	if (wireFrameEnabled)
@@ -249,19 +249,22 @@ void D3DClass::ToggleWireframe()
 	}
 }
 
-bool D3DClass::initializeDeviceAndSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
+bool Renderer_DirectX11::initializeDeviceAndSwapChain(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
 {
-	IDXGIFactory* factory;
-	IDXGIAdapter* adapter;
-	IDXGIOutput* adapterOutput;
-	unsigned int numModes, i, numerator, denominator;
-	unsigned long long stringLength;
-	DXGI_MODE_DESC* displayModeList;
-	DXGI_ADAPTER_DESC adapterDesc;
-	int error;
-	DXGI_SWAP_CHAIN_DESC swapChainDesc;
-	ID3D11Texture2D* backBufferPtr;
-	D3D_FEATURE_LEVEL featureLevel;
+	IDXGIFactory* factory = nullptr;
+	IDXGIAdapter* adapter = nullptr;
+	IDXGIOutput* adapterOutput = nullptr;
+	unsigned int numModes = -1;
+	unsigned int i = -1;
+	unsigned int numerator = -1;
+	unsigned int denominator = -1;
+	unsigned long long stringLength = -1;
+	DXGI_MODE_DESC* displayModeList = nullptr;
+	DXGI_ADAPTER_DESC adapterDesc{};
+	int error = -1;
+	DXGI_SWAP_CHAIN_DESC swapChainDesc{};
+	ID3D11Texture2D* backBufferPtr = nullptr;
+	D3D_FEATURE_LEVEL featureLevel{};
 
 	// Create a DirectX graphics interface factory.
 	HRESULT result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
@@ -440,7 +443,7 @@ bool D3DClass::initializeDeviceAndSwapChain(int screenWidth, int screenHeight, H
 	return true;
 }
 
-bool D3DClass::initializeDepthBuffer(int screenWidth, int screenHeight)
+bool Renderer_DirectX11::initializeDepthBuffer(int screenWidth, int screenHeight)
 {
 	D3D11_TEXTURE2D_DESC depthBufferDesc;
 
@@ -470,7 +473,7 @@ bool D3DClass::initializeDepthBuffer(int screenWidth, int screenHeight)
 	return true;
 }
 
-bool D3DClass::initializeDepthStencil()
+bool Renderer_DirectX11::initializeDepthStencil()
 {
 	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
@@ -530,9 +533,9 @@ bool D3DClass::initializeDepthStencil()
 	return true;
 }
 
-bool D3DClass::initializeRasterizer()
+bool Renderer_DirectX11::initializeRasterizer()
 {
-	D3D11_RASTERIZER_DESC rasterizerDescription;
+	D3D11_RASTERIZER_DESC rasterizerDescription{};
 
 	// Setup the raster description which will determine how and what polygons will be drawn.
 	rasterizerDescription.AntialiasedLineEnable = false;
@@ -573,7 +576,7 @@ bool D3DClass::initializeRasterizer()
 	return true;
 }
 
-bool D3DClass::initializeViewport(int screenWidth, int screenHeight)
+bool Renderer_DirectX11::initializeViewport(int screenWidth, int screenHeight)
 {
 	// Setup the viewport for rendering.
 	viewport.Width = static_cast<float>(screenWidth);
@@ -589,7 +592,7 @@ bool D3DClass::initializeViewport(int screenWidth, int screenHeight)
 	return true;
 }
 
-bool D3DClass::initializeMatrices(int screenWidth, int screenHeight, float screenDepth, float screenNear)
+bool Renderer_DirectX11::initializeMatrices(int screenWidth, int screenHeight, float screenDepth, float screenNear)
 {
 	// Setup the projection matrix.
 	float fieldOfView = 3.141592654f / 4.0f;

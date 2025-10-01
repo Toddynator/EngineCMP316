@@ -14,7 +14,7 @@ Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, 
 	unsigned char* pixels = stbi_load(filepath, &width, &height, &channels, 0);
 
 	// Setup the description of the texture.
-	D3D11_TEXTURE2D_DESC textureDesc;
+	D3D11_TEXTURE2D_DESC textureDesc{};
 	textureDesc.Height = height;
 	textureDesc.Width = width;
 	textureDesc.MipLevels = 0;
@@ -41,7 +41,7 @@ Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, 
 	deviceContext->UpdateSubresource(textureResource, 0, NULL, pixels, rowPitch, 0);
 
 	// Setup the shader resource view description.
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = textureDesc.Format;
 	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MostDetailedMip = 0;
