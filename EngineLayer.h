@@ -22,9 +22,9 @@
 
 #include <SDL3/SDL.h>
 
-#include <../ImGui/imgui.h>
-#include "ImGui/imgui_impl_sdl3.h"
-#include "ImGui/imgui_impl_dx11.h"
+#include <ImGui.h>
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_dx11.h"
 
 #include "Renderer_DirectX11.h" // RENDERER
 #include "Camera.h"
