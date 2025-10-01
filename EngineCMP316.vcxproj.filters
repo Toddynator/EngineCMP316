@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Shaders">
-      <UniqueIdentifier>{32acdf82-6807-434c-a67e-758703657902}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Managers">
       <UniqueIdentifier>{613a0aff-8327-48a1-a5f4-1fdd295f844a}</UniqueIdentifier>
     </Filter>
@@ -70,194 +67,197 @@
     <Filter Include="Source Files\ImGui">
       <UniqueIdentifier>{bca0d978-3bcd-4ca1-912a-de62f095f6f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{32acdf82-6807-434c-a67e-758703657902}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Renderer_DirectX11.cpp">
+    <ClCompile Include="Engine\Graphics\Renderer_DirectX11.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="Engine\Graphics\Camera.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Texture.cpp">
+    <ClCompile Include="Engine\Graphics\Texture.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
+    <ClCompile Include="Engine\Graphics\Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
+    <ClCompile Include="Engine\Graphics\Model.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp">
+    <ClCompile Include="Engine\Managers\InputManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="TimeManager.cpp">
+    <ClCompile Include="Engine\Managers\TimeManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Manager.cpp">
+    <ClCompile Include="Engine\Managers\Manager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="WindowManager.cpp">
+    <ClCompile Include="Engine\Managers\WindowManager.cpp">
       <Filter>Source Files\Managers\Window</Filter>
     </ClCompile>
-    <ClCompile Include="WindowManager_SDL.cpp">
+    <ClCompile Include="Engine\Managers\WindowManager_SDL.cpp">
       <Filter>Source Files\Managers\Window</Filter>
     </ClCompile>
-    <ClCompile Include="EngineLayer.cpp">
+    <ClCompile Include="Engine\EngineLayer.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="Engine\main.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
+    <ClCompile Include="Engine\Core\Application.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="RenderManager.cpp">
+    <ClCompile Include="Engine\Managers\RenderManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="AssetManager.cpp">
+    <ClCompile Include="Engine\Managers\AssetManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="TempApplication.cpp">
+    <ClCompile Include="Engine\TempApplication.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
+    <ClCompile Include="Engine\Core\Scene.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="TestScene.cpp">
+    <ClCompile Include="Engine\TestScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
+    <ClCompile Include="Engine\Graphics\Mesh.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="TextureLoader.cpp">
+    <ClCompile Include="Engine\ResourceLoading\TextureLoader.cpp">
       <Filter>Source Files\ResourceLoading</Filter>
     </ClCompile>
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Engine\Core\pch.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
-    <ClCompile Include="AudioManager.cpp">
+    <ClCompile Include="Engine\Managers\AudioManager.cpp">
       <Filter>Source Files\Managers\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="AudioManager_SoLoud.cpp">
+    <ClCompile Include="Engine\Managers\AudioManager_SoLoud.cpp">
       <Filter>Source Files\Managers\Audio</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicsManager.cpp">
+    <ClCompile Include="Engine\Managers\PhysicsManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="Engine\GameObject\GameObject.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Component.cpp">
+    <ClCompile Include="Engine\GameObject\Component.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="TransformComponent.cpp">
+    <ClCompile Include="Engine\GameObject\Components\TransformComponent.cpp">
       <Filter>Source Files\GameObject\Components</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_impl_dx11.cpp">
+    <ClCompile Include="Engine\ImGui\imgui_impl_dx11.cpp">
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_impl_sdl3.cpp">
+    <ClCompile Include="Engine\ImGui\imgui_impl_sdl3.cpp">
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="Engine\Graphics\Camera.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer_DirectX11.h">
+    <ClInclude Include="Engine\Graphics\Renderer_DirectX11.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="Engine\Graphics\Model.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
+    <ClInclude Include="Engine\Graphics\Texture.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="Engine\Graphics\Shader.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h">
+    <ClInclude Include="Engine\Managers\InputManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="TimeManager.h">
+    <ClInclude Include="Engine\Managers\TimeManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Manager.h">
+    <ClInclude Include="Engine\Managers\Manager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="WindowManager.h">
+    <ClInclude Include="Engine\Managers\WindowManager.h">
       <Filter>Header Files\Managers\Window</Filter>
     </ClInclude>
-    <ClInclude Include="WindowManager_SDL.h">
+    <ClInclude Include="Engine\Managers\WindowManager_SDL.h">
       <Filter>Header Files\Managers\Window</Filter>
     </ClInclude>
-    <ClInclude Include="EngineLayer.h">
+    <ClInclude Include="Engine\EngineLayer.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="Engine\Core\Application.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="RenderManager.h">
+    <ClInclude Include="Engine\Managers\RenderManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManager.h">
+    <ClInclude Include="Engine\Managers\AssetManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="TempApplication.h">
+    <ClInclude Include="Engine\TempApplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
+    <ClInclude Include="Engine\Core\Scene.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="TestScene.h">
+    <ClInclude Include="Engine\TestScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
+    <ClInclude Include="Engine\Graphics\Mesh.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="OBJ_Loader.h">
+    <ClInclude Include="Engine\ResourceLoading\OBJ_Loader.h">
       <Filter>Header Files\ResourceLoading</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
+    <ClInclude Include="Engine\ResourceLoading\stb_image.h">
       <Filter>Header Files\ResourceLoading</Filter>
     </ClInclude>
-    <ClInclude Include="TextureLoader.h">
+    <ClInclude Include="Engine\ResourceLoading\TextureLoader.h">
       <Filter>Header Files\ResourceLoading</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="Engine\Core\pch.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
-    <ClInclude Include="AudioManager.h">
+    <ClInclude Include="Engine\Managers\AudioManager.h">
       <Filter>Header Files\Managers\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="AudioManager_SoLoud.h">
+    <ClInclude Include="Engine\Managers\AudioManager_SoLoud.h">
       <Filter>Header Files\Managers\Audio</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsManager.h">
+    <ClInclude Include="Engine\Managers\PhysicsManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
+    <ClInclude Include="Engine\GameObject\GameObject.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Component.h">
+    <ClInclude Include="Engine\GameObject\Component.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="TransformComponent.h">
+    <ClInclude Include="Engine\GameObject\Components\TransformComponent.h">
       <Filter>Header Files\GameObject\Components</Filter>
     </ClInclude>
-    <ClInclude Include="imgui_impl_sdl3.h">
+    <ClInclude Include="Engine\ImGui\imgui_impl_sdl3.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="imgui_impl_dx11.h">
+    <ClInclude Include="Engine\ImGui\imgui_impl_dx11.h">
       <Filter>Header Files\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\shader_vs.hlsl">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="data\Shaders\shader_vs.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
-    <None Include="Shaders\shader_ps.hlsl">
-      <Filter>Source Files\Shaders</Filter>
+    <None Include="data\Shaders\shader_ps.hlsl">
+      <Filter>Resource Files\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

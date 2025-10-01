@@ -92,7 +92,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_DEBUG_RENDERER;JPH_PROFILE_ENABLED;JPH_OBJECT_STREAM;JPH_USE_AVX2;JPH_USE_AVX;JPH_USE_SSE4_1;JPH_USE_SSE4_2;JPH_USE_LZCNT;JPH_USE_TZCNT;JPH_USE_F16C;JPH_USE_FMADD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Third_Party\ImGui\include;$(SolutionDir)Third_Party\SDL3\include;$(SolutionDir)Third_Party\SoLoud\include;$(SolutionDir)Third_Party\Jolt;$(SolutionDir)Game</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\ImGui\include;$(SolutionDir)external\SDL3\include;$(SolutionDir)external\SoLoud\include;$(SolutionDir)external\Jolt;$(SolutionDir)Game</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -102,7 +102,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SDL3\lib\$(Platform)\;$(SolutionDir)Third_Party\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)Third_Party\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
@@ -115,7 +115,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_DEBUG_RENDERER;JPH_PROFILE_ENABLED;JPH_OBJECT_STREAM;JPH_USE_AVX2;JPH_USE_AVX;JPH_USE_SSE4_1;JPH_USE_SSE4_2;JPH_USE_LZCNT;JPH_USE_TZCNT;JPH_USE_F16C;JPH_USE_FMADD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Third_Party\ImGui\include;$(SolutionDir)Third_Party\SDL3\include;$(SolutionDir)Third_Party\SoLoud\include;$(SolutionDir)Third_Party\Jolt;$(SolutionDir)Game</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\ImGui\include;$(SolutionDir)external\SDL3\include;$(SolutionDir)external\SoLoud\include;$(SolutionDir)external\Jolt;$(SolutionDir)Game</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
@@ -125,7 +125,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SDL3\lib\$(Platform)\;$(SolutionDir)Third_Party\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)Third_Party\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
@@ -136,7 +136,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_DEBUG_RENDERER;JPH_PROFILE_ENABLED;JPH_OBJECT_STREAM;JPH_USE_AVX2;JPH_USE_AVX;JPH_USE_SSE4_1;JPH_USE_SSE4_2;JPH_USE_LZCNT;JPH_USE_TZCNT;JPH_USE_F16C;JPH_USE_FMADD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Third_Party\ImGui\include;$(SolutionDir)Third_Party\SDL3\include;$(SolutionDir)Third_Party\SoLoud\include;$(SolutionDir)Third_Party\Jolt</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\ImGui\include;$(SolutionDir)external\SDL3\include;$(SolutionDir)external\SoLoud\include;$(SolutionDir)external\Jolt;$(SolutionDir)Game</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -148,7 +148,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SDL3\lib\$(Platform)\;$(SolutionDir)Third_Party\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)Third_Party\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
@@ -161,7 +161,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;JPH_FLOATING_POINT_EXCEPTIONS_ENABLED;JPH_DEBUG_RENDERER;JPH_PROFILE_ENABLED;JPH_OBJECT_STREAM;JPH_USE_AVX2;JPH_USE_AVX;JPH_USE_SSE4_1;JPH_USE_SSE4_2;JPH_USE_LZCNT;JPH_USE_TZCNT;JPH_USE_F16C;JPH_USE_FMADD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Third_Party\ImGui\include;$(SolutionDir)Third_Party\SDL3\include;$(SolutionDir)Third_Party\SoLoud\include;$(SolutionDir)Third_Party\Jolt;$(SolutionDir)Game</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)external\ImGui\include;$(SolutionDir)external\SDL3\include;$(SolutionDir)external\SoLoud\include;$(SolutionDir)external\Jolt;$(SolutionDir)Game</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -173,82 +173,82 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SDL3\lib\$(Platform)\;$(SolutionDir)Third_Party\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)Third_Party\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)Third_Party\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\Build\VS2022_CL\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="AssetManager.cpp" />
-    <ClCompile Include="AudioManager.cpp" />
-    <ClCompile Include="AudioManager_SoLoud.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="imgui_impl_dx11.cpp" />
-    <ClCompile Include="imgui_impl_sdl3.cpp" />
-    <ClCompile Include="Renderer_DirectX11.cpp" />
-    <ClCompile Include="EngineLayer.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Manager.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="Engine\Core\Application.cpp" />
+    <ClCompile Include="Engine\Managers\AssetManager.cpp" />
+    <ClCompile Include="Engine\Managers\AudioManager.cpp" />
+    <ClCompile Include="Engine\Managers\AudioManager_SoLoud.cpp" />
+    <ClCompile Include="Engine\Graphics\Camera.cpp" />
+    <ClCompile Include="Engine\GameObject\Component.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="Engine\ImGui\imgui_impl_sdl3.cpp" />
+    <ClCompile Include="Engine\Graphics\Renderer_DirectX11.cpp" />
+    <ClCompile Include="Engine\EngineLayer.cpp" />
+    <ClCompile Include="Engine\GameObject\GameObject.cpp" />
+    <ClCompile Include="Engine\Managers\InputManager.cpp" />
+    <ClCompile Include="Engine\main.cpp" />
+    <ClCompile Include="Engine\Managers\Manager.cpp" />
+    <ClCompile Include="Engine\Graphics\Mesh.cpp" />
+    <ClCompile Include="Engine\Graphics\Model.cpp" />
+    <ClCompile Include="Engine\Core\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="PhysicsManager.cpp" />
-    <ClCompile Include="RenderManager.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="TempApplication.cpp" />
-    <ClCompile Include="TestScene.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="TextureLoader.cpp" />
-    <ClCompile Include="TimeManager.cpp" />
-    <ClCompile Include="TransformComponent.cpp" />
-    <ClCompile Include="WindowManager.cpp" />
-    <ClCompile Include="WindowManager_SDL.cpp" />
+    <ClCompile Include="Engine\Managers\PhysicsManager.cpp" />
+    <ClCompile Include="Engine\Managers\RenderManager.cpp" />
+    <ClCompile Include="Engine\Core\Scene.cpp" />
+    <ClCompile Include="Engine\TempApplication.cpp" />
+    <ClCompile Include="Engine\TestScene.cpp" />
+    <ClCompile Include="Engine\Graphics\Texture.cpp" />
+    <ClCompile Include="Engine\Graphics\Shader.cpp" />
+    <ClCompile Include="Engine\ResourceLoading\TextureLoader.cpp" />
+    <ClCompile Include="Engine\Managers\TimeManager.cpp" />
+    <ClCompile Include="Engine\GameObject\Components\TransformComponent.cpp" />
+    <ClCompile Include="Engine\Managers\WindowManager.cpp" />
+    <ClCompile Include="Engine\Managers\WindowManager_SDL.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="AssetManager.h" />
-    <ClInclude Include="AudioManager.h" />
-    <ClInclude Include="AudioManager_SoLoud.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="imgui_impl_dx11.h" />
-    <ClInclude Include="imgui_impl_sdl3.h" />
-    <ClInclude Include="Renderer_DirectX11.h" />
-    <ClInclude Include="EngineLayer.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="Manager.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="OBJ_Loader.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="PhysicsManager.h" />
-    <ClInclude Include="RenderManager.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="stb_image.h" />
-    <ClInclude Include="TempApplication.h" />
-    <ClInclude Include="TestScene.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="TextureLoader.h" />
-    <ClInclude Include="TimeManager.h" />
-    <ClInclude Include="TransformComponent.h" />
-    <ClInclude Include="WindowManager.h" />
-    <ClInclude Include="WindowManager_SDL.h" />
+    <ClInclude Include="Engine\Core\Application.h" />
+    <ClInclude Include="Engine\Managers\AssetManager.h" />
+    <ClInclude Include="Engine\Managers\AudioManager.h" />
+    <ClInclude Include="Engine\Managers\AudioManager_SoLoud.h" />
+    <ClInclude Include="Engine\Graphics\Camera.h" />
+    <ClInclude Include="Engine\GameObject\Component.h" />
+    <ClInclude Include="Engine\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="Engine\ImGui\imgui_impl_sdl3.h" />
+    <ClInclude Include="Engine\Graphics\Renderer_DirectX11.h" />
+    <ClInclude Include="Engine\EngineLayer.h" />
+    <ClInclude Include="Engine\GameObject\GameObject.h" />
+    <ClInclude Include="Engine\Managers\InputManager.h" />
+    <ClInclude Include="Engine\Managers\Manager.h" />
+    <ClInclude Include="Engine\Graphics\Mesh.h" />
+    <ClInclude Include="Engine\Graphics\Model.h" />
+    <ClInclude Include="Engine\ResourceLoading\OBJ_Loader.h" />
+    <ClInclude Include="Engine\Core\pch.h" />
+    <ClInclude Include="Engine\Managers\PhysicsManager.h" />
+    <ClInclude Include="Engine\Managers\RenderManager.h" />
+    <ClInclude Include="Engine\Core\Scene.h" />
+    <ClInclude Include="Engine\ResourceLoading\stb_image.h" />
+    <ClInclude Include="Engine\TempApplication.h" />
+    <ClInclude Include="Engine\TestScene.h" />
+    <ClInclude Include="Engine\Graphics\Texture.h" />
+    <ClInclude Include="Engine\Graphics\Shader.h" />
+    <ClInclude Include="Engine\ResourceLoading\TextureLoader.h" />
+    <ClInclude Include="Engine\Managers\TimeManager.h" />
+    <ClInclude Include="Engine\GameObject\Components\TransformComponent.h" />
+    <ClInclude Include="Engine\Managers\WindowManager.h" />
+    <ClInclude Include="Engine\Managers\WindowManager_SDL.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\shader_ps.hlsl">
+    <None Include="data\Shaders\shader_ps.hlsl">
       <FileType>Document</FileType>
     </None>
-    <None Include="Shaders\shader_vs.hlsl">
+    <None Include="data\Shaders\shader_vs.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
