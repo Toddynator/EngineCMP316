@@ -32,6 +32,7 @@ namespace CMP316engine {
 
 	private:
 		bool generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
+		void calculateWorldMatrix();
 		bool InitializeBuffers(ID3D11Device*);
 		void ShutdownBuffers();
 		void RenderBuffers(ID3D11DeviceContext*);

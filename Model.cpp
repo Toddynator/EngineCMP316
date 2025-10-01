@@ -49,11 +49,8 @@ void CMP316engine::Model::Shutdown()
 
 bool CMP316engine::Model::Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
-	/// TEMP UPDATE TRANSFORMS
-	XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
-	worldMatrix = rotationMatrix * translationMatrix;
-	/// TEMP
+	// Update models world matrix to any transforms that occurred during the frame, e.g. it has moved position or changed rotation
+	calculateWorldMatrix();
 
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
@@ -96,16 +93,12 @@ void CMP316engine::Model::RenderImGuiControls()
 {	
 	if (ImGui::InputFloat3("Position", &position.x))
 	{
-		XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
-		XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x,rotation.y,rotation.z);
-		worldMatrix = rotationMatrix * translationMatrix;
+		//calculateWorldMatrix(); // NOTE: May just leave this to be handled by the Render() call.
 	}
 
 	if (ImGui::SliderFloat3("Rotation", &rotation.x, 0, 6.3))
 	{
-		XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
-		XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
-		worldMatrix = rotationMatrix * translationMatrix;
+		//calculateWorldMatrix();
 	}
 }
 
@@ -129,13 +122,7 @@ bool CMP316engine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D1
 	if (!loadModel(device, deviceContext, "data/Dug/Dug.obj")) { return false; }
 
 	/// TEST TRANSFORMS ///
-	/*XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, 0.0f, 0.0f);
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
-	worldMatrix = translationMatrix * rotationMatrix;*/
-
-	XMMATRIX translationMatrix = XMMatrixTranslation(0.0f, -1.0f, 2.0f);
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.3f, 0.6f, 0.0f);
-	worldMatrix = rotationMatrix * translationMatrix;
+	calculateWorldMatrix();
 	///
 
 	/* //// MANUALLY DEFINING THE MODEL
@@ -182,6 +169,13 @@ bool CMP316engine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D1
 	if (!InitializeBuffers(device)) { return false; }
 
 	return true;
+}
+
+void CMP316engine::Model::calculateWorldMatrix()
+{
+	XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
+	worldMatrix = rotationMatrix * translationMatrix;
 }
 
 bool CMP316engine::Model::InitializeBuffers(ID3D11Device* device)
