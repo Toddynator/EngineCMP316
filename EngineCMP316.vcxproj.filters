@@ -61,6 +61,12 @@
     <Filter Include="Source Files\GameObject">
       <UniqueIdentifier>{f45052d0-a4ab-4b0b-acf5-7826aa99d23f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameObject\Components">
+      <UniqueIdentifier>{2d73eefb-b08c-415a-8459-41a8527ea713}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject\Components">
+      <UniqueIdentifier>{18a9f179-e7f8-4188-8de8-add6b6b8e6df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImGui\imgui.cpp">
@@ -161,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Source Files\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformComponent.cpp">
+      <Filter>Source Files\GameObject\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -268,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="Component.h">
       <Filter>Header Files\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Header Files\GameObject\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

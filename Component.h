@@ -25,10 +25,9 @@ public:
 	~Component() = default;
 	Component(const Component& component) = default; // Copy Constructor
 	Component(Component&& component) = default; // Move Constructor
-
 	virtual std::unique_ptr<Component> clone() const = 0; // Creates a copy // As this is abstract it CANNOT return
 
-	virtual void Update() = 0;
+	virtual void Update();
 };
 
 
@@ -36,9 +35,14 @@ public:
 /*
 This handles creating a clone on each derivation of component.
 Gets rid of the boilerplate for the most-part. However you still need to make each component inherit this.
+This uses CRTP https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern
+In particular: Polymorphic Copy Construction
+
+This MUST BE INHERITED AS PUBLIC. Otherwise you will despair
 */
 template <typename Derived>
 class ClonableComponent : public Component {
 public:
-	virtual std::unique_ptr<Component> clone() const { return std::unique_ptr<Derived>(new Derived(*this)); }
+	// Because I'm using 'this' in CloneableComponent, I need to cast it to the derived class I'm trying to implement cloning for.
+	std::unique_ptr<Component> clone() const override { return std::unique_ptr<Derived>(new Derived(static_cast<const Derived&>(*this))); }
 };
