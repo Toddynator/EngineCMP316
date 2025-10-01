@@ -1,4 +1,0 @@
-C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/soloud.dir
-C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/INSTALL.dir
-C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/toddy/Downloads/soloud20200207/build/CMakeFiles/ZERO_CHECK.dir
