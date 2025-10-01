@@ -1,0 +1,4 @@
+For any changes to the build,
+Download the latest from Jolt, run the required '.bat' file to generate a visual studio solution, and generate a static library.
+REMEMBER to set the C/C++ > Code Generation > Runtime Library to match the Engine's Runtime Library.
+

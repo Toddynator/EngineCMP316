@@ -102,7 +102,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
@@ -125,7 +125,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
@@ -148,7 +148,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
@@ -173,7 +173,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)bin\$(Platform)\$(Configuration)\;$(SolutionDir)external\SDL3\lib\$(Platform)\;$(SolutionDir)external\Jolt\lib\$(Configuration)\;$(SolutionDir)external\ImGui\lib\$(Platform)\$(Configuration)\;$(SolutionDir)external\SoLoud\lib\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL3.lib;ImGui.lib;soloud.lib;Jolt.lib;Game.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ProgramDatabaseFile>$(SolutionDir)build\$(Platform)\$(Configuration)\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>

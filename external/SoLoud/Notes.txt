@@ -1,0 +1,3 @@
+Download latest from SoLoud site, use Cmake to generate the visual studio solution.
+Add to the projects Preprocessor values the audio backends I want to implement, e.g. WITH_MINIAUDIO.
+Then manually include the implementations for the audio backends in the project. After that it should be good to build.

@@ -1,0 +1,9 @@
+Download the Source Code from the SDL3 repo if I want to build a static library.
+If I build a static library, I must add:
+
+Version.lib
+Cfgmgr32.lib
+Setupapi.lib
+Winmm.lib
+
+to the engines Linker > Input. SDL3's dll handles this typically. I can get the dll library from the devel-VC release.
