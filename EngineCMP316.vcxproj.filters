@@ -43,12 +43,6 @@
     <Filter Include="Header Files\Core">
       <UniqueIdentifier>{7c32cfc6-7571-4c80-bec9-39b98275f06f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\GameObjects">
-      <UniqueIdentifier>{77336e87-5833-4360-8f5b-3b5878b03719}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\GameObjects">
-      <UniqueIdentifier>{f45052d0-a4ab-4b0b-acf5-7826aa99d23f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\ResourceLoading">
       <UniqueIdentifier>{2caaa29e-18b7-4e61-90f2-a9b221f572fa}</UniqueIdentifier>
     </Filter>
@@ -60,6 +54,12 @@
     </Filter>
     <Filter Include="Header Files\Managers\Audio">
       <UniqueIdentifier>{ac3a366f-f61b-42c0-9d91-d814546f7cd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObject">
+      <UniqueIdentifier>{77336e87-5833-4360-8f5b-3b5878b03719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObject">
+      <UniqueIdentifier>{f45052d0-a4ab-4b0b-acf5-7826aa99d23f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +155,12 @@
     </ClCompile>
     <ClCompile Include="PhysicsManager.cpp">
       <Filter>Source Files\Managers</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Source Files\GameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,6 +262,12 @@
     </ClInclude>
     <ClInclude Include="PhysicsManager.h">
       <Filter>Header Files\Managers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Header Files\GameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

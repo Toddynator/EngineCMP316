@@ -158,8 +158,10 @@
     <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="AudioManager_SoLoud.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Component.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="EngineLayer.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ImGui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -220,8 +222,10 @@
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="AudioManager_SoLoud.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="EngineLayer.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
