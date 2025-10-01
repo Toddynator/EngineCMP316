@@ -8,7 +8,8 @@ bool EngineLayer::Initialize()
 	///////////////////
 	/// APPLICATION ///
 
-	application = std::make_unique<TempApplication>();
+	application = CMP316engine::CreateApp();
+	//application = std::make_unique<TempApplication>();
 	if (!application->Initialize()) { return false; }
 
 	/////////////////////

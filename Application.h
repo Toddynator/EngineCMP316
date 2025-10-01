@@ -21,5 +21,5 @@ namespace CMP316engine {
 		virtual void Render() = 0;
 	};
 
-	//extern std::unique_ptr<Application> CreateApp(int argc, char** argv); // From Lab 2 // If I were to static link
+	extern std::unique_ptr<Application> CreateApp(); // From Lab 2 // If I were to static link
 }
