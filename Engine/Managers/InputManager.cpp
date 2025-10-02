@@ -1,6 +1,20 @@
 #include "pch.h"
 #include "InputManager.h"
 
+
+
+
+const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::defaultKeybinds
+{
+	{ "fullscreen", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_F11 }}
+};
+
+
+
+
+
+
+
 CMP316engine::InputManager::InputManager()
 {
 	// Initialize all keys to not pressed
@@ -14,6 +28,13 @@ CMP316engine::InputManager::InputManager()
 		mouseButtons[i] = false;
 		prevMouseButtons[i] = false;
 	}
+}
+
+bool CMP316engine::InputManager::Initialize()
+{
+	keybindMap = defaultKeybinds;
+
+	return true;
 }
 
 void CMP316engine::InputManager::EndFrame()
@@ -30,7 +51,7 @@ void CMP316engine::InputManager::EndFrame()
 	}
 }
 
-void CMP316engine::InputManager::updateInputStates(const SDL_Event* event)
+void CMP316engine::InputManager::UpdateInputStates(const SDL_Event* event)
 {
 	switch (event->type)
 	{
@@ -51,38 +72,97 @@ void CMP316engine::InputManager::updateInputStates(const SDL_Event* event)
 	}
 }
 
-bool CMP316engine::InputManager::IsKeyPressed(SDL_Scancode key)
+
+
+bool CMP316engine::InputManager::IsKeyBindingPressed(std::string action)
+{
+	KeyBinding keyBind;
+	if (!getKeyBinding(action, keyBind)) { return false; }
+	return checkKeyBinding(keyBind.key1, keyBind.keyType1, PRESSED)
+		|| checkKeyBinding(keyBind.key2, keyBind.keyType2, PRESSED);
+}
+bool CMP316engine::InputManager::IsKeyBindingDown(std::string action)
+{
+	KeyBinding keyBind;
+	if (!getKeyBinding(action, keyBind)) { return false; }
+	return checkKeyBinding(keyBind.key1, keyBind.keyType1, DOWN)
+		|| checkKeyBinding(keyBind.key2, keyBind.keyType2, DOWN);
+}
+bool CMP316engine::InputManager::IsKeyBindingReleased(std::string action)
+{
+	KeyBinding keyBind;
+	if (!getKeyBinding(action, keyBind)) { return false; }
+	return checkKeyBinding(keyBind.key1, keyBind.keyType1, RELEASED)
+		|| checkKeyBinding(keyBind.key2, keyBind.keyType2, RELEASED);
+}
+bool CMP316engine::InputManager::getKeyBinding(std::string action, KeyBinding& keyBind)
+{
+	auto it = keybindMap.find(action);
+	if (it == keybindMap.end()) {
+		std::cout << "\nKeybind does not exist: " << action;
+		return false;
+	}
+	keyBind = it->second;
+	return true;
+}
+bool CMP316engine::InputManager::checkKeyBinding(int key, KeyBinding::KeyType keyType, CheckType checkType) const {
+	if (keyType == KeyBinding::KEYBOARD)
+	{
+		auto scancodeKey = static_cast<SDL_Scancode>(key);
+		switch (checkType)
+		{
+		case PRESSED: return IsKeyPressed(scancodeKey);
+		case DOWN: return IsKeyDown(scancodeKey);
+		case RELEASED: return IsKeyReleased(scancodeKey);
+		}
+	}
+	else if (keyType == KeyBinding::MOUSE)
+	{
+		auto mouseKey = static_cast<SDL_MouseButtonFlags>(key);
+		switch (checkType)
+		{
+		case PRESSED: return IsMouseButtonPressed(mouseKey);
+		case DOWN: return IsMouseButtonDown(mouseKey);
+		case RELEASED: return IsMouseButtonReleased(mouseKey);
+		}
+	}
+	return false;
+}
+
+
+
+bool CMP316engine::InputManager::IsKeyPressed(SDL_Scancode key) const
 {
 	//if (keys[key] && event->key.scancode && event->type == sdl_event_key_down && !event->key.repeat)
 	if (keys[key] && !prevKeys[key]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsKeyDown(SDL_Scancode key)
+bool CMP316engine::InputManager::IsKeyDown(SDL_Scancode key) const
 {
 	if(keys[key] && prevKeys[key]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsKeyReleased(SDL_Scancode key)
+bool CMP316engine::InputManager::IsKeyReleased(SDL_Scancode key) const
 {
 	if (!keys[key] && prevKeys[key]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton)
+bool CMP316engine::InputManager::IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton) const
 {
 	if (mouseButtons[mouseButton] && !prevMouseButtons[mouseButton]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsMouseButtonDown(SDL_MouseButtonFlags mouseButton)
+bool CMP316engine::InputManager::IsMouseButtonDown(SDL_MouseButtonFlags mouseButton) const
 {
 	if (mouseButtons[mouseButton] && prevMouseButtons[mouseButton]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton)
+bool CMP316engine::InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton) const
 {
 	if (!mouseButtons[mouseButton] && prevMouseButtons[mouseButton]) { return true; }
 	return false;

@@ -20,6 +20,7 @@ bool EngineLayer::Initialize()
 	/// INPUT MANAGER ///
 
 	inputManager = std::make_unique<CMP316engine::InputManager>();
+	inputManager->Initialize();
 
 	/////////////////////
 	/// AUDIO MANAGER ///
@@ -157,7 +158,7 @@ bool EngineLayer::processEvents()
 		/// INPUT ///
 
 		ImGui_ImplSDL3_ProcessEvent(&event);
-		inputManager->updateInputStates(&event);
+		inputManager->UpdateInputStates(&event);
 	}
 	return true;
 }
@@ -171,7 +172,7 @@ void EngineLayer::Update()
 	///// INPUT
 
 	// TODO: Make a global inputs function for encapsulating application input
-	if (inputManager->IsKeyPressed(SDL_SCANCODE_F11)) {
+	if (inputManager->IsKeyBindingPressed("fullscreen")) {
 		windowManager->FullscreenWindow();
 	}
 	inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.

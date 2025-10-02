@@ -13,6 +13,7 @@ Game::Game()
 
 bool Game::Initialize()
 {
+	std::cout << "\nTEST: The Game Project is successfully Linked!!!";
 	return true;
 }
 
@@ -33,7 +34,7 @@ void Game::HandleImgui()
 
 void Game::Update(float deltaTime)
 {
-	std::cout << "\nTEST: The Game Project is successfully Linked!!!";
+
 }
 
 void Game::Render()

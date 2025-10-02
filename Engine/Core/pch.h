@@ -14,6 +14,7 @@ the header uses them, but in building it will be using the precompiled header an
 #include <fstream>
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
 #include <Windows.h>
 #include <d3d11.h>
