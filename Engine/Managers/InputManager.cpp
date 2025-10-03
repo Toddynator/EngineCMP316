@@ -3,15 +3,10 @@
 
 
 
-
 const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::defaultKeybinds
 {
 	{ "fullscreen", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_F11 }}
 };
-
-
-
-
 
 
 

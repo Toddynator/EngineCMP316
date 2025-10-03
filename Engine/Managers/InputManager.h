@@ -44,8 +44,6 @@ namespace CMP316engine {
 		KeyBinding() = default;
 	};
 
-
-
 	class InputManager :
 		public Manager
 	{

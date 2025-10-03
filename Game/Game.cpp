@@ -1,20 +1,21 @@
 #include "pch.h"
 #include "Game.h"
 
-//std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
-//{
-//	return std::make_unique<Game>(engineContext);
-//}
-std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp()
+/////
+
+std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
 {
-	return std::make_unique<Game>();
+	return std::make_unique<Game>(engineContext);
 }
 
-
+/////
 
 bool Game::Initialize()
 {
-	std::cout << "\nTEST: The Game Project is successfully Linked!!!";
+	// I yearn for the music
+	int audioHandle = engineContext.audioManager->Play("MyJam");
+	engineContext.audioManager->SetAudioLoop(audioHandle, true);
+
 	return true;
 }
 

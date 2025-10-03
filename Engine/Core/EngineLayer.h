@@ -45,8 +45,7 @@ namespace CMP316engine {
 
 		/// TESTING VARIABLES
 		// NOTE: Temp, just for testing
-		bool audioPlayed = false;
-		JPH::BodyID modelPhysicsBodyID;
+		//JPH::BodyID modelPhysicsBodyID;
 
 
 

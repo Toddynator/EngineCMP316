@@ -3,30 +3,33 @@
 #include "../ImGui/imgui_impl_sdl3.h"
 #include "../ImGui/imgui_impl_dx11.h"
 
+#include "../Managers/AudioManager_SoLoud.h"
+#include "../Managers/WindowManager_SDL.h"
+
 
 
 CMP316engine::EngineLayer::EngineLayer()
 {
 	auto& ec = engineContext;
-	/*application = CMP316engine::CreateApp(engineContext);*/
-	application = CMP316engine::CreateApp();
+	application = CMP316engine::CreateApp(engineContext);
+	//application = CMP316engine::CreateApp();
 	ec.timeManager = std::make_unique<TimeManager>();
-	ec.inputManager = std::make_unique<InputManager>();
+	//ec.inputManager = std::make_unique<InputManager>();
 	ec.audioManager = std::make_unique<AudioManager_SoLoud>();
 	ec.windowManager = std::make_unique<WindowManager_SDL>();
-	ec.physicsManager = std::make_unique<PhysicsManager>();
+	//ec.physicsManager = std::make_unique<PhysicsManager>();
 }
 
 bool CMP316engine::EngineLayer::Initialize()
 {
 	auto& ec = engineContext;
-	if (!application->Initialize()) { return false; }
-	if (!ec.inputManager->Initialize()) { return false; }
+	//if (!ec.inputManager->Initialize()) { return false; }
 	if (!ec.audioManager->Initialize()) { return false; }
 	if (!ec.windowManager->Initialize()) { return false; }
 	HWND hwnd = ec.windowManager->GetHWND();
 	if (!createRenderer(hwnd)) { return false; }
-	if (!ec.physicsManager->Initialize()) { return false; }
+	//if (!ec.physicsManager->Initialize()) { return false; }
+	if (!application->Initialize()) { return false; } // Should probably do this last, incase I do any testing with the managers on initialization.
 
 	/////////////
 	/// IMGUI ///
@@ -72,12 +75,12 @@ bool CMP316engine::EngineLayer::Initialize()
 
 	/// PHYSICS TEST ///
 	// We'll just associate this with our model for now
-	JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
-	modelPhysicsBodyID = engineContext.physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
-	engineContext.physicsManager->GetBodyInterface().SetLinearVelocity(modelPhysicsBodyID, JPH::Vec3(0.1f, 0.1f, 0.0f));
-
-	JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
-	JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
+	//JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
+	//modelPhysicsBodyID = engineContext.physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
+	//engineContext.physicsManager->GetBodyInterface().SetLinearVelocity(modelPhysicsBodyID, JPH::Vec3(0.1f, 0.1f, 0.0f));
+	//
+	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
+	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
 	///
 
 
@@ -100,7 +103,7 @@ void CMP316engine::EngineLayer::Shutdown()
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
 
-	if (engineContext.physicsManager) { engineContext.physicsManager->Shutdown(); }
+	//if (engineContext.physicsManager) { engineContext.physicsManager->Shutdown(); }
 	if (application) { application->Shutdown(); }
 	if (engineContext.shader) { engineContext.shader->Shutdown(); }
 	if (model) { model->Shutdown(); }
@@ -138,7 +141,7 @@ bool CMP316engine::EngineLayer::processEvents()
 		/// INPUT ///
 
 		ImGui_ImplSDL3_ProcessEvent(&event);
-		engineContext.inputManager->UpdateInputStates(&event);
+		//engineContext.inputManager->UpdateInputStates(&event);
 	}
 	return true;
 }
@@ -152,10 +155,10 @@ void CMP316engine::EngineLayer::update()
 	///// INPUT
 
 	// TODO: Make a global inputs function for encapsulating application input
-	if (engineContext.inputManager->IsKeyBindingPressed("fullscreen")) {
-		engineContext.windowManager->FullscreenWindow();
-	}
-	engineContext.inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
+	//if (engineContext.inputManager->IsKeyBindingPressed("fullscreen")) {
+	//	engineContext.windowManager->FullscreenWindow();
+	//}
+	//engineContext.inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
 
 	///// IMGUI  
 
@@ -181,20 +184,12 @@ void CMP316engine::EngineLayer::update()
 	application->HandleImgui();
 	application->Update(engineContext.timeManager->getDeltaTime());
 
-	/// AUDIO TEST
-	if (!audioPlayed) {
-		audioPlayed = true;
-		int audioHandle = engineContext.audioManager->Play("MyJam");
-		engineContext.audioManager->SetAudioLoop(audioHandle, true);
-	}
-	///
-
 	/// PHYSICS TEST
 
-	engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
-	JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
-	JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
-	model->SetPosition(XMFLOAT3(position.GetX(), position.GetY(), position.GetZ()));
+	//engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
+	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
+	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
+	//model->SetPosition(XMFLOAT3(position.GetX(), position.GetY(), position.GetZ()));
 
 	///
 }

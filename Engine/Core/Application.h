@@ -4,14 +4,14 @@ Base class that games utilizing the engine will inherit.
 
 #pragma once
 #include <memory>
-//#include "EngineContext.h"
+#include "EngineContext.h"
 
 namespace CMP316engine {
 	class Application
 	{
 	public:
-		//Application(EngineContext& context) : engineContext(context) {}
-		Application() {}
+		explicit Application(EngineContext& context) : engineContext(context) {}
+		Application() = delete; // MUST pass the context in
 		~Application() = default;
 
 		virtual bool Initialize() = 0;
@@ -22,10 +22,9 @@ namespace CMP316engine {
 		virtual void Update(float deltaTime) = 0;
 		virtual void Render() = 0;
 
-	private:
-		//EngineContext& engineContext;
+	protected:
+		EngineContext& engineContext;
 	};
 
-	//extern std::unique_ptr<Application> CreateApp(EngineContext& engineContext); // This is how the Game links to the Engine! The engine does not need to know anything about the game.
-	extern std::unique_ptr<Application> CreateApp();
+	extern std::unique_ptr<Application> CreateApp(EngineContext& engineContext); // This is how the Game links to the Engine! The engine does not need to know anything about the game.
 }
