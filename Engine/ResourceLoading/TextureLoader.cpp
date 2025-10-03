@@ -3,7 +3,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-
 Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	Texture* texture = new Texture;
@@ -71,10 +70,6 @@ void TextureLoader::ReleaseTexture(Texture* texture)
 {
 	texture->Shutdown();
 }
-
-
-
-
 
 //unsigned char* TextureLoader::LoadImage(const char* filename, int* w, int* h, int* channels)
 //{

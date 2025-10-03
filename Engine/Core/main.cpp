@@ -42,7 +42,7 @@ NOTES:
 
 ================================================================
 - Engine does not need to abstract SDL for events or windows, I can use SDL types directly. SDL already is an abstraction layer.
-- Renderer should ideally be abstracted. The directx math library types I can keep using but renderer specific stuff like shader texture view I should abstract.
+- Renderer should ideally be abstracted. The directX math library types I can keep using but renderer specific stuff like shader texture view I should abstract.
 - My engine does not need to be multi-platform, I don't need any implementations for other platforms, but I should abstract stuff like the renderer anyway to have a good system architecture which technically then allows for the possibility of multi-platform.
 */
 
@@ -54,7 +54,7 @@ NOTES:
 ///
 
 int main(int argc, char* argv[]) {
-	std::unique_ptr<EngineLayer> engine = std::make_unique<EngineLayer>();
+	std::unique_ptr<CMP316engine::EngineLayer> engine = std::make_unique<CMP316engine::EngineLayer>();
 	if (engine->Initialize())
 	{
 		engine->Run();

@@ -179,6 +179,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Core\EngineContext.cpp" />
     <ClCompile Include="Engine\Core\Application.cpp" />
     <ClCompile Include="Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Engine\Managers\AudioManager.cpp" />
@@ -211,6 +212,7 @@
     <ClCompile Include="Engine\Managers\WindowManager_SDL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Core\EngineContext.h" />
     <ClInclude Include="Engine\Core\Application.h" />
     <ClInclude Include="Engine\Managers\AssetManager.h" />
     <ClInclude Include="Engine\Managers\AudioManager.h" />

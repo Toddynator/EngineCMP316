@@ -1,52 +1,32 @@
 #include "pch.h"
 #include "EngineLayer.h"
+#include "../ImGui/imgui_impl_sdl3.h"
+#include "../ImGui/imgui_impl_dx11.h"
 
 
 
-bool EngineLayer::Initialize()
+CMP316engine::EngineLayer::EngineLayer()
 {
-	///////////////////
-	/// APPLICATION ///
-
+	auto& ec = engineContext;
+	/*application = CMP316engine::CreateApp(engineContext);*/
 	application = CMP316engine::CreateApp();
+	ec.timeManager = std::make_unique<TimeManager>();
+	ec.inputManager = std::make_unique<InputManager>();
+	ec.audioManager = std::make_unique<AudioManager_SoLoud>();
+	ec.windowManager = std::make_unique<WindowManager_SDL>();
+	ec.physicsManager = std::make_unique<PhysicsManager>();
+}
+
+bool CMP316engine::EngineLayer::Initialize()
+{
+	auto& ec = engineContext;
 	if (!application->Initialize()) { return false; }
-
-	/////////////////////
-	/// TIME MANAGGER ///
-
-	timeManager = std::make_unique<CMP316engine::TimeManager>();
-
-	/////////////////////
-	/// INPUT MANAGER ///
-
-	inputManager = std::make_unique<CMP316engine::InputManager>();
-	inputManager->Initialize();
-
-	/////////////////////
-	/// AUDIO MANAGER ///
-
-	audioManager = std::make_unique<CMP316engine::AudioManager_SoLoud>();
-	audioManager->Initialize();
-
-	//////////////
-	/// WINDOW ///
-
-	windowManager = std::make_unique<CMP316engine::WindowManager_SDL>();
-	if (!windowManager->Initialize()) { return false; }
-	HWND hwnd = windowManager->GetHWND();
-
-	/////////////////
-	/// RENDERER  ///
-
-	if (!createRenderer(hwnd)) {
-		return false;
-	}
-
-	///////////////
-	/// PHYSICS ///
-
-	physicsManager = std::make_unique<CMP316engine::PhysicsManager>();
-	physicsManager->Initialize();
+	if (!ec.inputManager->Initialize()) { return false; }
+	if (!ec.audioManager->Initialize()) { return false; }
+	if (!ec.windowManager->Initialize()) { return false; }
+	HWND hwnd = ec.windowManager->GetHWND();
+	if (!createRenderer(hwnd)) { return false; }
+	if (!ec.physicsManager->Initialize()) { return false; }
 
 	/////////////
 	/// IMGUI ///
@@ -60,16 +40,16 @@ bool EngineLayer::Initialize()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // IF using Docking Branch
 
 	// Setup Platform/Renderer back-ends
-	ImGui_ImplSDL3_InitForD3D(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
-	ImGui_ImplDX11_Init(renderer->GetDevice(), renderer->GetDeviceContext());
+	ImGui_ImplSDL3_InitForD3D(static_cast<SDL_Window*>(engineContext.windowManager->GetNativeWindow()));
+	ImGui_ImplDX11_Init(engineContext.renderer->GetDevice(), engineContext.renderer->GetDeviceContext());
 
 	/////////////
 	/// SCENE ///
 
 	// Create and initialize the texture shader object.
-	shader = std::make_unique<Shader>();
+	engineContext.shader = std::make_unique<Shader>();
 
-	if (!shader->Initialize(renderer->GetDevice(), hwnd))
+	if (!engineContext.shader->Initialize(engineContext.renderer->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, L"Could not initialize the shader object.", L"Error", MB_OK);
 		return false;
@@ -83,7 +63,7 @@ bool EngineLayer::Initialize()
 	// Create and initialize the model object.
 	model = std::make_unique<CMP316engine::Model>();
 
-	if (!model->Initialize(renderer->GetDevice(), renderer->GetDeviceContext()))
+	if (!model->Initialize(engineContext.renderer->GetDevice(), engineContext.renderer->GetDeviceContext()))
 	{
 		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
 		return false;
@@ -93,43 +73,43 @@ bool EngineLayer::Initialize()
 	/// PHYSICS TEST ///
 	// We'll just associate this with our model for now
 	JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
-	modelPhysicsBodyID = physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
-	physicsManager->GetBodyInterface().SetLinearVelocity(modelPhysicsBodyID, JPH::Vec3(0.1f, 0.1f, 0.0f));
+	modelPhysicsBodyID = engineContext.physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
+	engineContext.physicsManager->GetBodyInterface().SetLinearVelocity(modelPhysicsBodyID, JPH::Vec3(0.1f, 0.1f, 0.0f));
 
-	JPH::RVec3 position = physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
-	JPH::Vec3 velocity = physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
+	JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
+	JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
 	///
 
 
 	return true;
 }
 
-void EngineLayer::Run()
+void CMP316engine::EngineLayer::Run()
 {
 	while (true)
 	{
 		if (!processEvents()) { return; }
-		Update();
-		Render();
+		update();
+		render();
 	}
 }
 
-void EngineLayer::Shutdown()
+void CMP316engine::EngineLayer::Shutdown()
 {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
 
-	if (physicsManager) { physicsManager->Shutdown(); }
+	if (engineContext.physicsManager) { engineContext.physicsManager->Shutdown(); }
 	if (application) { application->Shutdown(); }
-	if (shader) { shader->Shutdown(); }
+	if (engineContext.shader) { engineContext.shader->Shutdown(); }
 	if (model) { model->Shutdown(); }
-	if (renderer) { renderer->Shutdown(); }
-	if (windowManager) { windowManager->Shutdown(); }
-	if (audioManager) { audioManager->Shutdown(); }
+	if (engineContext.renderer) { engineContext.renderer->Shutdown(); }
+	if (engineContext.windowManager) { engineContext.windowManager->Shutdown(); }
+	if (engineContext.audioManager) { engineContext.audioManager->Shutdown(); }
 }
 
-bool EngineLayer::processEvents()
+bool CMP316engine::EngineLayer::processEvents()
 {
 	SDL_Event event;
 	while(SDL_PollEvent(&event) != 0)
@@ -150,32 +130,32 @@ bool EngineLayer::processEvents()
 		{
 			// Have to update the renderer when the window resizes, otherwise the scene will appear distorted/stretched.
 			int screenWidth, screenHeight;
-			windowManager->GetWindowSize(screenWidth, screenHeight);
-			renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
+			engineContext.windowManager->GetWindowSize(screenWidth, screenHeight);
+			engineContext.renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 		}
 
 		/////////////
 		/// INPUT ///
 
 		ImGui_ImplSDL3_ProcessEvent(&event);
-		inputManager->UpdateInputStates(&event);
+		engineContext.inputManager->UpdateInputStates(&event);
 	}
 	return true;
 }
 
-void EngineLayer::Update()
+void CMP316engine::EngineLayer::update()
 {
 	///// TIME
 
-	timeManager->Update();
+	engineContext.timeManager->Update();
 
 	///// INPUT
 
 	// TODO: Make a global inputs function for encapsulating application input
-	if (inputManager->IsKeyBindingPressed("fullscreen")) {
-		windowManager->FullscreenWindow();
+	if (engineContext.inputManager->IsKeyBindingPressed("fullscreen")) {
+		engineContext.windowManager->FullscreenWindow();
 	}
-	inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
+	engineContext.inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
 
 	///// IMGUI  
 
@@ -189,7 +169,7 @@ void EngineLayer::Update()
 	ImGui::Begin("Testing");
 	if (ImGui::Checkbox("Wireframe", &wireframeEnabled))
 	{
-		renderer->ToggleWireframe();
+		engineContext.renderer->ToggleWireframe();
 	}
 	model->RenderImGuiControls();
 	ImGui::End();
@@ -199,30 +179,30 @@ void EngineLayer::Update()
 
 	application->HandleInput();
 	application->HandleImgui();
-	application->Update(timeManager->getDeltaTime());
+	application->Update(engineContext.timeManager->getDeltaTime());
 
 	/// AUDIO TEST
 	if (!audioPlayed) {
 		audioPlayed = true;
-		int audioHandle = audioManager->Play("MyJam");
-		audioManager->SetAudioLoop(audioHandle, true);
+		int audioHandle = engineContext.audioManager->Play("MyJam");
+		engineContext.audioManager->SetAudioLoop(audioHandle, true);
 	}
 	///
 
 	/// PHYSICS TEST
 
-	physicsManager->Update(timeManager->getDeltaTime());
-	JPH::RVec3 position = physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
-	JPH::Vec3 velocity = physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
+	engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
+	JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
+	JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
 	model->SetPosition(XMFLOAT3(position.GetX(), position.GetY(), position.GetZ()));
 
 	///
 }
 
-void EngineLayer::Render()
+void CMP316engine::EngineLayer::render()
 {
 	XMMATRIX viewMatrix, projectionMatrix;
-	renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
+	engineContext.renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
 
 	///// SCENE
 
@@ -233,11 +213,11 @@ void EngineLayer::Render()
 
 	// Get the view, and projection matrices from the camera and d3d objects.
 	viewMatrix = camera->GetViewMatrix();
-	projectionMatrix = renderer->GetProjectionMatrix();
+	projectionMatrix = engineContext.renderer->GetProjectionMatrix();
 
 	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	// CALL THIS FOR EACH RENDERABLE OBJECT IN THE SCENE
-	model->Render(shader.get(), renderer->GetDeviceContext(), viewMatrix, projectionMatrix);
+	model->Render(engineContext.shader.get(), engineContext.renderer->GetDeviceContext(), viewMatrix, projectionMatrix);
 	
 	///// IMGUI
 
@@ -246,18 +226,18 @@ void EngineLayer::Render()
 
 	/////
 
-	renderer->EndScene();
+	engineContext.renderer->EndScene();
 }
 
-bool EngineLayer::createRenderer(HWND hwnd)
+bool CMP316engine::EngineLayer::createRenderer(HWND hwnd)
 {
-	renderer = std::make_unique<Renderer_DirectX11>();
+	engineContext.renderer = std::make_unique<Renderer_DirectX11>();
 
 	int screenWidth, screenHeight;
 	screenWidth = 0; screenHeight = 0;
-	windowManager->GetWindowSize(screenWidth, screenHeight);
+	engineContext.windowManager->GetWindowSize(screenWidth, screenHeight);
 
-	if (!renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, windowManager->IsFullscreen(), SCREEN_DEPTH, SCREEN_NEAR))
+	if (!engineContext.renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, engineContext.windowManager->IsFullscreen(), SCREEN_DEPTH, SCREEN_NEAR))
 	{
 		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
 		return false;

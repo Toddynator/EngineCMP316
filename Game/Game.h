@@ -1,11 +1,12 @@
 #pragma once
 #include "Core/Application.h"
+//#include "Core/EngineContext.h"
 
 class Game
 	: public CMP316engine::Application
 {
 public:
-	Game();
+	//Game(CMP316engine::EngineContext& context) : Application(context) {}
 
 	bool Initialize() override;
 	void Shutdown() override;

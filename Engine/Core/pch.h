@@ -20,3 +20,5 @@ the header uses them, but in building it will be using the precompiled header an
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <directxmath.h>
+#include <SDL3/SDL.h>
+#include <ImGui.h>

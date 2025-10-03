@@ -153,6 +153,9 @@
     <ClCompile Include="Engine\ImGui\imgui_impl_sdl3.cpp">
       <Filter>Source Files\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Core\EngineContext.cpp">
+      <Filter>Source Files\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\Camera.h">
@@ -238,6 +241,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ImGui\imgui_impl_dx11.h">
       <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Core\EngineContext.h">
+      <Filter>Header Files\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
