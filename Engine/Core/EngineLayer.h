@@ -9,9 +9,6 @@ It is also responsible for the structuring / ordering of the updates in an appli
 /////
 #include "EngineContext.h"
 #include "Application.h"
-/////
-#include "../Graphics/Camera.h"
-#include "../Graphics/Model.h"
 
 namespace CMP316engine {
 	class EngineLayer
@@ -35,19 +32,6 @@ namespace CMP316engine {
 	private:
 		std::unique_ptr<CMP316engine::Application> application = nullptr; // The actual game
 		EngineContext engineContext;
-
-
-
-		/// SCENE
-		// NOTE: Temp, should be in scene class only
-		std::unique_ptr<Camera> camera = nullptr;
-		std::unique_ptr<CMP316engine::Model> model = nullptr;
-
-		/// TESTING VARIABLES
-		// NOTE: Temp, just for testing
-		//JPH::BodyID modelPhysicsBodyID;
-
-
 
 		bool wireframeEnabled = false;
 		const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
