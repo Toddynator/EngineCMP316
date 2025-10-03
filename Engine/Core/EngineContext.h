@@ -15,12 +15,12 @@ Only include abstractions.
 
 #pragma once
 #include <memory>
-//#include "../Managers/InputManager.h"
+#include "../Managers/InputManager.h"
 #include "../Managers/TimeManager.h"
 #include "../Managers/AudioManager.h"
 #include "../Managers/WindowManager.h"
 #include "../Managers/RenderManager.h"
-//#include "../Managers/PhysicsManager.h"
+#include "../Managers/PhysicsManager.h"
 /////
 #include "../Graphics/Renderer_DirectX11.h" // RENDERER
 #include "../Graphics/Shader.h"
@@ -28,11 +28,11 @@ Only include abstractions.
 namespace CMP316engine {
 	struct EngineContext
 	{
-		//std::unique_ptr<InputManager> inputManager = nullptr;
+		std::unique_ptr<InputManager> inputManager = nullptr;
 		std::unique_ptr<TimeManager> timeManager = nullptr;
 		std::unique_ptr<WindowManager> windowManager = nullptr;
 		std::unique_ptr<AudioManager> audioManager = nullptr;
-		//std::unique_ptr<PhysicsManager> physicsManager = nullptr;
+		std::unique_ptr<PhysicsManager> physicsManager = nullptr;
 
 		std::unique_ptr<Renderer_DirectX11> renderer = nullptr; // TODO: Make RenderManager ~ Should not be exposing ANY directX types.
 		std::unique_ptr<Shader> shader = nullptr; // TODO: Make AssetManager and Move to AssetManager

@@ -69,7 +69,10 @@ void Game::Shutdown()
 
 void Game::HandleInput()
 {
-
+	// TODO: Make a global inputs function for encapsulating application input
+	if (engineContext.inputManager->IsKeyBindingPressed("fullscreen")) {
+		engineContext.windowManager->FullscreenWindow();
+	}
 }
 
 void Game::HandleImgui()

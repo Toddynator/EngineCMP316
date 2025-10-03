@@ -33,7 +33,6 @@ namespace CMP316engine {
 		std::unique_ptr<CMP316engine::Application> application = nullptr; // The actual game
 		EngineContext engineContext;
 
-		bool wireframeEnabled = false;
 		const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer
 		const float SCREEN_DEPTH = 1000.0f;
 		const float SCREEN_NEAR = 0.3f;

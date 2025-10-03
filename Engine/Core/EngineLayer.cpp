@@ -13,21 +13,21 @@ CMP316engine::EngineLayer::EngineLayer()
 	auto& ec = engineContext;
 	application = CMP316engine::CreateApp(engineContext);
 	ec.timeManager = std::make_unique<TimeManager>();
-	//ec.inputManager = std::make_unique<InputManager>();
+	ec.inputManager = std::make_unique<InputManager>();
 	ec.audioManager = std::make_unique<AudioManager_SoLoud>();
 	ec.windowManager = std::make_unique<WindowManager_SDL>();
-	//ec.physicsManager = std::make_unique<PhysicsManager>();
+	ec.physicsManager = std::make_unique<PhysicsManager>();
 }
 
 bool CMP316engine::EngineLayer::Initialize()
 {
 	auto& ec = engineContext;
-	//if (!ec.inputManager->Initialize()) { return false; }
+	if (!ec.inputManager->Initialize()) { return false; }
 	if (!ec.audioManager->Initialize()) { return false; }
 	if (!ec.windowManager->Initialize()) { return false; }
 	HWND hwnd = ec.windowManager->GetHWND();
 	if (!createRenderer(hwnd)) { return false; }
-	//if (!ec.physicsManager->Initialize()) { return false; }
+	if (!ec.physicsManager->Initialize()) { return false; }
 	if (!application->Initialize()) { return false; } // Should probably do this last, incase I do any testing with the managers on initialization.
 
 	/////////////
@@ -63,12 +63,13 @@ void CMP316engine::EngineLayer::Shutdown()
 	ImGui_ImplSDL3_Shutdown();
 	ImGui::DestroyContext();
 
-	//if (engineContext.physicsManager) { engineContext.physicsManager->Shutdown(); }
+	if (engineContext.physicsManager) { engineContext.physicsManager->Shutdown(); }
 	if (application) { application->Shutdown(); }
 	if (engineContext.shader) { engineContext.shader->Shutdown(); }
 	if (engineContext.renderer) { engineContext.renderer->Shutdown(); }
 	if (engineContext.windowManager) { engineContext.windowManager->Shutdown(); }
 	if (engineContext.audioManager) { engineContext.audioManager->Shutdown(); }
+	if (engineContext.inputManager) { engineContext.inputManager->Shutdown(); }
 }
 
 bool CMP316engine::EngineLayer::processEvents()
@@ -76,8 +77,8 @@ bool CMP316engine::EngineLayer::processEvents()
 	SDL_Event event;
 	while(SDL_PollEvent(&event) != 0)
 	{
-		//////////////////
-		/// QUIT EVENT ///
+		////////////////////
+		/// WINDOW CLOSE ///
 
 		if (event.type == SDL_EVENT_QUIT)
 		{
@@ -96,11 +97,11 @@ bool CMP316engine::EngineLayer::processEvents()
 			engineContext.renderer->HandleWindowResize(screenWidth, screenHeight, SCREEN_NEAR, SCREEN_DEPTH);
 		}
 
-		/////////////
-		/// INPUT ///
+		//////////////////////
+		/// MANAGERS / API ///
 
 		ImGui_ImplSDL3_ProcessEvent(&event);
-		//engineContext.inputManager->UpdateInputStates(&event);
+		engineContext.inputManager->UpdateInputStates(&event);
 	}
 	return true;
 }
@@ -110,14 +111,6 @@ void CMP316engine::EngineLayer::update()
 	///// TIME
 
 	engineContext.timeManager->Update();
-
-	///// INPUT
-
-	// TODO: Make a global inputs function for encapsulating application input
-	//if (engineContext.inputManager->IsKeyBindingPressed("fullscreen")) {
-	//	engineContext.windowManager->FullscreenWindow();
-	//}
-	//engineContext.inputManager->EndFrame(); // Should move this to the very end, just in case maybe the update loop for whatever reason has input calls for example.
 
 	///// IMGUI  
 
@@ -132,6 +125,8 @@ void CMP316engine::EngineLayer::update()
 	application->HandleInput();
 	application->HandleImgui();
 	application->Update(engineContext.timeManager->getDeltaTime());
+
+	engineContext.inputManager->EndFrame();
 }
 
 void CMP316engine::EngineLayer::render()
