@@ -5,8 +5,7 @@ A scene should have a single GameObject as the root.
 
 GameObjects can contain multiple children (GameObjects).
 
-
-
+ENTT:
 Systems will use entt to handle the lifecycle of components.
 GameObjects are purely for handling a scene hierarchy, which is useful in something like a Level Editor.
 */
@@ -53,7 +52,7 @@ namespace CMP316engine {
 	/// TEMPLATE FUNCTIONS ///
 
 	/*
-	@brief opaque handle for adding components to the GameObject, has handling for any parameters the Component may take.
+	@brief Adds a component to the GameObject (Which in reality is actually in the registry handled by entt), has handling for any parameters the Component may take.
 	@return reference to the component that was just added for immediate modifications if required.
 	*/
 	template<typename Component, typename ... Parameters >

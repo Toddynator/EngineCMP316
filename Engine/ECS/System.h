@@ -1,0 +1,29 @@
+#pragma once
+#include "Components.h"
+#include "entt.hpp"
+
+/*
+ABSTRACT BASE CLASS
+Base System that ALL system classes should inherit.
+ANY FUNCTIONS outside of the ones listed in this class should be either private or protected, YOU SHOULD NEVER be using systems outside of the scenes system container.
+*/
+
+namespace CMP316engine {
+	class System
+	{
+	public:
+		System(entt::registry* sceneRegistry) : registry(sceneRegistry) {}
+		System() = delete;
+
+		virtual bool Initialize() = 0;
+		virtual void Shutdown() = 0;
+
+		//virtual void HandleInput();
+		virtual void Update() = 0;
+		//virtual void Render();
+
+	protected:
+		entt::registry* registry;
+	};
+}
+

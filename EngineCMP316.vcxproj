@@ -215,6 +215,8 @@
     <ClCompile Include="Engine\ARCHIVE\GameObject\Components\TransformComponent.cpp" />
     <ClCompile Include="Engine\Managers\WindowManager.cpp" />
     <ClCompile Include="Engine\Managers\WindowManager_SDL.cpp" />
+    <ClCompile Include="Engine\ECS\System.cpp" />
+    <ClCompile Include="Engine\ECS\Systems\RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\ECS\Components.h" />
@@ -247,6 +249,8 @@
     <ClInclude Include="Engine\ARCHIVE\GameObject\Components\TransformComponent.h" />
     <ClInclude Include="Engine\Managers\WindowManager.h" />
     <ClInclude Include="Engine\Managers\WindowManager_SDL.h" />
+    <ClInclude Include="Engine\ECS\System.h" />
+    <ClInclude Include="Engine\ECS\Systems\RenderSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Shaders\shader_ps.hlsl">

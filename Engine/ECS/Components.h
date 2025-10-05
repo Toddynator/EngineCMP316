@@ -1,6 +1,12 @@
 #pragma once
 #include "entt.hpp"
 #include <directxmath.h>
+#include "../Graphics/Mesh.h"
+#include "../Graphics/Texture.h"
+
+/*
+Components should purely store data, only Systems should handle functionality.
+*/
 
 namespace CMP316engine 
 {
@@ -17,6 +23,36 @@ namespace CMP316engine
 	struct TransformComponent
 	{
 		DirectX::XMFLOAT3 position;
+		DirectX::XMFLOAT3 rotation;
+		DirectX::XMFLOAT3 scale;
+		DirectX::XMFLOAT3 origin;
+		DirectX::XMFLOAT3 upVector;
+		DirectX::XMFLOAT3 forwardVector;
+		DirectX::XMFLOAT3 rightVector;
+	};
+
+	struct ModelComponent
+	{
+		std::string filepath = ""; // This is the filepath from inside the data/Models directory!
+		bool modelLoaded = false;
+	};
+
+	struct MeshComponent
+	{
+		std::vector<Mesh> meshes;
+		DirectX::XMMATRIX worldMatrix{};
+		ID3D11Buffer* vertexBuffer = nullptr;
+		ID3D11Buffer* indexBuffer = nullptr;
+		std::unordered_map<std::string, Texture*> textures; // TODO: Remove once AssetManager is created, mesh struct holds texture name, it looks up texture in unordered map (which will be in assetManager at some point)
+		bool meshNeedsCalculated = true; // Can be used for the initial mesh calculation at the start or for run-time recalculation of the mesh, e.g. a voxel mesh has lost some voxels!.
+	};
+
+	/*
+	Most important role this component serves is to define which entity the player is. When systems see this component, they can define the player functionality.
+	*/
+	struct PlayerComponent
+	{
+		int playerNumber;
 	};
 }
 

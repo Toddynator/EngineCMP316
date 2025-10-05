@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TestScene.h"
 #include "ECS/GameObject.h"
+#include "ECS/Systems/RenderSystem.h"
+#include "ECS/Components.h"
 
 bool TestScene::Initialize()
 {
@@ -52,15 +54,28 @@ bool TestScene::Initialize()
 
 	////////// ECS TEST
 
+	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry));
+
+	for (auto& system : systems)
+	{
+		system->Initialize();
+	}
 
 	sceneTree = std::make_unique<CMP316engine::GameObject>(&registry);
-
+	auto& modelComponent = sceneTree->AddComponent<CMP316engine::ModelComponent>();
+	modelComponent.filepath = "Dug/Dug.obj";
+	auto& meshComponent = sceneTree->AddComponent<CMP316engine::MeshComponent>();
 
 	return true;
 }
 
 void TestScene::Shutdown()
 {
+	for (auto& system : systems)
+	{
+		system->Shutdown();
+	}
+
 	if (model) { model->Shutdown(); }
 }
 
@@ -78,6 +93,11 @@ void TestScene::HandleImgui()
 
 void TestScene::Update(float deltaTime)
 {
+	for (auto& system : systems)
+	{
+		system->Update();
+	}
+
 	/// PHYSICS TEST
 
 	//engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
