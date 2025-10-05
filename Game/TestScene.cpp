@@ -69,10 +69,20 @@ void TestScene::HandleInput()
 
 }
 
-void TestScene::HandleImgui()
+void TestScene::HandleImGui()
 {
 	ImGui::Begin("SceneControls");
 	
+	auto transformableEntities = registry.view<CMP316engine::TransformComponent>();
+	for (auto& entity : transformableEntities) {
+		auto& transforms = registry.get<CMP316engine::TransformComponent>(entity);
+
+		ImGui::PushID(entt::to_integral(entity));
+		ImGui::InputFloat3("Position: ", &transforms.position.x);
+		ImGui::SliderFloat3("Rotation: ", &transforms.rotation.x, 0.f, 6.3f);
+		ImGui::PopID();
+	}
+
 	ImGui::End();
 }
 

@@ -123,7 +123,7 @@ void CMP316engine::EngineLayer::update()
 	///// APPLICATION
 
 	application->HandleInput();
-	application->HandleImgui();
+	application->HandleImGui();
 	application->Update(engineContext.timeManager->getDeltaTime());
 
 	engineContext.inputManager->EndFrame();
@@ -132,11 +132,11 @@ void CMP316engine::EngineLayer::update()
 void CMP316engine::EngineLayer::render()
 {
 	engineContext.renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
+	///// APPLICATION
+	application->Render();
 	///// IMGUI
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-	///// APPLICATION
-	application->Render();
 	/////
 	engineContext.renderer->EndScene();
 }

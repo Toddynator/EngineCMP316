@@ -19,7 +19,7 @@ void CMP316engine::Application::HandleInput()
 	}
 }
 
-void CMP316engine::Application::HandleImgui()
+void CMP316engine::Application::HandleImGui()
 {
 
 }

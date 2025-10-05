@@ -18,9 +18,8 @@ namespace CMP316engine {
 		virtual bool Initialize() = 0;
 		virtual void Shutdown() = 0;
 
-		//virtual void HandleInput();
+		virtual void HandleInput() {};
 		virtual void Update() = 0;
-		//virtual void Render();
 
 	protected:
 		entt::registry* registry;
