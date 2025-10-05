@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Model.h"
-#include "../ResourceLoading/OBJ_Loader.h"
+//#include "../ResourceLoading/OBJ_Loader.h"
 #include "../ResourceLoading/TextureLoader.h"
 #include "imgui.h"
 
@@ -309,6 +309,7 @@ void CMP316engine::Model::ReleaseTexture()
 
 bool CMP316engine::Model::loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath)
 {
+	/*
 	meshes.clear();
 	textures.clear();
 
@@ -318,6 +319,7 @@ bool CMP316engine::Model::loadModel(ID3D11Device* device, ID3D11DeviceContext* d
 
 	for (auto& loadedMesh : objLoader.LoadedMeshes)
 	{
+		
 		meshes.push_back(CMP316engine::Mesh());
 		auto& mesh = meshes.back();
 		mesh.name = loadedMesh.MeshName;
@@ -366,6 +368,6 @@ bool CMP316engine::Model::loadModel(ID3D11Device* device, ID3D11DeviceContext* d
 		textures.insert({ textureName, texture });
 		mesh.textureName = textureName;
 	}
-
+	*/
 	return true;
 }

@@ -34,7 +34,6 @@ entt::entity CMP316engine::GameObject::AddChild()
 void CMP316engine::GameObject::CreateEntity()
 {
 	entityHandle = registry->create();
-	registry->emplace<HierarchyComponent>(entityHandle);
 }
 
 void CMP316engine::GameObject::DestroyEntity()

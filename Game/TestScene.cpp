@@ -15,10 +15,8 @@ bool TestScene::Initialize()
 	/////
 
 	HWND hwnd = engineContext.windowManager->GetHWND();
-
 	// Create and initialize the texture shader object.
 	engineContext.shader = std::make_unique<Shader>();
-
 	if (!engineContext.shader->Initialize(engineContext.renderer->GetDevice(), hwnd))
 	{
 		MessageBox(hwnd, L"Could not initialize the shader object.", L"Error", MB_OK);
@@ -30,14 +28,6 @@ bool TestScene::Initialize()
 	// Set the initial position of the camera.
 	camera->SetPosition(0.0f, 0.0f, -5.0f);
 
-	// Create and initialize the model object.
-	model = std::make_unique<CMP316engine::Model>();
-
-	if (!model->Initialize(engineContext.renderer->GetDevice(), engineContext.renderer->GetDeviceContext()))
-	{
-		MessageBox(hwnd, L"Could not initialize the model object.", L"Error", MB_OK);
-		return false;
-	}
 
 	////////////////////
 	/// PHYSICS TEST ///
@@ -54,7 +44,7 @@ bool TestScene::Initialize()
 
 	////////// ECS TEST
 
-	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry));
+	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
 
 	for (auto& system : systems)
 	{
@@ -63,7 +53,7 @@ bool TestScene::Initialize()
 
 	sceneTree = std::make_unique<CMP316engine::GameObject>(&registry);
 	auto& modelComponent = sceneTree->AddComponent<CMP316engine::ModelComponent>();
-	modelComponent.filepath = "Dug/Dug.obj";
+	modelComponent.filepath = "data/Models/Dug/Dug.obj";
 	auto& meshComponent = sceneTree->AddComponent<CMP316engine::MeshComponent>();
 
 	return true;
@@ -75,8 +65,6 @@ void TestScene::Shutdown()
 	{
 		system->Shutdown();
 	}
-
-	if (model) { model->Shutdown(); }
 }
 
 void TestScene::HandleInput()
@@ -87,7 +75,7 @@ void TestScene::HandleInput()
 void TestScene::HandleImgui()
 {
 	ImGui::Begin("SceneControls");
-	model->RenderImGuiControls();
+	
 	ImGui::End();
 }
 
@@ -108,16 +96,7 @@ void TestScene::Update(float deltaTime)
 
 void TestScene::Render()
 {
-	XMMATRIX viewMatrix, projectionMatrix;
-
-	// Generate the view matrix based on the camera's position.
-	camera->Render();
-
-	// Get the view, and projection matrices from the camera and d3d objects.
-	viewMatrix = camera->GetViewMatrix();
-	projectionMatrix = engineContext.renderer->GetProjectionMatrix();
-
-	// Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
-	// CALL THIS FOR EACH RENDERABLE OBJECT IN THE SCENE
-	model->Render(engineContext.shader.get(), engineContext.renderer->GetDeviceContext(), viewMatrix, projectionMatrix);
+	camera->Render(); // Generate the view matrix based on the camera's position.
+	XMMATRIX viewMatrix = camera->GetViewMatrix();
+	CMP316engine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.shader.get(), viewMatrix);
 }

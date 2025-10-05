@@ -60,7 +60,7 @@ namespace CMP316engine {
 	{
 		if (registry->any_of<Component>(entityHandle)) {
 			//assert("Tried to add a component that already exists, you should only have one component per entity!");
-			std::cerr << "\nTried to add a component that already exists, you should only have one component per entity!";
+			std::cout << "\nTried to add a component that already exists, you should only have one component per entity!";
 			Component& component = registry->get<Component>(entityHandle);
 			return component;
 		}

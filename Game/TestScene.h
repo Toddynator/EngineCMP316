@@ -20,7 +20,7 @@ public:
 
 private:
 	std::unique_ptr<Camera> camera = nullptr;
-	std::unique_ptr<CMP316engine::Model> model = nullptr;
+	//std::unique_ptr<CMP316engine::Model> model = nullptr;
 
 	/// TESTING VARIABLES
 	// NOTE: Temp, just for testing

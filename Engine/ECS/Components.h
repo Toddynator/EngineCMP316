@@ -6,6 +6,9 @@
 
 /*
 Components should purely store data, only Systems should handle functionality.
+
+COMPONENT IDEAS:
+- ShaderMaterial component? Mesh objects without one use a default shader for rendering.
 */
 
 namespace CMP316engine 
@@ -22,13 +25,13 @@ namespace CMP316engine
 
 	struct TransformComponent
 	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT3 rotation;
-		DirectX::XMFLOAT3 scale;
-		DirectX::XMFLOAT3 origin;
-		DirectX::XMFLOAT3 upVector;
-		DirectX::XMFLOAT3 forwardVector;
-		DirectX::XMFLOAT3 rightVector;
+		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f,0.f,0.f);
+		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 origin = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 upVector = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 forwardVector = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 rightVector = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 	};
 
 	struct ModelComponent
@@ -43,8 +46,25 @@ namespace CMP316engine
 		DirectX::XMMATRIX worldMatrix{};
 		ID3D11Buffer* vertexBuffer = nullptr;
 		ID3D11Buffer* indexBuffer = nullptr;
-		std::unordered_map<std::string, Texture*> textures; // TODO: Remove once AssetManager is created, mesh struct holds texture name, it looks up texture in unordered map (which will be in assetManager at some point)
+		std::unordered_map<std::string, Texture*> textures; // TODO: Remove once AssetManager is created, mesh struct holds texture name, it looks up texture in unordered map (which will be in assetManager at some point). Shutdown then handled by assetManager, clean!
 		bool meshNeedsCalculated = true; // Can be used for the initial mesh calculation at the start or for run-time recalculation of the mesh, e.g. a voxel mesh has lost some voxels!.
+
+		int GetIndexCount()
+		{
+			int total = 0;
+			for (auto& mesh : meshes) {
+				total += static_cast<int>(mesh.indices.size());
+			}
+			return total;
+		}
+		int GetVertexCount()
+		{
+			int total = 0;
+			for (auto& mesh : meshes) {
+				total += static_cast<int>(mesh.vertices.size());
+			}
+			return total;
+		}
 	};
 
 	/*
