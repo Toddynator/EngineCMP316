@@ -5,7 +5,7 @@ class TestScene
 	: public CMP316engine::Scene
 {
 public:
-	TestScene(CMP316engine::EngineContext& context) : Scene(context) {}
+	TestScene(CMP316engine::EngineContext& context);
 
 	bool Initialize() override;
 	void Shutdown() override;

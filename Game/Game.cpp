@@ -29,9 +29,9 @@ void Game::HandleInput()
 	activeScene->HandleInput();
 }
 
-void Game::HandleImgui()
+void Game::HandleImGui()
 {
-	activeScene->HandleImgui();
+	activeScene->HandleImGui();
 
 	ImGui::Begin("ApplicationControls");
 	if (ImGui::Checkbox("Wireframe", &wireframeEnabled))

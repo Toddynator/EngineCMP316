@@ -218,6 +218,7 @@
     <ClCompile Include="Engine\Managers\WindowManager_SDL.cpp" />
     <ClCompile Include="Engine\ECS\System.cpp" />
     <ClCompile Include="Engine\ECS\Systems\RenderSystem.cpp" />
+    <ClCompile Include="Engine\ECS\Systems\PhysicsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\ECS\EngineECSSystems.h" />
@@ -254,6 +255,7 @@
     <ClInclude Include="Engine\Managers\WindowManager_SDL.h" />
     <ClInclude Include="Engine\ECS\System.h" />
     <ClInclude Include="Engine\ECS\Systems\RenderSystem.h" />
+    <ClInclude Include="Engine\ECS\Systems\PhysicsSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\Shaders\shader_ps.hlsl">

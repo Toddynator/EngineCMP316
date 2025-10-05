@@ -11,7 +11,7 @@ public:
 	void Shutdown() override;
 
 	void HandleInput() override;
-	void HandleImgui() override;
+	void HandleImGui() override;
 	void Update(float deltaTime) override;
 	void Render() override;
 

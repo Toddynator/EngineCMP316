@@ -4,15 +4,22 @@
 #include "ECS/EngineECSSystems.h"
 #include "ECS/Components.h"
 
+TestScene::TestScene(CMP316engine::EngineContext& context) : Scene(context)
+{
+	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
+	systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
+	systems.push_back(std::make_unique<CMP316engine::PhysicsSystem>(&registry));
+}
+
 bool TestScene::Initialize()
 {
-	///// MUSIC
+	///// SOUND
 
 	// I yearn for the music
 	int audioHandle = engineContext.audioManager->Play("MyJam");
 	engineContext.audioManager->SetAudioLoop(audioHandle, true);
 
-	/////
+	///// SHADER
 
 	HWND hwnd = engineContext.windowManager->GetHWND();
 	// Create and initialize the texture shader object.
@@ -23,8 +30,8 @@ bool TestScene::Initialize()
 		return false;
 	}
 
-	////////////////////
-	/// PHYSICS TEST ///
+	///// PHYSICS TEST
+
 	// We'll just associate this with our model for now
 	//JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
 	//modelPhysicsBodyID = engineContext.physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
@@ -32,14 +39,15 @@ bool TestScene::Initialize()
 	//
 	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
 	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
-	//////////
 
-	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
-	systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
+	///// SYSTEMS
+
 	for (auto& system : systems)
 	{
 		system->Initialize();
 	}
+
+	///// SCENE OBJECTS
 
 	sceneTree = std::make_unique<CMP316engine::GameObject>(&registry);
 	auto& modelComponent = sceneTree->AddComponent<CMP316engine::ModelComponent>();
