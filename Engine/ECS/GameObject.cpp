@@ -24,11 +24,10 @@ CMP316engine::GameObject::~GameObject()
 //	}
 //}
 
-entt::entity CMP316engine::GameObject::AddChild()
+CMP316engine::GameObject* CMP316engine::GameObject::AddChild()
 {
-	std::unique_ptr<GameObject> child = std::make_unique<GameObject>(registry);
-	children.push_back(std::move(child));
-	return child->GetEntityHandle();
+	children.push_back(std::make_unique<GameObject>(registry));
+	return children.back().get();
 }
 
 void CMP316engine::GameObject::CreateEntity()

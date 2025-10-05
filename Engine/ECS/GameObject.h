@@ -36,10 +36,11 @@ namespace CMP316engine {
 		///////////
 		/// ECS ///
 
-		entt::entity AddChild();
+		GameObject* AddChild();
 		void CreateEntity();
 		void DestroyEntity();
 		template<typename Component, typename ... Parameters> Component& AddComponent(Parameters&&... parameters);
+		template<typename Component> Component* GetComponent();
 
 		/////////////////////////
 		/// GETTERS & SETTERS ///
@@ -66,5 +67,12 @@ namespace CMP316engine {
 		}
 		Component& component = registry->emplace<Component>(entityHandle, std::forward<Parameters>(parameters)...);
 		return component;
+	}
+
+	template<typename Component>
+	Component* GameObject::GetComponent()
+	{
+		if (!registry->any_of<Component>(entityHandle)) { std::cout << "\nEntity does not have that component!"; return nullptr; }
+		return &registry->get<Component>(entityHandle);
 	}
 }

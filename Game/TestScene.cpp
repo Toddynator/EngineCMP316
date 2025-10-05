@@ -23,15 +23,8 @@ bool TestScene::Initialize()
 		return false;
 	}
 
-	// Create the camera object.
-	camera = std::make_unique<Camera>();
-	// Set the initial position of the camera.
-	camera->SetPosition(0.0f, 0.0f, -5.0f);
-
-
 	////////////////////
 	/// PHYSICS TEST ///
-
 	// We'll just associate this with our model for now
 	//JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
 	//modelPhysicsBodyID = engineContext.physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
@@ -39,10 +32,7 @@ bool TestScene::Initialize()
 	//
 	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
 	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
-
-
-
-	////////// ECS TEST
+	//////////
 
 	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
 	systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
@@ -55,6 +45,13 @@ bool TestScene::Initialize()
 	auto& modelComponent = sceneTree->AddComponent<CMP316engine::ModelComponent>();
 	modelComponent.filepath = "data/Models/Dug/Dug.obj";
 	auto& meshComponent = sceneTree->AddComponent<CMP316engine::MeshComponent>();
+
+	auto cameraObject = sceneTree->AddChild();
+	cameraObject->AddComponent<CMP316engine::CameraComponent>();
+	auto transforms = cameraObject->GetComponent<CMP316engine::TransformComponent>();
+	if (transforms) { 
+		transforms->position = DirectX::XMFLOAT3(0.f, 0.f, -5.0f); 
+	}
 
 	return true;
 }
@@ -86,10 +83,7 @@ void TestScene::Update(float deltaTime)
 		system->Update();
 	}
 
-	camera->Update(); // Generate the view matrix based on the camera's position.
-
 	/// PHYSICS TEST
-
 	//engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
 	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
 	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
@@ -98,6 +92,6 @@ void TestScene::Update(float deltaTime)
 
 void TestScene::Render()
 {
-	XMMATRIX viewMatrix = camera->GetViewMatrix();
+	XMMATRIX viewMatrix = CMP316engine::CameraSystem::GetActiveCameraViewMatrix(&registry);
 	CMP316engine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.shader.get(), viewMatrix);
 }

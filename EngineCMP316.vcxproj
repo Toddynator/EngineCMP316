@@ -190,7 +190,7 @@
     <ClCompile Include="Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Engine\Managers\AudioManager.cpp" />
     <ClCompile Include="Engine\Managers\AudioManager_SoLoud.cpp" />
-    <ClCompile Include="Engine\Graphics\Camera.cpp" />
+    <ClCompile Include="Engine\ARCHIVE\Camera.cpp" />
     <ClCompile Include="Engine\ARCHIVE\GameObject\Component.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_impl_sdl3.cpp" />
@@ -228,7 +228,7 @@
     <ClInclude Include="Engine\Managers\AssetManager.h" />
     <ClInclude Include="Engine\Managers\AudioManager.h" />
     <ClInclude Include="Engine\Managers\AudioManager_SoLoud.h" />
-    <ClInclude Include="Engine\Graphics\Camera.h" />
+    <ClInclude Include="Engine\ARCHIVE\Camera.h" />
     <ClInclude Include="Engine\ARCHIVE\GameObject\Component.h" />
     <ClInclude Include="Engine\ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="Engine\ImGui\imgui_impl_sdl3.h" />

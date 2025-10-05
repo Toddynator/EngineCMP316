@@ -1,7 +1,5 @@
 #pragma once
 #include "Core/Scene.h"
-/////
-#include "Graphics/Camera.h"
 
 class TestScene
 	: public CMP316engine::Scene
@@ -18,8 +16,6 @@ public:
 	void Render() override;
 
 private:
-	std::unique_ptr<Camera> camera = nullptr;
-
 	/// TESTING VARIABLES
 	// NOTE: Temp, just for testing
 	//JPH::BodyID modelPhysicsBodyID;

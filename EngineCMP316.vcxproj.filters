@@ -75,7 +75,7 @@
     <ClCompile Include="Engine\Graphics\Renderer_DirectX11.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Camera.cpp">
+    <ClCompile Include="Engine\ARCHIVE\Camera.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Texture.cpp">
@@ -170,7 +170,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Graphics\Camera.h">
+    <ClInclude Include="Engine\ARCHIVE\Camera.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Renderer_DirectX11.h">
