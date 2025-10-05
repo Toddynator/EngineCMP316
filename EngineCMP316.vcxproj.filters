@@ -138,13 +138,13 @@
     <ClCompile Include="Engine\Managers\PhysicsManager.cpp">
       <Filter>Source Files\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameObject\GameObject.cpp">
+    <ClCompile Include="Engine\ECS\GameObject.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameObject\Component.cpp">
+    <ClCompile Include="Engine\ARCHIVE\GameObject\Component.cpp">
       <Filter>Source Files\GameObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\GameObject\Components\TransformComponent.cpp">
+    <ClCompile Include="Engine\ARCHIVE\GameObject\Components\TransformComponent.cpp">
       <Filter>Source Files\GameObject\Components</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ImGui\imgui_impl_dx11.cpp">
@@ -155,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Core\EngineContext.cpp">
       <Filter>Source Files\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ECS\Components.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,13 +230,13 @@
     <ClInclude Include="Engine\Managers\PhysicsManager.h">
       <Filter>Header Files\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameObject\GameObject.h">
+    <ClInclude Include="Engine\ECS\GameObject.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameObject\Component.h">
+    <ClInclude Include="Engine\ARCHIVE\GameObject\Component.h">
       <Filter>Header Files\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\GameObject\Components\TransformComponent.h">
+    <ClInclude Include="Engine\ARCHIVE\GameObject\Components\TransformComponent.h">
       <Filter>Header Files\GameObject\Components</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ImGui\imgui_impl_sdl3.h">
@@ -244,6 +247,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Core\EngineContext.h">
       <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\Components.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

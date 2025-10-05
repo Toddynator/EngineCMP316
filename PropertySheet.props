@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <ENGINE_INCLUDES>$(SolutionDir)external\ImGui\include; $(SolutionDir)external\SDL3\include; $(SolutionDir)external\SoLoud\include; $(SolutionDir)external\Jolt\include;</ENGINE_INCLUDES>
+    <ENGINE_INCLUDES>$(SolutionDir)external\ImGui\include; $(SolutionDir)external\SDL3\include; $(SolutionDir)external\SoLoud\include; $(SolutionDir)external\Jolt\include;$(SolutionDir)external\Entt\include;</ENGINE_INCLUDES>
   </PropertyGroup>
   <PropertyGroup />
   <ItemDefinitionGroup />

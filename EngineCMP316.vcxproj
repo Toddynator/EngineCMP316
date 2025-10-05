@@ -183,18 +183,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\Components.cpp" />
     <ClCompile Include="Engine\Core\EngineContext.cpp" />
     <ClCompile Include="Engine\Core\Application.cpp" />
     <ClCompile Include="Engine\Managers\AssetManager.cpp" />
     <ClCompile Include="Engine\Managers\AudioManager.cpp" />
     <ClCompile Include="Engine\Managers\AudioManager_SoLoud.cpp" />
     <ClCompile Include="Engine\Graphics\Camera.cpp" />
-    <ClCompile Include="Engine\GameObject\Component.cpp" />
+    <ClCompile Include="Engine\ARCHIVE\GameObject\Component.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_impl_dx11.cpp" />
     <ClCompile Include="Engine\ImGui\imgui_impl_sdl3.cpp" />
     <ClCompile Include="Engine\Graphics\Renderer_DirectX11.cpp" />
     <ClCompile Include="Engine\Core\EngineLayer.cpp" />
-    <ClCompile Include="Engine\GameObject\GameObject.cpp" />
+    <ClCompile Include="Engine\ECS\GameObject.cpp" />
     <ClCompile Include="Engine\Managers\InputManager.cpp" />
     <ClCompile Include="Engine\Core\main.cpp" />
     <ClCompile Include="Engine\Managers\Manager.cpp" />
@@ -211,23 +212,24 @@
     <ClCompile Include="Engine\Graphics\Shader.cpp" />
     <ClCompile Include="Engine\ResourceLoading\TextureLoader.cpp" />
     <ClCompile Include="Engine\Managers\TimeManager.cpp" />
-    <ClCompile Include="Engine\GameObject\Components\TransformComponent.cpp" />
+    <ClCompile Include="Engine\ARCHIVE\GameObject\Components\TransformComponent.cpp" />
     <ClCompile Include="Engine\Managers\WindowManager.cpp" />
     <ClCompile Include="Engine\Managers\WindowManager_SDL.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ECS\Components.h" />
     <ClInclude Include="Engine\Core\EngineContext.h" />
     <ClInclude Include="Engine\Core\Application.h" />
     <ClInclude Include="Engine\Managers\AssetManager.h" />
     <ClInclude Include="Engine\Managers\AudioManager.h" />
     <ClInclude Include="Engine\Managers\AudioManager_SoLoud.h" />
     <ClInclude Include="Engine\Graphics\Camera.h" />
-    <ClInclude Include="Engine\GameObject\Component.h" />
+    <ClInclude Include="Engine\ARCHIVE\GameObject\Component.h" />
     <ClInclude Include="Engine\ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="Engine\ImGui\imgui_impl_sdl3.h" />
     <ClInclude Include="Engine\Graphics\Renderer_DirectX11.h" />
     <ClInclude Include="Engine\Core\EngineLayer.h" />
-    <ClInclude Include="Engine\GameObject\GameObject.h" />
+    <ClInclude Include="Engine\ECS\GameObject.h" />
     <ClInclude Include="Engine\Managers\InputManager.h" />
     <ClInclude Include="Engine\Managers\Manager.h" />
     <ClInclude Include="Engine\Graphics\Mesh.h" />
@@ -242,7 +244,7 @@
     <ClInclude Include="Engine\Graphics\Shader.h" />
     <ClInclude Include="Engine\ResourceLoading\TextureLoader.h" />
     <ClInclude Include="Engine\Managers\TimeManager.h" />
-    <ClInclude Include="Engine\GameObject\Components\TransformComponent.h" />
+    <ClInclude Include="Engine\ARCHIVE\GameObject\Components\TransformComponent.h" />
     <ClInclude Include="Engine\Managers\WindowManager.h" />
     <ClInclude Include="Engine\Managers\WindowManager_SDL.h" />
   </ItemGroup>

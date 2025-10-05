@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "TestScene.h"
+#include "ECS/GameObject.h"
 
 bool TestScene::Initialize()
 {
@@ -46,6 +47,14 @@ bool TestScene::Initialize()
 	//
 	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
 	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
+
+
+
+	////////// ECS TEST
+
+
+	sceneTree = std::make_unique<CMP316engine::GameObject>(&registry);
+
 
 	return true;
 }
