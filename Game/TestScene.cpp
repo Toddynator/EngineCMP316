@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "TestScene.h"
 #include "ECS/GameObject.h"
-#include "ECS/Systems/RenderSystem.h"
+#include "ECS/EngineECSSystems.h"
 #include "ECS/Components.h"
 
 bool TestScene::Initialize()
@@ -45,7 +45,7 @@ bool TestScene::Initialize()
 	////////// ECS TEST
 
 	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
-
+	systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
 	for (auto& system : systems)
 	{
 		system->Initialize();
@@ -86,6 +86,8 @@ void TestScene::Update(float deltaTime)
 		system->Update();
 	}
 
+	camera->Update(); // Generate the view matrix based on the camera's position.
+
 	/// PHYSICS TEST
 
 	//engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
@@ -96,7 +98,6 @@ void TestScene::Update(float deltaTime)
 
 void TestScene::Render()
 {
-	camera->Render(); // Generate the view matrix based on the camera's position.
 	XMMATRIX viewMatrix = camera->GetViewMatrix();
 	CMP316engine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.shader.get(), viewMatrix);
 }

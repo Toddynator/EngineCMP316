@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -183,6 +183,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ECS\Systems\CameraSystem.cpp" />
     <ClCompile Include="Engine\ECS\Components.cpp" />
     <ClCompile Include="Engine\Core\EngineContext.cpp" />
     <ClCompile Include="Engine\Core\Application.cpp" />
@@ -200,7 +201,7 @@
     <ClCompile Include="Engine\Core\main.cpp" />
     <ClCompile Include="Engine\Managers\Manager.cpp" />
     <ClCompile Include="Engine\Graphics\Mesh.cpp" />
-    <ClCompile Include="Engine\Graphics\Model.cpp" />
+    <ClCompile Include="Engine\ARCHIVE\Model.cpp" />
     <ClCompile Include="Engine\Core\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -219,6 +220,8 @@
     <ClCompile Include="Engine\ECS\Systems\RenderSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ECS\EngineECSSystems.h" />
+    <ClInclude Include="Engine\ECS\Systems\CameraSystem.h" />
     <ClInclude Include="Engine\ECS\Components.h" />
     <ClInclude Include="Engine\Core\EngineContext.h" />
     <ClInclude Include="Engine\Core\Application.h" />
@@ -235,7 +238,7 @@
     <ClInclude Include="Engine\Managers\InputManager.h" />
     <ClInclude Include="Engine\Managers\Manager.h" />
     <ClInclude Include="Engine\Graphics\Mesh.h" />
-    <ClInclude Include="Engine\Graphics\Model.h" />
+    <ClInclude Include="Engine\ARCHIVE\Model.h" />
     <ClInclude Include="Engine\ResourceLoading\OBJ_Loader.h" />
     <ClInclude Include="Engine\Core\pch.h" />
     <ClInclude Include="Engine\Managers\PhysicsManager.h" />

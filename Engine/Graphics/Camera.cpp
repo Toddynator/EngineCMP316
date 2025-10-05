@@ -52,7 +52,7 @@ XMFLOAT3 Camera::GetRotation()
 	return XMFLOAT3(rotationX, rotationY, rotationZ);
 }
 
-void Camera::Render()
+void Camera::Update()
 {
 	/*
 	Builds and updates the view matrix.

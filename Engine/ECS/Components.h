@@ -26,12 +26,12 @@ namespace CMP316engine
 	struct TransformComponent
 	{
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f,0.f,0.f);
-		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f); // TODO: Probably should replace with Quaternions in the future.
 		DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 		DirectX::XMFLOAT3 origin = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
-		DirectX::XMFLOAT3 upVector = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
-		DirectX::XMFLOAT3 forwardVector = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
-		DirectX::XMFLOAT3 rightVector = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 	};
 
 	struct ModelComponent
@@ -73,6 +73,12 @@ namespace CMP316engine
 	struct PlayerComponent
 	{
 		int playerNumber;
+	};
+
+	struct CameraComponent
+	{
+		DirectX::XMMATRIX viewMatrix;
+		bool active = false;
 	};
 }
 

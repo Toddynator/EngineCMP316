@@ -84,7 +84,7 @@
     <ClCompile Include="Engine\Graphics\Shader.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Graphics\Model.cpp">
+    <ClCompile Include="Engine\ARCHIVE\Model.cpp">
       <Filter>Source Files\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Managers\InputManager.cpp">
@@ -165,6 +165,9 @@
     <ClCompile Include="Engine\ECS\Systems\RenderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ECS\Systems\CameraSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Graphics\Camera.h">
@@ -173,7 +176,7 @@
     <ClInclude Include="Engine\Graphics\Renderer_DirectX11.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Graphics\Model.h">
+    <ClInclude Include="Engine\ARCHIVE\Model.h">
       <Filter>Header Files\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Graphics\Texture.h">
@@ -261,6 +264,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ECS\Systems\RenderSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\Systems\CameraSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ECS\EngineECSSystems.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,9 +4,9 @@
 #include <directxmath.h>
 using namespace DirectX;
 
-#include "Texture.h"
-#include "Mesh.h"
-#include "Shader.h"
+#include "../Graphics/Texture.h"
+#include "../Graphics/Mesh.h"
+#include "../Graphics/Shader.h"
 #include <unordered_map>
 
 namespace CMP316engine {

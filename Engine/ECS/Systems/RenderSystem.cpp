@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "RenderSystem.h"
+#include "CameraSystem.h"
 #include "../../ResourceLoading/TextureLoader.h"
 #include "../../ResourceLoading/OBJ_Loader.h"
 
