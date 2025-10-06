@@ -5,6 +5,7 @@
 
 # User-specific files
 !external/
+!data/
 build/
 bin/
 *.rsuser
