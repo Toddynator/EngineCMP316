@@ -6,7 +6,8 @@
 # User-specific files
 !external/
 !data/
-build/
+build/*
+!build/.gitkeep
 bin/
 *.rsuser
 *.suo
