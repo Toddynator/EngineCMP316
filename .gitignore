@@ -9,6 +9,7 @@
 build/*
 !build/.gitkeep
 bin/
+install/
 *.rsuser
 *.suo
 *.user
