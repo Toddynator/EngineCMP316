@@ -1,7 +1,5 @@
 
 ## TODO:
-#  - Need to move the source_group files into exactly 'Source Files' and 'Header Files' to match VS2022's style of filter.
-# That will require me sorting the .h and .cpp files into an include and src folder in the Engine directory.
 # - Should make it that the game library name can be set on build through the cmake gui.
 
 
@@ -27,10 +25,14 @@ set(CMAKE_C_STANDARD 17) # Don't think this is actually working
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 # Set the output directory for all projects
-set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Bin")
+set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #EXE
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #LIB
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #DLL
+# Install directory, whatever that is
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
+# Remove Unused Configurations (Use only Release & Debug)
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 
 
 
@@ -45,10 +47,6 @@ file(GLOB_RECURSE ENGINE_SRC CONFIGURE_DEPENDS
 )
 # IDE Project will use the same Folder Structure as found in the source files (If the IDE supports it)
 source_group(TREE "${CMAKE_SOURCE_DIR}/Engine" PREFIX "src" FILES ${ENGINE_SRC})
-# Install directory, whatever that is
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
-# Remove Unused Configurations (Use only Release & Debug)
-set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
 # Create the project file
 add_executable(${PROJECT_NAME} ${ENGINE_SRC})
 # Include the Engine Source Code
