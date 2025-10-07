@@ -6,7 +6,7 @@
 
 
 
-cmake_minimum_required(VERSION 4.0)
+cmake_minimum_required(VERSION 3.29)
 project(
     Engine
     DESCRIPTION "Game Engine Specialized on Voxels, created for CMP316 University Module"
@@ -112,14 +112,14 @@ add_subdirectory("external/SDL3" EXCLUDE_FROM_ALL)
 ## IMGUI
 add_subdirectory("external/ImGui" EXCLUDE_FROM_ALL)
 ## SOLOUD
-add_subdirectory("external/SoLoud/contrib" EXCLUDE_FROM_ALL) 
-# Set SoLoud to MiniAudio
-target_compile_definitions(soloud PUBLIC WITH_MINIAUDIO)
 set(SOLOUD_BACKEND_NULL OFF CACHE BOOL "" FORCE)
 set(SOLOUD_BACKEND_SDL2 OFF CACHE BOOL "" FORCE)
 set(SOLOUD_BACKEND_WITH_MINIAUDIO ON CACHE BOOL "" FORCE)
+add_subdirectory("external/SoLoud/contrib" EXCLUDE_FROM_ALL) 
 # Add the MiniAudio files to the SoLoud project (Its CMake file doesn't do this)
 target_sources(soloud PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/external/SoLoud/src/backend/miniaudio/soloud_miniaudio.cpp")
+# Set SoLoud to MiniAudio
+target_compile_definitions(soloud PUBLIC WITH_MINIAUDIO)
 
 # Link libraries to game and engine project
 target_link_libraries(Engine

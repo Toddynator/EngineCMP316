@@ -52,7 +52,7 @@ bool TestScene::Initialize()
 
 	sceneTree = std::make_unique<CMP316engine::GameObject>(&registry);
 	auto& modelComponent = sceneTree->AddComponent<CMP316engine::ModelComponent>();
-	modelComponent.filepath = "../data/Models/Dug/Dug.obj";
+	modelComponent.filepath = "data/Models/Dug/Dug.obj";
 	auto& meshComponent = sceneTree->AddComponent<CMP316engine::MeshComponent>();
 
 	auto cameraObject = sceneTree->AddChild();

@@ -32,5 +32,6 @@ namespace CMP316engine {
 	private:
 		SoLoud::Soloud soloud;
 		std::unordered_map<std::string, SoLoud::Wav> audioAssets; // Possibly move to assetManager
+		bool audioInitialized = false;
 	};
 }

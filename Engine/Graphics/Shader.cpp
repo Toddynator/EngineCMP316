@@ -31,14 +31,14 @@ bool Shader::Initialize(ID3D11Device* device, HWND hwnd)
 	std::filesystem::path filepath = std::filesystem::current_path();
 
 	// Set the filename of the vertex shader.
-	error = wcscpy_s(vsFilename, 128, L"../data/Shaders/shader_vs.hlsl");
+	error = wcscpy_s(vsFilename, 128, L"data/Shaders/shader_vs.hlsl");
 	if (error != 0)
 	{
 		return false;
 	}
 
 	// Set the filename of the pixel shader.
-	error = wcscpy_s(psFilename, 128, L"../data/Shaders/shader_ps.hlsl");
+	error = wcscpy_s(psFilename, 128, L"data/Shaders/shader_ps.hlsl");
 	if (error != 0)
 	{
 		return false;
@@ -114,8 +114,10 @@ bool Shader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename
 		// If there was nothing in the error message then it simply could not find the shader file itself.
 		else
 		{
+			std::wstring wstr(vsFilename);
+			std::string vertexShaderFilenameString(wstr.begin(), wstr.end());
 			//MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
-			std::cout << "\nMissing Vertex Shader File: " << vsFilename;
+			std::cout << "\nMissing Vertex Shader File: " << vertexShaderFilenameString;
 		}
 
 		return false;
@@ -134,8 +136,10 @@ bool Shader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename
 		// If there was nothing in the error message then it simply could not find the file itself.
 		else
 		{
+			std::wstring wstr(psFilename);
+			std::string pixelShaderFilenameString(wstr.begin(), wstr.end());
 			//MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
-			std::cout << "\nMissing Pixel Shader File: " << psFilename;
+			std::cout << "\nMissing Pixel Shader File: " << pixelShaderFilenameString;
 		}
 
 		return false;
