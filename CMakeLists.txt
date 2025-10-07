@@ -21,14 +21,25 @@ project(
 # C / C++ Language Standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_C_STANDARD 17) # Don't think this is actually working
+set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 # Set the output directory for all projects
 set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #EXE
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #LIB
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #DLL
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #EXE
+#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #LIB
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #DLL
+# Set the output directory to sort by platform
+math(EXPR platform_bits "${CMAKE_SIZEOF_VOID_P} * 8")
+set(platform_dir ${CMAKE_SYSTEM_NAME}${platform_bits}-${CMAKE_CXX_COMPILER_ID}${CMAKE_CXX_COMPILER_VERSION})
+foreach(config DEBUG RELEASE)
+    # Sorts by the different types of binaries
+    # LIB, DLL, EXE
+    foreach(var CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${config} CMAKE_LIBRARY_OUTPUT_DIRECTORY_${config} CMAKE_RUNTIME_OUTPUT_DIRECTORY_${config})
+        set(${var} "${OUTPUT_DIRECTORY}/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}-${config}")
+        string(TOLOWER "${${var}}" ${var})
+    endforeach()
+endforeach()
 # Install directory, whatever that is
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 # Remove Unused Configurations (Use only Release & Debug)
