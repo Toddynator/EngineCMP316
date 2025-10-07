@@ -123,7 +123,8 @@ bool Shader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename
 		// If there was nothing in the error message then it simply could not find the shader file itself.
 		else
 		{
-			MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+			//MessageBox(hwnd, vsFilename, L"Missing Shader File", MB_OK);
+			std::cout << "\nMissing Vertex Shader File: " << vsFilename;
 		}
 
 		return false;
@@ -142,7 +143,8 @@ bool Shader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename
 		// If there was nothing in the error message then it simply could not find the file itself.
 		else
 		{
-			MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
+			//MessageBox(hwnd, psFilename, L"Missing Shader File", MB_OK);
+			std::cout << "\nMissing Pixel Shader File: " << psFilename;
 		}
 
 		return false;
@@ -324,7 +326,8 @@ void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR
 	errorMessage = 0;
 
 	// Pop a message up on the screen to notify the user to check the text file for compile errors.
-	MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
+	//MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
+	std::cout << "\nError compiling shader.Check shader - error.txt for message." << shaderFilename;
 
 	return;
 }

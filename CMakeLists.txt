@@ -26,6 +26,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 17) # Don't think this is actually working
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+# Set the output directory for all projects
+set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #EXE
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #LIB
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #DLL
 
 
 
@@ -51,13 +56,13 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/Engine")
 # Precompiled Header
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Engine/Core/pch.h")
 # Engine Project Output Directory ~ Binaries + Build Files
-set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Bin")
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    # ENGINE PROJECT BINARIES 
-    RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #EXE
-    ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #LIB
-    LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #DLL
-)
+#set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Bin")
+# set_target_properties(${PROJECT_NAME} PROPERTIES
+#     # ENGINE PROJECT BINARIES 
+#     RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #EXE
+#     ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #LIB
+#     LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #DLL
+# )
 
 
 
@@ -82,7 +87,7 @@ if(EXISTS "${CMAKE_SOURCE_DIR}/Game")
     # Link Game to Engine
     target_link_libraries(Engine PRIVATE Game)
     # Define in the engine via Preprocessor Macro that the game is linked. Used so that the engine can run standalone
-    target_compile_definitions(Engine PRIVATE GAME_LINKED=1)
+    target_compile_definitions(Engine PRIVATE GAME_LINKED)
     # Precompiled Header
     target_precompile_headers(Game PRIVATE "${CMAKE_SOURCE_DIR}/Game/pch.h")
 endif()
@@ -93,17 +98,48 @@ endif()
 
 
 
-# ENTT
- target_include_directories(Engine PUBLIC ${CMAKE_SOURCE_DIR}/external/Entt)
- target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/external/Entt)
-# SDL3
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/exterenal/SDL3/cmake")
-find_package(SDL3 CONFIG REQUIRED)
-target_link_libraries(Engine PRIVATE SDL3)
-target_link_libraries(Game PRIVATE SDL3)
-# Add Post-Build Command to move DLL next to the Executable
-add_custom_command(TARGET Engine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    "$<TARGET_FILE:SDL3::SDL3>"
-    "$<TARGET_FILE_DIR:Engine>"
+## ENTT
+target_include_directories(Engine PUBLIC ${CMAKE_SOURCE_DIR}/external/Entt/include)
+target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/external/Entt/include)
+## JOLT
+add_subdirectory("external/Jolt" EXCLUDE_FROM_ALL)
+## SDL3
+# Force SDL3 to build as a static library
+set(SDL_SHARED OFF CACHE BOOL "" FORCE)
+set(SDL_STATIC ON CACHE BOOL "" FORCE)
+set(SDL_TEST OFF CACHE BOOL "" FORCE)
+set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory("external/SDL3" EXCLUDE_FROM_ALL)
+## IMGUI
+add_subdirectory("external/ImGui" EXCLUDE_FROM_ALL)
+## SOLOUD
+add_subdirectory("external/SoLoud/contrib" EXCLUDE_FROM_ALL) 
+# Set SoLoud to MiniAudio
+target_compile_definitions(soloud PUBLIC WITH_MINIAUDIO)
+set(SOLOUD_BACKEND_NULL OFF CACHE BOOL "" FORCE)
+set(SOLOUD_BACKEND_SDL2 OFF CACHE BOOL "" FORCE)
+set(SOLOUD_BACKEND_WITH_MINIAUDIO ON CACHE BOOL "" FORCE)
+# Add the MiniAudio files to the SoLoud project (Its CMake file doesn't do this)
+target_sources(soloud PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/external/SoLoud/src/backend/miniaudio/soloud_miniaudio.cpp")
+
+# Link libraries to game and engine project
+target_link_libraries(Engine
+    PRIVATE Jolt
+    PRIVATE SDL3-static
+    PRIVATE ImGui
+    PRIVATE soloud
 )
+target_link_libraries(Game
+    PRIVATE Jolt
+    PRIVATE SDL3-static
+    PRIVATE ImGui
+    PRIVATE soloud
+)
+# Manually add soLoud, which doesn't seem to link normally
+target_include_directories(Engine PUBLIC  ${CMAKE_SOURCE_DIR}/external/SoLoud/include)
+
+# Move the external projects into folders to keep the main solution clean.
+set_target_properties(Jolt PROPERTIES FOLDER "external")
+set_target_properties(SDL3-static PROPERTIES FOLDER "external")
+set_target_properties(ImGui PROPERTIES FOLDER "external")
+set_target_properties(soloud PROPERTIES FOLDER "external")

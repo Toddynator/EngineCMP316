@@ -151,7 +151,8 @@ bool CMP316engine::EngineLayer::createRenderer(HWND hwnd)
 
 	if (!engineContext.renderer->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, engineContext.windowManager->IsFullscreen(), SCREEN_DEPTH, SCREEN_NEAR))
 	{
-		MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
+		//MessageBox(hwnd, L"Could not initialize Direct3D", L"Error", MB_OK);
+		std::cout << "\nCould not initialize Direct3D";
 		return false;
 	}
 

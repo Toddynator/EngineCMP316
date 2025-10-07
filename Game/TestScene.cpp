@@ -26,7 +26,8 @@ bool TestScene::Initialize()
 	engineContext.shader = std::make_unique<Shader>();
 	if (!engineContext.shader->Initialize(engineContext.renderer->GetDevice(), hwnd))
 	{
-		MessageBox(hwnd, L"Could not initialize the shader object.", L"Error", MB_OK);
+		//MessageBox(hwnd, L"Could not initialize the shader object.", L"Error", MB_OK);
+		std::cout << "\nCould not initialize the shader object.";
 		return false;
 	}
 
