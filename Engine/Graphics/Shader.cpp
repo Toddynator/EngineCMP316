@@ -31,23 +31,14 @@ bool Shader::Initialize(ID3D11Device* device, HWND hwnd)
 	std::filesystem::path filepath = std::filesystem::current_path();
 
 	// Set the filename of the vertex shader.
-	//error = wcscpy_s(vsFilename, 128, L"../EngineCMP316/Shaders/texture_vs.hlsl");
-	std::wstring assetPath(L"/data/Shaders/shader_vs.hlsl");
-	std::wstring filePathWString(filepath);
-	std::wstring fullAssetFilepath = filePathWString + assetPath;
-	const wchar_t* wideCharFilepath = fullAssetFilepath.c_str();
-	error = wcscpy_s(vsFilename, 128, wideCharFilepath);
+	error = wcscpy_s(vsFilename, 128, L"../data/Shaders/shader_vs.hlsl");
 	if (error != 0)
 	{
 		return false;
 	}
 
 	// Set the filename of the pixel shader.
-	assetPath = (L"/data/Shaders/shader_ps.hlsl");
-	filePathWString = (filepath);
-	fullAssetFilepath = filePathWString + assetPath;
-	wideCharFilepath = fullAssetFilepath.c_str();
-	error = wcscpy_s(psFilename, 128, wideCharFilepath);
+	error = wcscpy_s(psFilename, 128, L"../data/Shaders/shader_ps.hlsl");
 	if (error != 0)
 	{
 		return false;
@@ -325,9 +316,12 @@ void Shader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND hwnd, WCHAR
 	errorMessage->Release();
 	errorMessage = 0;
 
+	std::wstring wstr(shaderFilename);
+	std::string shaderFilenameString(wstr.begin(), wstr.end());
+
 	// Pop a message up on the screen to notify the user to check the text file for compile errors.
 	//MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
-	std::cout << "\nError compiling shader.Check shader - error.txt for message." << shaderFilename;
+	std::cout << "\nError compiling shader.Check shader - error.txt for message. File: " << shaderFilenameString;
 
 	return;
 }

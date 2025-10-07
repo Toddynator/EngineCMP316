@@ -9,8 +9,7 @@ bool CMP316engine::AudioManager_SoLoud::Initialize()
 	if (result != 0) { std::cout << "\nAudio Init Error Result: " << result; return false; }
 
 	// Load Default Audio Files
-	std::string audioFilepathString = std::filesystem::current_path().string() + "/data/Audio/9 (102 BPM)_Seq02.wav";
-	if (!LoadAudio("MyJam", audioFilepathString)) { return false; }
+	if (!LoadAudio("MyJam", "../data/Audio/9 (102 BPM)_Seq02.wav")) { return false; }
 
 	return true;
 }

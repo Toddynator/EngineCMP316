@@ -69,6 +69,6 @@ DirectX::XMMATRIX CMP316engine::CameraSystem::GetActiveCameraViewMatrix(entt::re
 		if (cameraComponent.active) { return cameraComponent.viewMatrix; }
 	}
 
-	std::cout << "\nNo Active Camera Found";
+	//std::cout << "\nNo Active Camera Found";
 	return DirectX::XMMATRIX{}; // Return default matrix
 }

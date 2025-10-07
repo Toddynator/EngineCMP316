@@ -55,14 +55,13 @@ add_executable(${PROJECT_NAME} ${ENGINE_SRC})
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/Engine")
 # Precompiled Header
 target_precompile_headers(${PROJECT_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/Engine/Core/pch.h")
-# Engine Project Output Directory ~ Binaries + Build Files
-#set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/Bin")
-# set_target_properties(${PROJECT_NAME} PROPERTIES
-#     # ENGINE PROJECT BINARIES 
-#     RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #EXE
-#     ARCHIVE_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #LIB
-#     LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>" #DLL
-# )
+# Copy all data / resources into bin folder with the executable
+add_custom_command(
+    TARGET Engine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_SOURCE_DIR}/data"
+        "$<TARGET_FILE_DIR:Engine>/data"
+)
 
 
 
