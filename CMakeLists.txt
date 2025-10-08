@@ -26,12 +26,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 # Set the output directory for all projects
 set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #EXE
-#set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #LIB
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${OUTPUT_DIRECTORY}/${CMAKE_VS_PLATFORM_NAME}/$<CONFIG>") #DLL
 # Set the output directory to sort by platform
-math(EXPR platform_bits "${CMAKE_SIZEOF_VOID_P} * 8")
-set(platform_dir ${CMAKE_SYSTEM_NAME}${platform_bits}-${CMAKE_CXX_COMPILER_ID}${CMAKE_CXX_COMPILER_VERSION})
 foreach(config DEBUG RELEASE)
     # Sorts by the different types of binaries
     # LIB, DLL, EXE
@@ -57,6 +52,7 @@ file(GLOB_RECURSE ENGINE_SRC CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/Engine/*.h"
 )
 # IDE Project will use the same Folder Structure as found in the source files (If the IDE supports it)
+# In VS2022 for example, this ONLY applies to CMake Targets view. But it is unlikely I will use that.
 source_group(TREE "${CMAKE_SOURCE_DIR}/Engine" PREFIX "src" FILES ${ENGINE_SRC})
 # Create the project file
 add_executable(${PROJECT_NAME} ${ENGINE_SRC})
@@ -149,5 +145,7 @@ target_include_directories(Engine PUBLIC  ${CMAKE_SOURCE_DIR}/external/SoLoud/in
 # Move the external projects into folders to keep the main solution clean.
 set_target_properties(Jolt PROPERTIES FOLDER "external")
 set_target_properties(SDL3-static PROPERTIES FOLDER "external")
+set_target_properties(SDL_uclibc PROPERTIES FOLDER "external")
+set_target_properties(SDL3_test PROPERTIES FOLDER "external")
 set_target_properties(ImGui PROPERTIES FOLDER "external")
 set_target_properties(soloud PROPERTIES FOLDER "external")
