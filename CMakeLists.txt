@@ -24,16 +24,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
-# Set the output directory for all projects
+# Set the output directory for all binaries
 set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
 # Set the output directory to sort by platform
 foreach(config DEBUG RELEASE)
     # Sorts by the different types of binaries
-    # LIB, DLL, EXE
-    foreach(var CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${config} CMAKE_LIBRARY_OUTPUT_DIRECTORY_${config} CMAKE_RUNTIME_OUTPUT_DIRECTORY_${config})
+    # DLL, EXE
+    foreach(var CMAKE_LIBRARY_OUTPUT_DIRECTORY_${config} CMAKE_RUNTIME_OUTPUT_DIRECTORY_${config})
         set(${var} "${OUTPUT_DIRECTORY}/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}-${config}")
         string(TOLOWER "${${var}}" ${var})
     endforeach()
+
+    # Lib's should stay in build folder, not needed for shipping / after the executable has been generated.
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${config} "${CMAKE_SOURCE_DIR}/out/lib/${CMAKE_SYSTEM_NAME}-${CMAKE_SYSTEM_PROCESSOR}-${config}")
 endforeach()
 # Install directory, whatever that is
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
