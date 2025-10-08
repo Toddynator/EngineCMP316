@@ -83,9 +83,45 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/Game")
     message(WARNING "No Game Folder Found, Generating new Game Project")
     # Create the Game directory
     file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/Game")
-    # Create a simple starter main.cpp
-    file(WRITE "${CMAKE_SOURCE_DIR}/Game/Game.cpp")
-    #file(WRITE "${CMAKE_SOURCE_DIR}/test/Game.h")
+    # Create a basic application implementation
+    file(WRITE "${CMAKE_SOURCE_DIR}/Game/Game.h" [[
+        #pragma once
+        #include "Core/Application.h"
+        
+        class Game
+        	: public CMP316engine::Application
+        {
+        public:
+        	Game(CMP316engine::EngineContext& context) : Application(context) {}
+        
+        	bool Initialize() override { return true; }
+        	void Shutdown() override {}
+        
+        	void HandleInput() override {}
+        	void HandleImGui() override {}
+        	void Update(float deltaTime) override {}
+        	void Render() override {}
+        
+        private:
+        	bool wireframeEnabled = false;
+        };
+    ]])
+    file(WRITE "${CMAKE_SOURCE_DIR}/Game/Game.cpp" [[
+        #include "pch.h"
+        #include "Game.h"
+        std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
+        {
+        	return std::make_unique<Game>(engineContext);
+        }
+    ]])
+    file(WRITE "${CMAKE_SOURCE_DIR}/Game/pch.h" [[
+        #pragma once
+        #include <string>
+        #include <unordered_map>
+    ]])
+    file(WRITE "${CMAKE_SOURCE_DIR}/Game/pch.cpp" [[
+        #include "pch.h"
+    ]])
 endif()
 # Get the Game Source Code
 file(GLOB_RECURSE GAME_SRC CONFIGURE_DEPENDS
