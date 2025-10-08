@@ -77,27 +77,23 @@ add_custom_command(
 
 
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/Game")
-    # Get the Game Source Code
-    file(GLOB_RECURSE GAME_SRC CONFIGURE_DEPENDS
-        "${CMAKE_SOURCE_DIR}/Game/*.cpp"
-        "${CMAKE_SOURCE_DIR}/Game/*.h"
-    )
-    # Creat the Library Project
-    add_library(Game STATIC ${GAME_SRC})
-    # Include the Game source Code
-    target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/Game)
-    # Inlcude the Engine source Code
-    target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/Engine)
-    # Create Folder Structure for Game Project
-    source_group(TREE "${CMAKE_SOURCE_DIR}/Game" PREFIX "src" FILES ${GAME_SRC})
-    # Link Game to Engine
-    target_link_libraries(Engine PRIVATE Game)
-    # Define in the engine via Preprocessor Macro that the game is linked. Used so that the engine can run standalone
-    target_compile_definitions(Engine PRIVATE GAME_LINKED)
-    # Precompiled Header
-    target_precompile_headers(Game PRIVATE "${CMAKE_SOURCE_DIR}/Game/pch.h")
-endif()
+# Get the Game Source Code
+file(GLOB_RECURSE GAME_SRC CONFIGURE_DEPENDS
+    "${CMAKE_SOURCE_DIR}/Game/*.cpp"
+    "${CMAKE_SOURCE_DIR}/Game/*.h"
+)
+# Creat the Library Project
+add_library(Game STATIC ${GAME_SRC})
+# Include the Game source Code
+target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/Game)
+# Inlcude the Engine source Code
+target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/Engine)
+# Create Folder Structure for Game Project
+source_group(TREE "${CMAKE_SOURCE_DIR}/Game" PREFIX "src" FILES ${GAME_SRC})
+# Link Game to Engine
+target_link_libraries(Engine PRIVATE Game)
+# Precompiled Header
+target_precompile_headers(Game PRIVATE "${CMAKE_SOURCE_DIR}/Game/pch.h")
 
 
 
