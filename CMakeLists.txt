@@ -1,6 +1,7 @@
 
 ## TODO:
 # - Should make it that the game library name can be set on build through the cmake gui.
+# - Make it that cmake generates a game project if one doesn't exist
 
 
 
@@ -77,6 +78,15 @@ add_custom_command(
 
 
 
+# Create game project if it doesn't exist
+if (NOT EXISTS "${CMAKE_SOURCE_DIR}/Game")
+    message(WARNING "No Game Folder Found, Generating new Game Project")
+    # Create the Game directory
+    file(MAKE_DIRECTORY "${CMAKE_SOURCE_DIR}/Game")
+    # Create a simple starter main.cpp
+    file(WRITE "${CMAKE_SOURCE_DIR}/Game/Game.cpp")
+    #file(WRITE "${CMAKE_SOURCE_DIR}/test/Game.h")
+endif()
 # Get the Game Source Code
 file(GLOB_RECURSE GAME_SRC CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/Game/*.cpp"
