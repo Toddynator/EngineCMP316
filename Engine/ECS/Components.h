@@ -22,7 +22,10 @@ namespace CMP316engine
 	*/
 	struct HierarchyComponent
 	{
-		entt::entity parent = entt::null;
+		entt::entity parent = entt::null; // The root entity, that owns the current entity as a child.
+		entt::entity firstChild = entt::null; // Entities store children, but they only point to the first child.
+		entt::entity prevNeighbour = entt::null; // The previous adjacent entity with the same parent (if null then it is the first child).
+		entt::entity nextNeighbour = entt::null; // The adjacent entity with the same parent (if null then it is the last child).
 	};
 
 	struct TransformComponent

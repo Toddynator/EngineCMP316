@@ -1,20 +1,21 @@
 #include "LevelEditorScene.h"
+#include "../ECS/Systems/LevelEditorSystem.h"
 
 namespace CMP316engine
 {
 	LevelEditorScene::LevelEditorScene(CMP316engine::EngineContext& context) : ECSScene(context)
 	{
-		// Maybe a LevelEditorSystem? It could encapsulate all the UI logic for interefacing with hierarchyComponent Objects.
+		systems.emplace_back(std::make_unique<LevelEditorSystem>(&registry, sceneRoot.get()));
 	}
 
 	bool LevelEditorScene::Initialize()
 	{
-		CMP316engine::ECSScene::Initialize();
+		ECSScene::Initialize();
 		return true;
 	}
 
 	void LevelEditorScene::HandleImGui()
 	{
-
+		ECSScene::HandleImGui();
 	}
 }

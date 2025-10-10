@@ -131,7 +131,7 @@ void CMP316engine::EngineLayer::update()
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 	ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport*)0, ImGuiDockNodeFlags_PassthruCentralNode); // Supports docking windows to the viewport, must be rendered before other ImGui Windows
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 
 	///// APPLICATION
 

@@ -1,14 +1,11 @@
 #include "Game.h"
 #include "TestScene.h"
-
-/////
+#include "Core/LevelEditorScene.h"
 
 std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
 {
 	return std::make_unique<Game>(engineContext);
 }
-
-/////
 
 bool Game::Initialize()
 {
@@ -26,6 +23,15 @@ void Game::HandleInput()
 {
 	Application::HandleInput();
 	activeScene->HandleInput();
+
+	/// TEMP
+	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_ESCAPE))
+	{
+		activeScene->Shutdown();
+		activeScene = std::make_unique<CMP316engine::LevelEditorScene>(engineContext);
+		activeScene->Initialize();
+	}
+	/// TEMP
 }
 
 void Game::HandleImGui()
