@@ -14,10 +14,5 @@ public:
 	void HandleImGui() override;
 	void Update(float deltaTime) override;
 	void Render() override;
-
-private:
-	/// TESTING VARIABLES
-	// NOTE: Temp, just for testing
-	//JPH::BodyID modelPhysicsBodyID;
 };
 

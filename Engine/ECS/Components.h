@@ -3,6 +3,8 @@
 #include <directxmath.h>
 #include "../Graphics/Mesh.h"
 #include "../Graphics/Texture.h"
+#include <Jolt/Jolt.h>
+#include <Jolt/Physics/Body/Body.h>
 
 /*
 Components should purely store data, only Systems should handle functionality.
@@ -72,6 +74,13 @@ namespace CMP316engine
 		// Camera needs just position and rotation
 		DirectX::XMMATRIX viewMatrix;
 		bool active = false;
+	};
+
+	struct RigidBodyComponent
+	{
+		bool bodyCreated = false;
+		JPH::BodyID physicsBodyHandle; // Hardcoded to Jolt for now
+		//int physicsBodyHandle = -1;
 	};
 }
 

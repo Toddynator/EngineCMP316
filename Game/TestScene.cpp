@@ -9,7 +9,7 @@ TestScene::TestScene(CMP316engine::EngineContext& context) : Scene(context)
 {
 	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
 	systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
-	systems.push_back(std::make_unique<CMP316engine::PhysicsSystem>(&registry));
+	systems.push_back(std::make_unique<CMP316engine::PhysicsSystem>(&registry, engineContext.physicsManager.get()));
 	systems.push_back(std::make_unique<PlayerSystem>(&registry, engineContext.inputManager.get()));
 }
 
@@ -33,16 +33,6 @@ bool TestScene::Initialize()
 		return false;
 	}
 
-	///// PHYSICS TEST
-
-	// We'll just associate this with our model for now
-	//JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
-	//modelPhysicsBodyID = engineContext.physicsManager->GetBodyInterface().CreateAndAddBody(sphere_settings, JPH::EActivation::Activate);
-	//engineContext.physicsManager->GetBodyInterface().SetLinearVelocity(modelPhysicsBodyID, JPH::Vec3(0.1f, 0.1f, 0.0f));
-	//
-	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
-	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
-
 	///// SYSTEMS
 
 	for (auto& system : systems)
@@ -57,6 +47,7 @@ bool TestScene::Initialize()
 	modelComponent.filepath = "data/Models/Dug/Dug.obj";
 	auto& meshComponent = sceneTree->AddComponent<CMP316engine::MeshComponent>();
 	sceneTree->AddComponent<PlayerComponent>(); // Make it controllable!! Once hierarchy is setup, should move this from the scene root
+	sceneTree->AddComponent<CMP316engine::RigidBodyComponent>();
 
 	auto cameraObject = sceneTree->AddChild();
 	cameraObject->AddComponent<CMP316engine::CameraComponent>();
@@ -104,12 +95,6 @@ void TestScene::Update(float deltaTime)
 	{
 		system->Update(deltaTime);
 	}
-
-	/// PHYSICS TEST
-	//engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
-	//JPH::RVec3 position = engineContext.physicsManager->GetBodyInterface().GetCenterOfMassPosition(modelPhysicsBodyID);
-	//JPH::Vec3 velocity = engineContext.physicsManager->GetBodyInterface().GetLinearVelocity(modelPhysicsBodyID);
-	//model->SetPosition(XMFLOAT3(position.GetX(), position.GetY(), position.GetZ()));
 }
 
 void TestScene::Render()

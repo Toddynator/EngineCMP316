@@ -5,6 +5,7 @@
 
 #include "../Managers/AudioManager_SoLoud.h"
 #include "../Managers/WindowManager_SDL.h"
+//#include "../Managers/PhysicsManager_Jolt.h"
 
 
 
@@ -126,6 +127,7 @@ void CMP316engine::EngineLayer::update()
 	application->HandleImGui();
 	application->Update(engineContext.timeManager->getDeltaTime());
 
+	engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
 	engineContext.inputManager->EndFrame();
 }
 
