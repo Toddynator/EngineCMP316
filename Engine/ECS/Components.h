@@ -82,5 +82,10 @@ namespace CMP316engine
 		JPH::BodyID physicsBodyHandle; // Hardcoded to Jolt for now
 		//int physicsBodyHandle = -1;
 	};
+
+	struct MovementComponent
+	{
+		DirectX::XMFLOAT3 linearVelocity; // CURRENTLY JUST ONE VELOCITY ALL DIRECTIONS, TODO: More settings
+	};
 }
 

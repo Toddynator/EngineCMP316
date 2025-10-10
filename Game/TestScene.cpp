@@ -48,6 +48,7 @@ bool TestScene::Initialize()
 	auto& meshComponent = sceneTree->AddComponent<CMP316engine::MeshComponent>();
 	sceneTree->AddComponent<PlayerComponent>(); // Make it controllable!! Once hierarchy is setup, should move this from the scene root
 	sceneTree->AddComponent<CMP316engine::RigidBodyComponent>();
+	sceneTree->AddComponent<CMP316engine::MovementComponent>();
 
 	auto cameraObject = sceneTree->AddChild();
 	cameraObject->AddComponent<CMP316engine::CameraComponent>();
@@ -69,7 +70,10 @@ void TestScene::Shutdown()
 
 void TestScene::HandleInput()
 {
-
+	for (auto& system : systems)
+	{
+		system->HandleInput();
+	}
 }
 
 void TestScene::HandleImGui()

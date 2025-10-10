@@ -40,7 +40,6 @@ void CMP316engine::PhysicsSystem::Update(float deltaTime)
 			// in the game, it should ensure the physics bodies are placed at those positions.
 			// After that, the internal physics transforms should take over and be setting the transformComponent.
 
-			//physicsManager->GetBodyInterface().SetLinearVelocity();
 			JPH::Vec3 bodyPosition = { t.position.x, t.position.y, t.position.z };
 			physicsManager->GetBodyInterface().SetPosition(r.physicsBodyHandle, bodyPosition, JPH::EActivation::Activate);
 
@@ -50,10 +49,15 @@ void CMP316engine::PhysicsSystem::Update(float deltaTime)
 		/// UPDATE TRANSFORMS
 
 		JPH::RVec3 position = physicsManager->GetBodyInterface().GetPosition(rigidBodyComponent.physicsBodyHandle);
+		JPH::Quat rotation = physicsManager->GetBodyInterface().GetRotation(rigidBodyComponent.physicsBodyHandle);
 		transformComponent.position = DirectX::XMFLOAT3(position.GetX(), position.GetY(), position.GetZ());
+		//transformComponent.rotation = DirectX::XMFLOAT4(rotation.GetX, rotation.GetY(), rotation.GetZ(), rotation.GetW());
 
-
-
-		//physicsManager->GetBodyInterface().SetLinearVelocity(rigidBodyComponent.physicsBodyHandle, JPH::Vec3(0.1f, 0.1f, 0.0f)); ////////////////////////////// TEST
+		if (auto moveComponent = registry->try_get<MovementComponent>(entity))
+		{
+			auto& m = moveComponent;
+			JPH::Vec3 bodyVelocity = { m->linearVelocity.x, m->linearVelocity.y, m->linearVelocity.z };
+			physicsManager->GetBodyInterface().SetLinearVelocity(rigidBodyComponent.physicsBodyHandle, bodyVelocity);
+		}
 	}
 }

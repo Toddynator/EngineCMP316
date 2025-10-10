@@ -16,7 +16,49 @@ void PlayerSystem::Shutdown()
 
 void PlayerSystem::HandleInput()
 {
+	auto playerEntities = registry->view<PlayerComponent>();
+	for (auto& entity : playerEntities) {
+		auto& playerComponent = registry->get<PlayerComponent>(entity);
 
+		if (auto movementComponent = registry->try_get<CMP316engine::MovementComponent>(entity))
+		{
+			auto& m = movementComponent;
+			if (inputManager->IsKeyBindingDown("Move Up"))
+			{
+				m->linearVelocity.y = 1.f;
+			}
+			else if (inputManager->IsKeyBindingDown("Move Down"))
+			{
+				m->linearVelocity.y = -1.f;
+			}
+			else {
+				m->linearVelocity.y = 0.f;
+			}
+			if (inputManager->IsKeyBindingDown("Move Left"))
+			{
+				m->linearVelocity.x = -1.f;
+			}
+			else if (inputManager->IsKeyBindingDown("Move Right"))
+			{
+				m->linearVelocity.x = 1.f;
+			}
+			else {
+				m->linearVelocity.x = 0.f;
+			}
+			if (inputManager->IsKeyBindingDown("Move Forward"))
+			{
+				m->linearVelocity.z = 1.f;
+			}
+			else if (inputManager->IsKeyBindingDown("Move Backward"))
+			{
+				m->linearVelocity.z = -1.f;
+			}
+			else
+			{
+				m->linearVelocity.z = 0.f;
+			}
+		}
+	}
 }
 
 void PlayerSystem::Update(float deltaTime)
@@ -25,36 +67,6 @@ void PlayerSystem::Update(float deltaTime)
 	for (auto& entity : playerEntities) {
 		auto [playerComponent, transformComponent] = registry->get<PlayerComponent, CMP316engine::TransformComponent>(entity);
 
-		/*
-		TODO: 
-		Add Movement Component, it should contain intended movement direction, and 
-		the speeds for those directions. (Which may be part of a physics component later).
-		Input should then be moved to HandleInput() and all it should set is the intended movement direction.
-		*/
-		auto& t = transformComponent;
-		if (inputManager->IsKeyBindingDown("Move Up"))
-		{
-			t.position = DirectX::XMFLOAT3(t.position.x, t.position.y + (1.f * deltaTime), t.position.z);
-		}
-		if (inputManager->IsKeyBindingDown("Move Down"))
-		{
-			t.position = DirectX::XMFLOAT3(t.position.x, t.position.y - (1.f * deltaTime), t.position.z);
-		}
-		if (inputManager->IsKeyBindingDown("Move Left"))
-		{
-			t.position = DirectX::XMFLOAT3(t.position.x - (1.f * deltaTime), t.position.y, t.position.z);
-		}
-		if (inputManager->IsKeyBindingDown("Move Right"))
-		{
-			t.position = DirectX::XMFLOAT3(t.position.x + (1.f * deltaTime), t.position.y, t.position.z);
-		}
-		if (inputManager->IsKeyBindingDown("Move Forward"))
-		{
-			t.position = DirectX::XMFLOAT3(t.position.x, t.position.y, t.position.z + (1.f * deltaTime));
-		}
-		if (inputManager->IsKeyBindingDown("Move Backward"))
-		{
-			t.position = DirectX::XMFLOAT3(t.position.x, t.position.y, t.position.z - (1.f * deltaTime));
-		}
+		// TODO
 	}
 }
