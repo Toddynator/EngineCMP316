@@ -14,9 +14,6 @@ However I could use a setter and have a sceneManager handle this in the future.
 
 #pragma once
 #include "EngineContext.h"
-#include <entt.hpp>
-#include "../ECS/GameObject.h"
-#include "../ECS/System.h"
 
 namespace CMP316engine {
 	class Scene
@@ -36,9 +33,6 @@ namespace CMP316engine {
 
 	protected:
 		EngineContext& engineContext;
-		entt::registry registry;
-		std::unique_ptr<GameObject> sceneTree; // All scenes have a single root object, it has children which as a result forms the hierarchy / scene graph.
-		std::vector<std::unique_ptr<System>> systems;
 	};
 }
 

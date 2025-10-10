@@ -53,6 +53,8 @@ void CMP316engine::PhysicsSystem::Update(float deltaTime)
 		transformComponent.position = DirectX::XMFLOAT3(position.GetX(), position.GetY(), position.GetZ());
 		//transformComponent.rotation = DirectX::XMFLOAT4(rotation.GetX, rotation.GetY(), rotation.GetZ(), rotation.GetW());
 
+		/// UPDATE VELOCITIES / FORCES
+
 		if (auto moveComponent = registry->try_get<MovementComponent>(entity))
 		{
 			auto& m = moveComponent;

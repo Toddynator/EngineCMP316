@@ -45,6 +45,18 @@ bool CMP316engine::EngineLayer::Initialize()
 	ImGui_ImplSDL3_InitForD3D(static_cast<SDL_Window*>(engineContext.windowManager->GetNativeWindow()));
 	ImGui_ImplDX11_Init(engineContext.renderer->GetDevice(), engineContext.renderer->GetDeviceContext());
 
+	///// DEFAULT SHADER
+	// TODO: Prob move to assetManager soon
+
+	// Create and initialize the texture shader object.
+	engineContext.shader = std::make_unique<Shader>();
+	if (!engineContext.shader->Initialize(engineContext.renderer->GetDevice(), hwnd))
+	{
+		//MessageBox(hwnd, L"Could not initialize the shader object.", L"Error", MB_OK);
+		std::cout << "\nCould not initialize the shader object.";
+		return false;
+	}
+
 	return true;
 }
 

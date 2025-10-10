@@ -70,5 +70,27 @@ DirectX::XMMATRIX CMP316engine::CameraSystem::GetActiveCameraViewMatrix(entt::re
 	}
 
 	//std::cout << "\nNo Active Camera Found";
-	return DirectX::XMMATRIX{}; // Return default matrix
+	return createDefaultViewMatrix(); // Return default matrix
+}
+
+DirectX::XMMATRIX CMP316engine::CameraSystem::createDefaultViewMatrix()
+{
+	DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f, 0.f, -5.0f);
+	DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.f, 1.f, 0.f);
+	DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
+
+	DirectX::XMVECTOR positionVector = XMLoadFloat3(&position);
+	DirectX::XMVECTOR upVector = XMLoadFloat3(&up);
+	DirectX::XMVECTOR lookAtVector = XMLoadFloat3(&forward);
+
+	float pitch = 0.f;
+	float yaw = 0.f;
+	float roll = 0.f;
+	DirectX::XMMATRIX rotationMatrix;
+
+	rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
+	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
+	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
+	lookAtVector = DirectX::XMVectorAdd(positionVector, lookAtVector);
+	return DirectX::XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 }
