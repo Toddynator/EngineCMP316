@@ -1,13 +1,23 @@
 /*
 CONCRETE CLASS
-The Fundamental Object that the sceneTree of an application will use.
-A scene should have a single GameObject as the root.
+Purpose of this class is to store a singular important entity handle (e.g. scene root OR 
+a copy of an entity, e.g. for a clipboard system), and to encapsulate
+adding essential components to entities that get added to the scene.
 
-GameObjects can contain multiple children (GameObjects).
+NOTE: For temporary entities like bullets, they don't necessarily need to be part of the SceneTree / hierarchy, and can
+be created directly through the registry.
+An ECS scene MUST HAVE a single GameObject as the root.
+After that, any entities that should be added to the scene tree should
+be created using GameObject functions in order to encapsulate creating the entity
+and adding the common components.
+
 
 ENTT:
 Systems will use entt to handle the lifecycle of components.
-GameObjects are purely for handling a scene hierarchy, which is useful in something like a Level Editor.
+GameObjects are purely for adding essential components 
+that EVERY object in the scene should have.
+This is mainly useful for a level editor, which needs some way to clearly interface with
+the scene and visualize the entities.
 */
 
 #pragma once
@@ -19,35 +29,29 @@ namespace CMP316engine {
 	class GameObject
 	{
 	private:
-		entt::registry* registry = nullptr;
-		std::vector<std::unique_ptr<GameObject>> children;
-		std::string name = "Undefined"; // How it is named in the SceneTree, purely for organization purposes.
 		entt::entity entityHandle = entt::null;
 
 	public:
-		GameObject(entt::registry* sceneRegistry);
+		GameObject(entt::registry* sceneRegistry); // FOR CREATING A NEW ENTITY WITH BASIC FUNCTIONALITY
+		GameObject(entt::entity existingEntity); // FOR CREATING AN INTERFACE FOR OR AN EXISTING ENTITY
 		GameObject() = delete;
-		~GameObject();
-		// MUST IMPLEMENT COPY CONSTRUCTOR AS UNIQUE_POINTERS COPY CONSTRUCTOR IS DELETED
-		//GameObject(const GameObject& gameObject); // Copy Constructor
-		GameObject(GameObject&& gameObject) = default; // Move Constructor
-		//std::unique_ptr<GameObject> clone() const { return std::unique_ptr<GameObject>(new GameObject(*this)); } // Creates a copy
 
-		///////////
-		/// ECS ///
+		///////////////////
+		/// ECS HELPERS ///
 
-		GameObject* AddChild();
-		void CreateEntity();
-		void DestroyEntity();
-		template<typename Component, typename ... Parameters> Component& AddComponent(Parameters&&... parameters);
-		template<typename Component> Component* GetComponent();
+		static entt::entity AddChild(entt::registry* registry, entt::entity parentEntity, entt::entity entityToAdd);
+		static entt::entity CreateEntity(entt::registry* registry);
+		static void DestroyEntity(entt::registry* registry, entt::entity entity);
+
+		template<typename Component, typename ... Parameters> 
+		static Component& AddComponent(entt::registry* registry, entt::entity entity, Parameters&&... parameters);
+		template<typename Component> 
+		static Component* GetComponent(entt::registry* registry, entt::entity entity);
 
 		/////////////////////////
 		/// GETTERS & SETTERS ///
 
 		entt::entity GetEntityHandle() { return entityHandle; }
-		std::string GetName() { return name; }
-		void SetName(std::string newName) { name = newName; }
 	};
 	
 	//////////////////////////
@@ -58,22 +62,22 @@ namespace CMP316engine {
 	@return reference to the component that was just added for immediate modifications if required.
 	*/
 	template<typename Component, typename ... Parameters >
-	Component& GameObject::AddComponent(Parameters&&... parameters)
+	Component& GameObject::AddComponent(entt::registry* registry, entt::entity entity, Parameters&&... parameters)
 	{
-		if (registry->any_of<Component>(entityHandle)) {
+		if (registry->any_of<Component>(entity)) {
 			//assert("Tried to add a component that already exists, you should only have one component per entity!");
 			std::cout << "\nTried to add a component that already exists, you should only have one component per entity!";
-			Component& component = registry->get<Component>(entityHandle);
+			Component& component = registry->get<Component>(entity);
 			return component;
 		}
-		Component& component = registry->emplace<Component>(entityHandle, std::forward<Parameters>(parameters)...);
+		Component& component = registry->emplace<Component>(entity, std::forward<Parameters>(parameters)...);
 		return component;
 	}
 
 	template<typename Component>
-	Component* GameObject::GetComponent()
+	Component* GameObject::GetComponent(entt::registry* registry, entt::entity entity)
 	{
-		if (!registry->any_of<Component>(entityHandle)) { std::cout << "\nEntity does not have that component!"; return nullptr; }
-		return &registry->get<Component>(entityHandle);
+		if (!registry->any_of<Component>(entity)) { std::cout << "\nEntity does not have that component!"; return nullptr; }
+		return &registry->get<Component>(entity);
 	}
 }

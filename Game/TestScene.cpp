@@ -23,19 +23,19 @@ bool TestScene::Initialize()
 
 	///// SCENE OBJECTS
 
-	auto& modelComponent = sceneRoot->AddComponent<CMP316engine::ModelComponent>();
+	auto& modelComponent = CMP316engine::GameObject::AddComponent<CMP316engine::ModelComponent>(&registry, sceneRoot->GetEntityHandle());
 	modelComponent.filepath = "data/Models/Dug/Dug.obj";
-	auto& meshComponent = sceneRoot->AddComponent<CMP316engine::MeshComponent>();
-	sceneRoot->AddComponent<PlayerComponent>(); // Make it controllable!! Once hierarchy is setup, should move this from the scene root
-	sceneRoot->AddComponent<CMP316engine::RigidBodyComponent>();
-	sceneRoot->AddComponent<CMP316engine::MovementComponent>();
+	auto& meshComponent = CMP316engine::GameObject::AddComponent<CMP316engine::MeshComponent>(&registry, sceneRoot->GetEntityHandle());
+	CMP316engine::GameObject::AddComponent<PlayerComponent>(&registry, sceneRoot->GetEntityHandle()); // Make it controllable!! Once hierarchy is setup, should move this from the scene root
+	CMP316engine::GameObject::AddComponent<CMP316engine::RigidBodyComponent>(&registry, sceneRoot->GetEntityHandle());
+	CMP316engine::GameObject::AddComponent<CMP316engine::MovementComponent>(&registry, sceneRoot->GetEntityHandle());
 
-	auto cameraObject = sceneRoot->AddChild();
+	/*auto cameraObject = sceneRoot->AddChild();
 	cameraObject->AddComponent<CMP316engine::CameraComponent>();
 	auto transforms = cameraObject->GetComponent<CMP316engine::TransformComponent>();
 	if (transforms) { 
 		transforms->position = DirectX::XMFLOAT3(0.f, 0.f, -5.0f); 
-	}
+	}*/
 
 	return true;
 }

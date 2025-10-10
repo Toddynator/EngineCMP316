@@ -27,9 +27,6 @@ namespace CMP316engine {
 
 		void HandleImGui() override;
 		void Update(float deltaTime) override;
-		
-		// MUST BE CALLED IF SCENE ROOT HAS CHANGED (Ideally never)
-		void SetSceneRoot(GameObject* sceneRootObject) { sceneRoot = sceneRootObject; }
 
 	private:
 		// Display the hierarchy, no extra details
@@ -38,6 +35,6 @@ namespace CMP316engine {
 		void renderObjectInspectorWindow();
 		// Cut, Copy, Paste, Delete
 		void renderSelectionWindowManipulationTools();
-		void renderSelectionWindowObjectTree(GameObject* currentObject);
+		void renderSelectionWindowObjectTree(GameObject* currentObject, GameObject* selectedObject);
 	};
 }

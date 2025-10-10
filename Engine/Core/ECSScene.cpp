@@ -5,6 +5,7 @@
 namespace CMP316engine {
 	ECSScene::ECSScene(CMP316engine::EngineContext& context) : Scene(context)
 	{
+		sceneRoot = std::make_unique<CMP316engine::GameObject>(&registry);
 		systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
 		systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
 	}
@@ -16,8 +17,8 @@ namespace CMP316engine {
 			system->Initialize();
 		}
 
-		sceneRoot = std::make_unique<CMP316engine::GameObject>(&registry);
-		sceneRoot->SetName("SCENE ROOT");
+		auto& hierarchyComp = registry.get<HierarchyComponent>(sceneRoot->GetEntityHandle());
+		hierarchyComp.name = "SCENE ROOT";
 
 		return true;
 	}

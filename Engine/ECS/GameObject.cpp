@@ -2,40 +2,32 @@
 #include "GameObject.h"
 #include "Components.h"
 
-CMP316engine::GameObject::GameObject(entt::registry* sceneRegistry) : registry(sceneRegistry)
-{
-	CreateEntity();
-	auto& hierarchyComponent = AddComponent<HierarchyComponent>();
-	hierarchyComponent.parent = entityHandle;
-	AddComponent<TransformComponent>();
-}
+namespace CMP316engine {
+	GameObject::GameObject(entt::registry* sceneRegistry)
+	{
+		entityHandle = CreateEntity(sceneRegistry);
+	}
 
-CMP316engine::GameObject::~GameObject()
-{
-	DestroyEntity();
-}
+	GameObject::GameObject(entt::entity existingEntity)
+	{
+		entityHandle = existingEntity;
+	}
 
-//CMP316engine::GameObject::GameObject(const GameObject& originalGameObject) : name(originalGameObject.name)
-//{
-//	for (const auto& child : originalGameObject.children) {
-//		// Since gameObject clones its children, this means it will recursively do that for ALL children whenever the child is cloned.
-//		auto childCopy = child->clone();
-//		children.push_back(std::move(childCopy));
-//	}
-//}
+	entt::entity GameObject::AddChild(entt::registry* registry, entt::entity parentEntity, entt::entity entityToAdd)
+	{
+		return entt::null; //// TODO
+	}
 
-CMP316engine::GameObject* CMP316engine::GameObject::AddChild()
-{
-	children.push_back(std::make_unique<GameObject>(registry));
-	return children.back().get();
-}
+	entt::entity GameObject::CreateEntity(entt::registry* registry)
+	{
+		entt::entity newEntity = registry->create();
+		auto& hierarchyComponent = GameObject::AddComponent<HierarchyComponent>(registry, newEntity);
+		auto& transformComponent = GameObject::AddComponent<TransformComponent>(registry, newEntity);
+		return newEntity;
+	}
 
-void CMP316engine::GameObject::CreateEntity()
-{
-	entityHandle = registry->create();
-}
-
-void CMP316engine::GameObject::DestroyEntity()
-{
-	registry->destroy(entityHandle);
+	void GameObject::DestroyEntity(entt::registry* registry, entt::entity entity)
+	{
+		registry->destroy(entity);
+	}
 }

@@ -33,7 +33,7 @@ namespace CMP316engine {
 		ImGui::Begin("Scene GameObject Tree");
 		renderSelectionWindowManipulationTools();
 		ImGui::Separator();
-		renderSelectionWindowObjectTree(sceneRoot);
+		renderSelectionWindowObjectTree(sceneRoot, selectedObject);
 		ImGui::End();
 	}
 
@@ -88,7 +88,7 @@ namespace CMP316engine {
 		if (noSelectedObject) { ImGui::EndDisabled(); }
 	}
 
-	void LevelEditorSystem::renderSelectionWindowObjectTree(GameObject* currentObject)
+	void LevelEditorSystem::renderSelectionWindowObjectTree(GameObject* currentObject, GameObject* selectedObject)
 	{
 		auto& rootHierarchyComponent = registry->get<HierarchyComponent>(currentObject->GetEntityHandle());
 
@@ -96,7 +96,7 @@ namespace CMP316engine {
 
 		bool buttonWasHighlighted = false;
 		if (currentObject == selectedObject) { buttonWasHighlighted = true;  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 1.0f, 1.0f)); }
-		if (ImGui::Button(currentObject->GetName().c_str())) {
+		if (ImGui::Button(rootHierarchyComponent.name.c_str())) {
 			// Select Object if pressed
 			selectedObject = currentObject;
 		}
