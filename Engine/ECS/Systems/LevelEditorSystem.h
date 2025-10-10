@@ -1,4 +1,7 @@
 /*
+NOTE:
+- This is one of the few systems (If I can help it) that needs to defer creation and initialization, as it requires the scene root to be made first to be operational.
+
 TODO:
 - Make GameObject clone / copy constructor set an initialization bool to false, it needs to create new entities for the copied objects!
 */
@@ -17,13 +20,16 @@ namespace CMP316engine {
 		std::unique_ptr<GameObject> copiedObject = nullptr;
 
 	public:
-		LevelEditorSystem(entt::registry* sceneRegistry, GameObject* sceneRootObject);
+		LevelEditorSystem(entt::registry* sceneRegistry, GameObject* sceneRoot);
 
 		bool Initialize() override;
 		void Shutdown() override;
 
 		void HandleImGui() override;
 		void Update(float deltaTime) override;
+		
+		// MUST BE CALLED IF SCENE ROOT HAS CHANGED (Ideally never)
+		void SetSceneRoot(GameObject* sceneRootObject) { sceneRoot = sceneRootObject; }
 
 	private:
 		// Display the hierarchy, no extra details
@@ -32,6 +38,6 @@ namespace CMP316engine {
 		void renderObjectInspectorWindow();
 		// Cut, Copy, Paste, Delete
 		void renderSelectionWindowManipulationTools();
-		void renderSelectionWindowObjectTree();
+		void renderSelectionWindowObjectTree(GameObject* currentObject);
 	};
 }

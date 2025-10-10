@@ -47,6 +47,7 @@ namespace CMP316engine {
 
 		entt::entity GetEntityHandle() { return entityHandle; }
 		std::string GetName() { return name; }
+		void SetName(std::string newName) { name = newName; }
 	};
 	
 	//////////////////////////

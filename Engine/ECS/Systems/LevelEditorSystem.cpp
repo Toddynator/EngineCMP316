@@ -33,7 +33,7 @@ namespace CMP316engine {
 		ImGui::Begin("Scene GameObject Tree");
 		renderSelectionWindowManipulationTools();
 		ImGui::Separator();
-		renderSelectionWindowObjectTree();
+		renderSelectionWindowObjectTree(sceneRoot);
 		ImGui::End();
 	}
 
@@ -88,8 +88,52 @@ namespace CMP316engine {
 		if (noSelectedObject) { ImGui::EndDisabled(); }
 	}
 
-	void LevelEditorSystem::renderSelectionWindowObjectTree()
+	void LevelEditorSystem::renderSelectionWindowObjectTree(GameObject* currentObject)
 	{
+		auto& rootHierarchyComponent = registry->get<HierarchyComponent>(currentObject->GetEntityHandle());
 
+		/// OBJECT SELECT BUTTON
+
+		bool buttonWasHighlighted = false;
+		if (currentObject == selectedObject) { buttonWasHighlighted = true;  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 1.0f, 1.0f)); }
+		if (ImGui::Button(currentObject->GetName().c_str())) {
+			// Select Object if pressed
+			selectedObject = currentObject;
+		}
+		if (buttonWasHighlighted) { ImGui::PopStyleColor(); }
+
+		/// OBJECTS CHILDREN
+
+
+
+
+
+
+
+		/// FROM CMP301:
+		/*// Render button for object
+		bool buttonWasHighlighted = false;
+		if (currentObject == selectedObject) { buttonWasHighlighted = true;  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 1.0f, 1.0f)); }
+		if (ImGui::Button(currentObject->GetName().c_str())) {
+			// Select Object if pressed
+			selectedObject = currentObject;
+		}
+		if (buttonWasHighlighted) { ImGui::PopStyleColor(); }
+
+		if (!currentObject->GetChildren().empty()) {
+			ImGui::SameLine();
+			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) {
+				// Render for children - Note the indent as you get deeper into the hierarchy.
+				std::unordered_map<std::string, int> childCount;
+				currentObject->CallForAllChildren([&childCount, &selectedObject](SceneObject* object) {
+					ImGui::PushID(GenerateObjectID(childCount, object->GetName()).c_str());
+					ImGui::Indent();
+					RenderObjectAndChildrenImGuiSelection(object, selectedObject);
+					ImGui::Unindent();
+					ImGui::PopID();
+					});
+				ImGui::TreePop();
+			}
+		}*/
 	}
 }

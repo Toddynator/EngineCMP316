@@ -17,6 +17,7 @@ namespace CMP316engine {
 		}
 
 		sceneRoot = std::make_unique<CMP316engine::GameObject>(&registry);
+		sceneRoot->SetName("SCENE ROOT");
 
 		return true;
 	}
