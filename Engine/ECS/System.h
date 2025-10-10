@@ -19,7 +19,7 @@ namespace CMP316engine {
 		virtual void Shutdown() = 0;
 
 		virtual void HandleInput() {};
-		virtual void Update() = 0;
+		virtual void Update(float deltaTime) = 0;
 
 	protected:
 		entt::registry* registry;

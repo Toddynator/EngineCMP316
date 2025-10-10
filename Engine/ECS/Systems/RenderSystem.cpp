@@ -14,7 +14,7 @@ void CMP316engine::RenderSystem::Shutdown()
 	shutdownBuffers();
 }
 
-void CMP316engine::RenderSystem::Update()
+void CMP316engine::RenderSystem::Update(float deltaTime)
 {
 	auto modelEntities = registry->view<ModelComponent, MeshComponent>();
 	for (auto& entity : modelEntities) {

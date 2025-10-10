@@ -1,16 +1,16 @@
-#include "pch.h"
 #include "TestScene.h"
 #include "ECS/GameObject.h"
 #include "ECS/EngineECSSystems.h"
-#include "ECS/Components.h"
+#include "ECS/Components.h" // Engine Components
 #include "PlayerSystem.h"
+#include "Components.h" // Game Components
 
 TestScene::TestScene(CMP316engine::EngineContext& context) : Scene(context)
 {
 	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
 	systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
 	systems.push_back(std::make_unique<CMP316engine::PhysicsSystem>(&registry));
-	systems.push_back(std::make_unique<PlayerSystem>(&registry));
+	systems.push_back(std::make_unique<PlayerSystem>(&registry, engineContext.inputManager.get()));
 }
 
 bool TestScene::Initialize()
@@ -56,6 +56,7 @@ bool TestScene::Initialize()
 	auto& modelComponent = sceneTree->AddComponent<CMP316engine::ModelComponent>();
 	modelComponent.filepath = "data/Models/Dug/Dug.obj";
 	auto& meshComponent = sceneTree->AddComponent<CMP316engine::MeshComponent>();
+	sceneTree->AddComponent<PlayerComponent>(); // Make it controllable!! Once hierarchy is setup, should move this from the scene root
 
 	auto cameraObject = sceneTree->AddChild();
 	cameraObject->AddComponent<CMP316engine::CameraComponent>();
@@ -101,7 +102,7 @@ void TestScene::Update(float deltaTime)
 {
 	for (auto& system : systems)
 	{
-		system->Update();
+		system->Update(deltaTime);
 	}
 
 	/// PHYSICS TEST

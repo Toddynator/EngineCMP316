@@ -10,6 +10,6 @@ namespace CMP316engine {
 		bool Initialize() override;
 		void Shutdown() override;
 
-		void Update() override;
+		void Update(float deltaTime) override;
 	};
 }

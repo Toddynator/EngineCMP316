@@ -16,7 +16,7 @@ void CMP316engine::CameraSystem::Shutdown()
 
 }
 
-void CMP316engine::CameraSystem::Update()
+void CMP316engine::CameraSystem::Update(float deltaTime)
 {
 	auto cameraEntities = registry->view<CameraComponent, TransformComponent>();
 	for (auto& entity : cameraEntities) {

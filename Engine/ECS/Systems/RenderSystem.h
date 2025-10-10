@@ -16,7 +16,7 @@ namespace CMP316engine {
 		bool Initialize() override;
 		void Shutdown() override;
 
-		void Update() override;
+		void Update(float deltaTime) override;
 
 		static void RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, Shader* shader, DirectX::XMMATRIX viewMatrix);
 

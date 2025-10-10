@@ -1,7 +1,10 @@
+## NOTE:
+# - Cmake makes its own precompiled header which it force includes, don't need to add pch.h to the beginning of every file!
+# I still have a pch file, but their precompiled header now just includes that on its own, and I define in the file itself the includes.
 
 ## TODO:
+# - Remove my precompiled header and replace with target_precompiled_header entirely, just pass in the includes instead of my own pch file.
 # - Should make it that the game library name can be set on build through the cmake gui.
-# - Make it that cmake generates a game project if one doesn't exist
 
 
 
@@ -139,7 +142,7 @@ source_group(TREE "${CMAKE_SOURCE_DIR}/Game" PREFIX "src" FILES ${GAME_SRC})
 # Link Game to Engine
 target_link_libraries(Engine PRIVATE Game)
 # Precompiled Header
-target_precompile_headers(Game PRIVATE "${CMAKE_SOURCE_DIR}/Game/pch.h")
+target_precompile_headers(Game PRIVATE "${CMAKE_SOURCE_DIR}/Game/pch.h") # CMAKE uses its own precompiled header and this just sets what it contains, but I've just leveraged my pch so it practically works the same.
 
 
 

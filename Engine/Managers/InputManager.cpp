@@ -5,7 +5,13 @@
 
 const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::defaultKeybinds
 {
-	{ "fullscreen", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_F11 }}
+	{ "fullscreen", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_F11 }},
+	{ "Move Forward", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_W }},
+	{ "Move Backward", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_S }},
+	{ "Move Up", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_SPACE }},
+	{ "Move Down", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_LCTRL }},
+	{ "Move Left", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_A }},
+	{ "Move Right", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_D }}
 };
 
 

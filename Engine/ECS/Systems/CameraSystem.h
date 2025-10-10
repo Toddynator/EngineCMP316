@@ -10,7 +10,7 @@ namespace CMP316engine {
 		bool Initialize() override;
 		void Shutdown() override;
 
-		void Update() override;
+		void Update(float deltaTime) override;
 
 		static DirectX::XMMATRIX GetActiveCameraViewMatrix(entt::registry* sceneRegistry);
 	};
