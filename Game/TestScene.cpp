@@ -3,12 +3,14 @@
 #include "ECS/GameObject.h"
 #include "ECS/EngineECSSystems.h"
 #include "ECS/Components.h"
+#include "PlayerSystem.h"
 
 TestScene::TestScene(CMP316engine::EngineContext& context) : Scene(context)
 {
 	systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
 	systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
 	systems.push_back(std::make_unique<CMP316engine::PhysicsSystem>(&registry));
+	systems.push_back(std::make_unique<PlayerSystem>(&registry));
 }
 
 bool TestScene::Initialize()

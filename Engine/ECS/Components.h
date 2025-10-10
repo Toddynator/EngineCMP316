@@ -77,6 +77,7 @@ namespace CMP316engine
 
 	struct CameraComponent
 	{
+		// Camera needs just position and rotation
 		DirectX::XMMATRIX viewMatrix;
 		bool active = false;
 	};
