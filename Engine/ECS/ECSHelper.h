@@ -8,8 +8,10 @@ namespace CMP316engine::ECS
 {
 	/*
 	@brief handles adding a child and correctly setting the hierarchy component of the parent and children.
+	@param pass in the entity to add if you have already created entity, otherwise leave blank and a default entity will be created.
 	*/
 	entt::entity AddChild(entt::registry* registry, entt::entity parentEntity);
+	entt::entity AddChild(entt::registry* registry, entt::entity parentEntity, entt::entity entityToAdd);
 	/*
 	@brief handles recursively removing a child and all its children, will adjust the hierarchyComponents accordingly.
 	Compared to OOP style scene graphs, you can't delete the parent and expect all the children to be automatically
@@ -28,6 +30,8 @@ namespace CMP316engine::ECS
 	variables that need modified.
 	*/
 	void CallForAllChildren(entt::registry* registry, entt::entity parentEntity, const std::function<void(entt::registry*, entt::entity)>& functionToCall);
+	// @brief check if entityToCheck is a descendant of 'ancestor'
+	bool IsDescendant(entt::registry* registry, entt::entity ancestor, entt::entity entityToCheck);
 
 
 	/////////////////

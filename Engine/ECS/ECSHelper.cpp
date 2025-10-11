@@ -6,11 +6,51 @@ namespace CMP316engine::ECS
 	entt::entity AddChild(entt::registry* registry, entt::entity parentEntity)
 	{
 		entt::entity entityToAdd = CreateEntityWithDefaultComponents(registry);
-
+		return AddChild(registry, parentEntity, entityToAdd);
+	}
+	entt::entity AddChild(entt::registry* registry, entt::entity parentEntity, entt::entity entityToAdd)
+	{
 		auto& parentHierarchyComponent = registry->get<HierarchyComponent>(parentEntity);
 		auto& newChildHierarchyComponent = registry->get<HierarchyComponent>(entityToAdd);
 
+		/// Check if the entity had a previous parent and neighbours
+
+		if (newChildHierarchyComponent.parent != entt::null)
+		{
+			// Had a parent
+			auto& previousParentHierarchyComponent = registry->get<HierarchyComponent>(newChildHierarchyComponent.parent);
+
+			if (newChildHierarchyComponent.prevNeighbour == entt::null)
+			{
+				// Entity is the first child
+				if (newChildHierarchyComponent.nextNeighbour != entt::null) {
+					// Parents first child is now the neighbour
+					registry->get<HierarchyComponent>(newChildHierarchyComponent.nextNeighbour).prevNeighbour = entt::null;
+					previousParentHierarchyComponent.firstChild = newChildHierarchyComponent.nextNeighbour;
+				}
+				// Entity was the first AND only child
+				else {
+					// Parent no longer has any children
+					previousParentHierarchyComponent.firstChild = entt::null;
+				}
+			}
+			else {
+				// The previous child now links to the next child (if one exists)
+				auto& prevNeighbourHierarchyComponent = registry->get<HierarchyComponent>(newChildHierarchyComponent.prevNeighbour);
+				prevNeighbourHierarchyComponent.nextNeighbour = newChildHierarchyComponent.nextNeighbour;
+
+				if (newChildHierarchyComponent.nextNeighbour != entt::null)
+				{
+					// There was a child after, it now links to the previous neighbour
+					auto& nextNeighbourHierarchyComponent = registry->get<HierarchyComponent>(newChildHierarchyComponent.nextNeighbour);
+					nextNeighbourHierarchyComponent.prevNeighbour = newChildHierarchyComponent.prevNeighbour;
+				}
+			}
+		}
+		// Child now points to the new parent and has different neighbours
 		newChildHierarchyComponent.parent = parentEntity;
+		newChildHierarchyComponent.prevNeighbour = entt::null;
+		newChildHierarchyComponent.nextNeighbour = entt::null;
 
 		/// Find the last child
 
@@ -124,5 +164,19 @@ namespace CMP316engine::ECS
 			functionToCall(registry, childEntity);
 			childEntity = childHierarchyComponent.nextNeighbour;
 		}
+	}
+
+	bool IsDescendant(entt::registry* registry, entt::entity ancestor, entt::entity entityToCheck)
+	{
+		auto& hierarchyComponent = registry->get<HierarchyComponent>(entityToCheck);
+		entt::entity parent = hierarchyComponent.parent;
+		while (parent != entt::null)
+		{
+			if (parent == ancestor) {
+				return true;
+			}
+			parent = registry->get<HierarchyComponent>(parent).parent;
+		}
+		return false;
 	}
 }

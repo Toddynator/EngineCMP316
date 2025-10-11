@@ -51,7 +51,7 @@ namespace CMP316engine {
 		if (selectedObject == entt::null) { noSelectedObject = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Copy"))
 		{
-			//cutObject = nullptr;
+			cutObject = entt::null;
 			//copiedObject = selectedObject->Clone();
 		}
 		ImGui::SameLine();
@@ -59,19 +59,20 @@ namespace CMP316engine {
 		if (selectedObject == sceneRoot) { sceneRootSelected = true; ImGui::BeginDisabled(); }
 		if (ImGui::Button("Cut"))
 		{
-			//copiedObject = nullptr;
-			//cutObject = selectedObject;
+			copiedObject = entt::null;
+			cutObject = selectedObject;
 		}
 		if (sceneRootSelected) { ImGui::EndDisabled(); }
 		ImGui::SameLine();
 		bool noObjectToPaste = false;
-		if ((cutObject == entt::null && copiedObject == entt::null)) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
+		// ENSURE that the user doesn't paste the cut object onto itself or its own parent.
+		if ((cutObject == entt::null && copiedObject == entt::null) || (selectedObject == cutObject) || ECS::IsDescendant(registry, cutObject, selectedObject)) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Paste"))
 		{
 			if (cutObject != entt::null)
 			{
-				//selectedObject->AddChild(cutObject->GetParent()->MoveChild(cutObject));
-				//cutObject = nullptr;
+				ECS::AddChild(registry, selectedObject, cutObject);
+				cutObject = entt::null;
 			}
 			else if (copiedObject != entt::null)
 			{
@@ -83,10 +84,20 @@ namespace CMP316engine {
 		if (sceneRootSelected) { ImGui::BeginDisabled(); }
 		if (ImGui::Button("Delete"))
 		{
+			// Remove CutObject if and only when it is deleted
+			if (selectedObject == cutObject || ECS::IsDescendant(registry, cutObject, selectedObject))
+			{
+				cutObject = entt::null;
+			}
 			ECS::RemoveChild(registry, selectedObject);
 			selectedObject = entt::null;
 		}
 		if (sceneRootSelected) { ImGui::EndDisabled(); }
+		ImGui::SameLine();
+		if (ImGui::Button("Add"))
+		{
+			//// TODO
+		}
 		if (noSelectedObject) { ImGui::EndDisabled(); }
 	}
 
@@ -109,7 +120,7 @@ namespace CMP316engine {
 		if (rootHierarchyComponent.firstChild != entt::null) 
 		{
 			ImGui::SameLine();
-			if (ImGui::TreeNodeEx("Test##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) 
+			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) 
 			{
 				int childNum = 0; // For ImGui ID
 				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject](entt::registry* registry, entt::entity childEntity) {
