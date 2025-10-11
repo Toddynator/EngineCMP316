@@ -8,19 +8,19 @@ TODO:
 
 #pragma once
 #include "../System.h"
-#include "../GameObject.h"
+#include <entt.hpp>
 
 namespace CMP316engine {
 	class LevelEditorSystem : public System
 	{
 	private:
-		GameObject* sceneRoot = nullptr;
-		GameObject* selectedObject = nullptr;
-		GameObject* cutObject = nullptr;
-		std::unique_ptr<GameObject> copiedObject = nullptr;
+		entt::entity  sceneRoot = entt::null;
+		entt::entity  selectedObject = entt::null;
+		entt::entity  cutObject = entt::null;
+		entt::entity  copiedObject = entt::null;
 
 	public:
-		LevelEditorSystem(entt::registry* sceneRegistry, GameObject* sceneRoot);
+		LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRoot);
 
 		bool Initialize() override;
 		void Shutdown() override;
@@ -35,6 +35,6 @@ namespace CMP316engine {
 		void renderObjectInspectorWindow();
 		// Cut, Copy, Paste, Delete
 		void renderSelectionWindowManipulationTools();
-		void renderSelectionWindowObjectTree(GameObject* currentObject, GameObject* selectedObject);
+		void renderSelectionWindowObjectTree(entt::entity& currentObject, entt::entity& selectedObject);
 	};
 }

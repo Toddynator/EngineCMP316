@@ -2,7 +2,7 @@
 #include <ImGui.h>
 
 namespace CMP316engine {
-	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, GameObject* sceneRootObject) : System(sceneRegistry), sceneRoot(sceneRootObject)
+	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRootObject) : System(sceneRegistry), sceneRoot(sceneRootObject)
 	{
 
 	}
@@ -47,7 +47,7 @@ namespace CMP316engine {
 	void LevelEditorSystem::renderSelectionWindowManipulationTools()
 	{
 		bool noSelectedObject = false;
-		if (!selectedObject) { noSelectedObject = true;  ImGui::BeginDisabled(); }
+		if (selectedObject == entt::null) { noSelectedObject = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Copy"))
 		{
 			//cutObject = nullptr;
@@ -64,15 +64,15 @@ namespace CMP316engine {
 		if (sceneRootSelected) { ImGui::EndDisabled(); }
 		ImGui::SameLine();
 		bool noObjectToPaste = false;
-		if ((!cutObject && !copiedObject)) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
+		if ((cutObject == entt::null && copiedObject == entt::null)) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Paste"))
 		{
-			if (cutObject)
+			if (cutObject != entt::null)
 			{
 				//selectedObject->AddChild(cutObject->GetParent()->MoveChild(cutObject));
 				//cutObject = nullptr;
 			}
-			else if (copiedObject)
+			else if (copiedObject != entt::null)
 			{
 				//selectedObject->AddChild(copiedObject->Clone());
 			}
@@ -88,9 +88,9 @@ namespace CMP316engine {
 		if (noSelectedObject) { ImGui::EndDisabled(); }
 	}
 
-	void LevelEditorSystem::renderSelectionWindowObjectTree(GameObject* currentObject, GameObject* selectedObject)
+	void LevelEditorSystem::renderSelectionWindowObjectTree(entt::entity& currentObject, entt::entity& selectedObject)
 	{
-		auto& rootHierarchyComponent = registry->get<HierarchyComponent>(currentObject->GetEntityHandle());
+		auto& rootHierarchyComponent = registry->get<HierarchyComponent>(currentObject);
 
 		/// OBJECT SELECT BUTTON
 

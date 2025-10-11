@@ -7,7 +7,6 @@ HOW TO USE:
 #pragma once
 #include "Scene.h"
 #include <entt.hpp>
-#include "../ECS/GameObject.h"
 #include "../ECS/System.h"
 
 namespace CMP316engine {
@@ -27,7 +26,7 @@ namespace CMP316engine {
 
 	protected:
 		entt::registry registry;
-		std::unique_ptr<GameObject> sceneRoot; // All scenes have a single root object, it has children which as a result forms the hierarchy / scene graph.
+		entt::entity sceneRoot; // All scenes have a single root object, it has children which as a result forms the hierarchy / scene graph.
 		std::vector<std::unique_ptr<System>> systems;
 	};
 }

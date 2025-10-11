@@ -1,11 +1,12 @@
 #include "ECSScene.h"
 
 #include "ECS/EngineECSSystems.h"
+#include "ECS/ECSHelper.h"
 
 namespace CMP316engine {
 	ECSScene::ECSScene(CMP316engine::EngineContext& context) : Scene(context)
 	{
-		sceneRoot = std::make_unique<CMP316engine::GameObject>(&registry);
+		sceneRoot = ECS::CreateEntityWithDefaultComponents(&registry);
 		systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.renderer.get(), engineContext.shader.get()));
 		systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry));
 	}
@@ -17,7 +18,7 @@ namespace CMP316engine {
 			system->Initialize();
 		}
 
-		auto& hierarchyComp = registry.get<HierarchyComponent>(sceneRoot->GetEntityHandle());
+		auto& hierarchyComp = registry.get<HierarchyComponent>(sceneRoot);
 		hierarchyComp.name = "SCENE ROOT";
 
 		return true;

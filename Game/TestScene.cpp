@@ -1,9 +1,9 @@
 #include "TestScene.h"
-#include "ECS/GameObject.h"
 #include "ECS/EngineECSSystems.h"
 #include "ECS/Components.h" // Engine Components
 #include "PlayerSystem.h"
 #include "Components.h" // Game Components
+#include "ECS/ECSHelper.h" // MAYBE SHOULD HAVE AS PART OF ECS SCENE HEADER?
 
 TestScene::TestScene(CMP316engine::EngineContext& context) : ECSScene(context)
 {
@@ -23,12 +23,12 @@ bool TestScene::Initialize()
 
 	///// SCENE OBJECTS
 
-	auto& modelComponent = CMP316engine::GameObject::AddComponent<CMP316engine::ModelComponent>(&registry, sceneRoot->GetEntityHandle());
+	auto& modelComponent = CMP316engine::ECS::AddComponent<CMP316engine::ModelComponent>(&registry, sceneRoot);
 	modelComponent.filepath = "data/Models/Dug/Dug.obj";
-	auto& meshComponent = CMP316engine::GameObject::AddComponent<CMP316engine::MeshComponent>(&registry, sceneRoot->GetEntityHandle());
-	CMP316engine::GameObject::AddComponent<PlayerComponent>(&registry, sceneRoot->GetEntityHandle()); // Make it controllable!! Once hierarchy is setup, should move this from the scene root
-	CMP316engine::GameObject::AddComponent<CMP316engine::RigidBodyComponent>(&registry, sceneRoot->GetEntityHandle());
-	CMP316engine::GameObject::AddComponent<CMP316engine::MovementComponent>(&registry, sceneRoot->GetEntityHandle());
+	auto& meshComponent = CMP316engine::ECS::AddComponent<CMP316engine::MeshComponent>(&registry, sceneRoot);
+	CMP316engine::ECS::AddComponent<PlayerComponent>(&registry, sceneRoot); // Make it controllable!! Once hierarchy is setup, should move this from the scene root
+	CMP316engine::ECS::AddComponent<CMP316engine::RigidBodyComponent>(&registry, sceneRoot);
+	CMP316engine::ECS::AddComponent<CMP316engine::MovementComponent>(&registry, sceneRoot);
 
 	/*auto cameraObject = sceneRoot->AddChild();
 	cameraObject->AddComponent<CMP316engine::CameraComponent>();
