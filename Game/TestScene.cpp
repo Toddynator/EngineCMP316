@@ -3,7 +3,6 @@
 #include "ECS/Components.h" // Engine Components
 #include "PlayerSystem.h"
 #include "Components.h" // Game Components
-#include "ECS/ECSHelper.h" // MAYBE SHOULD HAVE AS PART OF ECS SCENE HEADER?
 
 TestScene::TestScene(CMP316engine::EngineContext& context) : ECSScene(context)
 {

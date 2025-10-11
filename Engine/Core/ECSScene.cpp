@@ -1,7 +1,5 @@
 #include "ECSScene.h"
-
 #include "ECS/EngineECSSystems.h"
-#include "ECS/ECSHelper.h"
 
 namespace CMP316engine {
 	ECSScene::ECSScene(CMP316engine::EngineContext& context) : Scene(context)

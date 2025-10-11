@@ -11,6 +11,17 @@ namespace CMP316engine
 	bool LevelEditorScene::Initialize()
 	{
 		ECSScene::Initialize();
+
+		/// TEMP TEST
+		ECS::AddChild(&registry, sceneRoot);
+		ECS::AddChild(&registry, sceneRoot);
+		auto ent1 = ECS::AddChild(&registry, sceneRoot);
+		ECS::AddChild(&registry, ent1);
+		auto ent2 = ECS::AddChild(&registry, sceneRoot);
+		auto ent21 = ECS::AddChild(&registry, ent2);
+		ECS::AddChild(&registry, ent21);
+		/// TEMP TEST
+
 		return true;
 	}
 

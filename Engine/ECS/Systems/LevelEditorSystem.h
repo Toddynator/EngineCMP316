@@ -35,6 +35,6 @@ namespace CMP316engine {
 		void renderObjectInspectorWindow();
 		// Cut, Copy, Paste, Delete
 		void renderSelectionWindowManipulationTools();
-		void renderSelectionWindowObjectTree(entt::entity& currentObject, entt::entity& selectedObject);
+		static void renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject);
 	};
 }

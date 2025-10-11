@@ -1,5 +1,6 @@
 #include "LevelEditorSystem.h"
 #include <ImGui.h>
+#include "../ECSHelper.h"
 
 namespace CMP316engine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRootObject) : System(sceneRegistry), sceneRoot(sceneRootObject)
@@ -33,7 +34,7 @@ namespace CMP316engine {
 		ImGui::Begin("Scene GameObject Tree");
 		renderSelectionWindowManipulationTools();
 		ImGui::Separator();
-		renderSelectionWindowObjectTree(sceneRoot, selectedObject);
+		renderObjectSelectionWindowObjectTree(registry, sceneRoot, selectedObject);
 		ImGui::End();
 	}
 
@@ -88,7 +89,7 @@ namespace CMP316engine {
 		if (noSelectedObject) { ImGui::EndDisabled(); }
 	}
 
-	void LevelEditorSystem::renderSelectionWindowObjectTree(entt::entity& currentObject, entt::entity& selectedObject)
+	void LevelEditorSystem::renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject)
 	{
 		auto& rootHierarchyComponent = registry->get<HierarchyComponent>(currentObject);
 
@@ -104,36 +105,22 @@ namespace CMP316engine {
 
 		/// OBJECTS CHILDREN
 
-
-
-
-
-
-
-		/// FROM CMP301:
-		/*// Render button for object
-		bool buttonWasHighlighted = false;
-		if (currentObject == selectedObject) { buttonWasHighlighted = true;  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 1.0f, 1.0f)); }
-		if (ImGui::Button(currentObject->GetName().c_str())) {
-			// Select Object if pressed
-			selectedObject = currentObject;
-		}
-		if (buttonWasHighlighted) { ImGui::PopStyleColor(); }
-
-		if (!currentObject->GetChildren().empty()) {
+		if (rootHierarchyComponent.firstChild != entt::null) 
+		{
 			ImGui::SameLine();
-			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) {
-				// Render for children - Note the indent as you get deeper into the hierarchy.
-				std::unordered_map<std::string, int> childCount;
-				currentObject->CallForAllChildren([&childCount, &selectedObject](SceneObject* object) {
-					ImGui::PushID(GenerateObjectID(childCount, object->GetName()).c_str());
+			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) 
+			{
+				int childNum = 0; // For ImGui ID
+				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject](entt::registry* registry, entt::entity childEntity) {
+					ImGui::PushID(std::to_string(childNum).c_str());
 					ImGui::Indent();
-					RenderObjectAndChildrenImGuiSelection(object, selectedObject);
+					renderObjectSelectionWindowObjectTree(registry, childEntity, selectedObject);
 					ImGui::Unindent();
 					ImGui::PopID();
+					childNum++;
 					});
 				ImGui::TreePop();
 			}
-		}*/
+		}
 	}
 }

@@ -8,6 +8,7 @@ HOW TO USE:
 #include "Scene.h"
 #include <entt.hpp>
 #include "../ECS/System.h"
+#include "../ECS/ECSHelper.h"
 
 namespace CMP316engine {
 	class ECSScene :

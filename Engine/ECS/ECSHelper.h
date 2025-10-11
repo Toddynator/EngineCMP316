@@ -6,9 +6,27 @@
 
 namespace CMP316engine::ECS
 {
-	entt::entity AddChild(entt::registry* registry, entt::entity parentEntity, entt::entity entityToAdd);
+	/*
+	@brief handles adding a child and correctly setting the hierarchy component of the parent and children.
+	*/
+	entt::entity AddChild(entt::registry* registry, entt::entity parentEntity);
+	/*
+	@brief handles recursively removing a child and all its children, will adjust the hierarchyComponents accordingly.
+	Compared to OOP style scene graphs, you can't delete the parent and expect all the children to be automatically
+	destroyed. With ECS, you must delete from the ends of the sceneGraph up.
+	NOTE: May want to defer deletion by adding a markedForDeletion bool to hierarchyComponent and have an ECSCoreSystem handle cleanup of
+	marked entities. I may need to have the ECSCoreSystem at a slightly different update step to other systems.
+	*/
+	void RemoveChild(entt::registry* registry, entt::entity entityToRemove);
 	entt::entity CreateEntityWithDefaultComponents(entt::registry* registry);
 	void DestroyEntity(entt::registry* registry, entt::entity entity);
+	/*
+	@brief calls for every child direclty under the parent entity. For recursive operations, the function that is called should call the CallForAllChildren() function again.
+	@param functionToCall can be created by defining a lambda directly in the parameter list, MUST have the registy pointer and the root entity passed in, in the lambda capture list you can then pass in any additional
+	variables that need modified.
+	*/
+	void CallForAllChildren(entt::registry* registry, entt::entity parentEntity, const std::function<void(entt::registry*, entt::entity)>& functionToCall);
+
 
 	/////////////////
 	/// TEMPLATES ///
