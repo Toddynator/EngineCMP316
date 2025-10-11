@@ -52,7 +52,7 @@ namespace CMP316engine {
 		if (ImGui::Button("Copy"))
 		{
 			cutObject = entt::null;
-			//copiedObject = selectedObject->Clone();
+			//copiedObject = selectedObject->Clone(); //// TODO
 		}
 		ImGui::SameLine();
 		bool sceneRootSelected = false;

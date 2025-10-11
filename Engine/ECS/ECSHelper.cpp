@@ -168,6 +168,8 @@ namespace CMP316engine::ECS
 
 	bool IsDescendant(entt::registry* registry, entt::entity ancestor, entt::entity entityToCheck)
 	{
+		if (entityToCheck == entt::null) { return false; }
+
 		auto& hierarchyComponent = registry->get<HierarchyComponent>(entityToCheck);
 		entt::entity parent = hierarchyComponent.parent;
 		while (parent != entt::null)
