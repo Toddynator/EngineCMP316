@@ -18,6 +18,7 @@ namespace CMP316engine {
 		entt::entity  selectedObject = entt::null;
 		entt::entity  cutObject = entt::null;
 		entt::entity  copiedObject = entt::null;
+		bool deletePrompt = false;
 
 	public:
 		LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRoot);

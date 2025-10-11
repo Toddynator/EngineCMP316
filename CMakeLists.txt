@@ -46,6 +46,9 @@ endforeach()
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 # Remove Unused Configurations (Use only Release & Debug)
 set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
+if (MSVC)
+    add_compile_options($<$<CONFIG:Debug>:/ZI>)
+endif()
 
 
 

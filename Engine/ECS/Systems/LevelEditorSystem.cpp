@@ -1,6 +1,7 @@
 #include "LevelEditorSystem.h"
 #include <ImGui.h>
 #include "../ECSHelper.h"
+#include "../../Utility/ImGuiHelper.h"
 
 namespace CMP316engine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRootObject) : System(sceneRegistry), sceneRoot(sceneRootObject)
@@ -84,13 +85,7 @@ namespace CMP316engine {
 		if (sceneRootSelected) { ImGui::BeginDisabled(); }
 		if (ImGui::Button("Delete"))
 		{
-			// Remove CutObject if and only when it is deleted
-			if (selectedObject == cutObject || ECS::IsDescendant(registry, cutObject, selectedObject))
-			{
-				cutObject = entt::null;
-			}
-			ECS::RemoveChild(registry, selectedObject);
-			selectedObject = entt::null;
+			deletePrompt = true;
 		}
 		if (sceneRootSelected) { ImGui::EndDisabled(); }
 		ImGui::SameLine();
@@ -99,6 +94,19 @@ namespace CMP316engine {
 			//// TODO
 		}
 		if (noSelectedObject) { ImGui::EndDisabled(); }
+
+		/// PROMPTS
+
+		ImGuiHelper::PromptUser(deletePrompt, [this]() {
+			// Remove CutObject if and only when it is deleted
+			if (selectedObject == cutObject || ECS::IsDescendant(registry, cutObject, selectedObject))
+			{
+				cutObject = entt::null;
+			}
+			ECS::RemoveChild(registry, selectedObject);
+			selectedObject = entt::null;
+			},
+			"Deletion Confirmation", "Are you sure you want to delete the entity?");
 	}
 
 	void LevelEditorSystem::renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject)

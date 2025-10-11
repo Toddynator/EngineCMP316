@@ -226,7 +226,7 @@ void CMP316engine::RenderSystem::shutdownBuffers()
 {
 	auto meshEntities = registry->view<MeshComponent>();
 	for (auto& entity : meshEntities) {
-		auto meshComponent = registry->get<MeshComponent>(entity);
+		auto& meshComponent = registry->get<MeshComponent>(entity);
 
 		if (meshComponent.vertexBuffer) { meshComponent.vertexBuffer->Release(); }
 		if (meshComponent.indexBuffer) { meshComponent.indexBuffer->Release(); }
