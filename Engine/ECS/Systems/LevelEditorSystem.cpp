@@ -91,7 +91,7 @@ namespace CMP316engine {
 		ImGui::SameLine();
 		if (ImGui::Button("Add"))
 		{
-			//// TODO
+			ECS::AddChild(registry, selectedObject);
 		}
 		if (noSelectedObject) { ImGui::EndDisabled(); }
 
