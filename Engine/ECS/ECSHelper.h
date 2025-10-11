@@ -18,6 +18,8 @@ namespace CMP316engine::ECS
 	marked entities. I may need to have the ECSCoreSystem at a slightly different update step to other systems.
 	*/
 	void RemoveChild(entt::registry* registry, entt::entity entityToRemove);
+	// Should be used only by RemoveChild
+	void RemoveChildWithoutUpdatingHierarchy(entt::registry* registry, entt::entity entityToRemove);
 	entt::entity CreateEntityWithDefaultComponents(entt::registry* registry);
 	void DestroyEntity(entt::registry* registry, entt::entity entity);
 	/*

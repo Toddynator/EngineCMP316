@@ -83,7 +83,8 @@ namespace CMP316engine {
 		if (sceneRootSelected) { ImGui::BeginDisabled(); }
 		if (ImGui::Button("Delete"))
 		{
-			//selectedObject->MarkObjectToBeDeleted();
+			ECS::RemoveChild(registry, selectedObject);
+			selectedObject = entt::null;
 		}
 		if (sceneRootSelected) { ImGui::EndDisabled(); }
 		if (noSelectedObject) { ImGui::EndDisabled(); }
@@ -108,11 +109,11 @@ namespace CMP316engine {
 		if (rootHierarchyComponent.firstChild != entt::null) 
 		{
 			ImGui::SameLine();
-			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) 
+			if (ImGui::TreeNodeEx("Test##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) 
 			{
 				int childNum = 0; // For ImGui ID
 				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject](entt::registry* registry, entt::entity childEntity) {
-					ImGui::PushID(std::to_string(childNum).c_str());
+					ImGui::PushID(("." + std::to_string(childNum)).c_str());
 					ImGui::Indent();
 					renderObjectSelectionWindowObjectTree(registry, childEntity, selectedObject);
 					ImGui::Unindent();
