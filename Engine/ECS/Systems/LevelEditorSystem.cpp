@@ -5,8 +5,8 @@
 #include "CameraSystem.h"
 
 namespace CMP316engine {
-	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
-		System(sceneRegistry), sceneRoot(sceneRootEntity), renderer(sceneRenderer)
+	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
+		System(sceneRegistry, sceneInputManager), sceneRoot(sceneRootEntity), renderer(sceneRenderer)
 	{
 
 	}

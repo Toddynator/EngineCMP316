@@ -5,9 +5,6 @@
 class PlayerSystem :
 	public CMP316engine::System
 {
-private:
-	CMP316engine::InputManager* inputManager;
-
 public:
 	PlayerSystem(entt::registry* sceneRegistry, CMP316engine::InputManager* sceneInputManager);
 

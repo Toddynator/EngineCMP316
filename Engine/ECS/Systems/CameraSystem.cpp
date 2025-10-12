@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CameraSystem.h"
 
-CMP316engine::CameraSystem::CameraSystem(entt::registry* sceneRegistry) : System(sceneRegistry)
+CMP316engine::CameraSystem::CameraSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager) : System(sceneRegistry, sceneInputManager)
 {
 
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "Components.h"
 #include "entt.hpp"
+#include "Managers/InputManager.h"
 
 /*
 ABSTRACT BASE CLASS
@@ -11,8 +12,12 @@ ANY FUNCTIONS outside of the ones listed in this class should be either private 
 namespace CMP316engine {
 	class System
 	{
+	protected:
+		entt::registry* registry;
+		InputManager* inputManager;
+
 	public:
-		System(entt::registry* sceneRegistry) : registry(sceneRegistry) {}
+		System(entt::registry* sceneRegistry, InputManager* sceneInputManager) : registry(sceneRegistry), inputManager(sceneInputManager) {}
 		System() = delete;
 
 		virtual bool Initialize() = 0;
@@ -21,9 +26,6 @@ namespace CMP316engine {
 		virtual void HandleInput(float deltaTime) {};
 		virtual void HandleImGui() {};
 		virtual void Update(float deltaTime) = 0;
-
-	protected:
-		entt::registry* registry;
 	};
 }
 

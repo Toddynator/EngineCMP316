@@ -9,7 +9,7 @@ namespace CMP316engine {
 		inline static constexpr float BASE_CAMERA_ROTATION_SPEED = 1.f;
 
 	public:
-		CameraSystem(entt::registry* sceneRegistry);
+		CameraSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager);
 
 		bool Initialize() override;
 		void Shutdown() override;

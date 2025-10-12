@@ -11,7 +11,7 @@ namespace CMP316engine {
 		Shader* shader;
 
 	public:
-		RenderSystem(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, Shader* sceneDefaultShader) : System(sceneRegistry), renderer(sceneRenderer), shader(sceneDefaultShader) {}
+		RenderSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, Renderer_DirectX11* sceneRenderer, Shader* sceneDefaultShader) : System(sceneRegistry, sceneInputManager), renderer(sceneRenderer), shader(sceneDefaultShader) {}
 
 		bool Initialize() override;
 		void Shutdown() override;

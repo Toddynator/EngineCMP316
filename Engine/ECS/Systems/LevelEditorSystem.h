@@ -31,7 +31,7 @@ namespace CMP316engine {
 		float snapImGuizmo[3] = { 1.f, 1.f, 1.f };
 
 	public:
-		LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRoot, Renderer_DirectX11* renderer);
+		LevelEditorSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, entt::entity sceneRoot, Renderer_DirectX11* renderer);
 
 		bool Initialize() override;
 		void Shutdown() override;
