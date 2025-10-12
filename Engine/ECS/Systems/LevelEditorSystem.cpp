@@ -59,7 +59,7 @@ namespace CMP316engine {
 		if (ImGui::Button("Copy"))
 		{
 			cutObject = entt::null;
-			//copiedObject = selectedObject->Clone(); //// TODO
+			copiedObject = selectedObject; // The actual copy will be created on pasting, unfortunately can't keep the copy if object is deleted.
 
 			//// TEMP
 			//clipboardRegistry.clear();
@@ -89,6 +89,7 @@ namespace CMP316engine {
 			else if (copiedObject != entt::null)
 			{
 				//ECS::AddChild(registry, selectedObject, ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, copiedObject));
+				ECS::AddChild(registry, selectedObject, ECS::CopyEntity(registry, copiedObject));
 			}
 		}
 		if (noObjectToPaste) { ImGui::EndDisabled(); }

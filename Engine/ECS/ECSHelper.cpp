@@ -182,20 +182,27 @@ namespace CMP316engine::ECS
 		return false;
 	}
 
-	entt::entity CopyEntity(entt::registry* homeRegistry, entt::entity entityToCopy)
+	entt::entity CopyEntity(entt::registry* registry, entt::entity entityToCopy)
 	{
 		/*
 		Copying of all entities that are children of the copied entity, and adjusting all the hierarchy components to the new entity handles.
 		*/
 
 		// Copy every component into the new entity
-		entt::entity copyEntity = homeRegistry->create();
-		for (auto [id, storage] : homeRegistry->storage()) {
+		entt::entity copyEntity = registry->create();
+		for (auto [id, storage] : registry->storage()) {
 			// Checks every component storage, and copies to the new entity
 			if (storage.contains(entityToCopy)) {
 				storage.push(copyEntity, storage.value(entityToCopy));
 			}
 		}
+
+		auto& copyHierarchyComponent = registry->get<HierarchyComponent>(copyEntity);
+		copyHierarchyComponent.firstChild = entt::null; // TEMP // Just to see if I can copy one entity at a time.
+		copyHierarchyComponent.nextNeighbour = entt::null;
+		copyHierarchyComponent.prevNeighbour = entt::null;
+		copyHierarchyComponent.parent = entt::null;
+
 		return copyEntity;
 	}
 
