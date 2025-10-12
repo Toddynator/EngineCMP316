@@ -167,6 +167,10 @@ set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory("external/SDL3" EXCLUDE_FROM_ALL)
 ## IMGUI
 add_subdirectory("external/ImGui" EXCLUDE_FROM_ALL)
+target_compile_definitions(Engine PRIVATE IMGUI_DEFINE_MATH_OPERATORS)
+target_compile_definitions(Game PRIVATE IMGUI_DEFINE_MATH_OPERATORS)
+target_compile_definitions(Engine PRIVATE NOMINMAX)
+target_compile_definitions(Game PRIVATE NOMINMAX)
 ## SOLOUD
 set(SOLOUD_BACKEND_NULL OFF CACHE BOOL "" FORCE)
 set(SOLOUD_BACKEND_SDL2 OFF CACHE BOOL "" FORCE)

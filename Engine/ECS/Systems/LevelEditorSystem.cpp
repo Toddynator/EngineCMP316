@@ -2,9 +2,11 @@
 #include <ImGui.h>
 #include "../ECSHelper.h"
 #include "../../Utility/ImGuiHelper.h"
+#include "CameraSystem.h"
 
 namespace CMP316engine {
-	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRootObject) : System(sceneRegistry), sceneRoot(sceneRootObject)
+	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
+		System(sceneRegistry), sceneRoot(sceneRootEntity), renderer(sceneRenderer)
 	{
 
 	}
@@ -21,6 +23,7 @@ namespace CMP316engine {
 
 	void LevelEditorSystem::HandleImGui()
 	{
+		renderImGuizmoManipulateTool();
 		renderSceneTreeSelectionWindow();
 		renderObjectInspectorWindow();
 	}
@@ -152,6 +155,68 @@ namespace CMP316engine {
 					childNum++;
 					});
 				ImGui::TreePop();
+			}
+		}
+	}
+	void LevelEditorSystem::renderImGuizmoManipulateTool()
+	{
+		/// IMGUIZMO MANIPULATOR
+
+		TransformComponent* transformComponent = registry->try_get<TransformComponent>(selectedEntity);
+		if (transformComponent)
+		{
+			DirectX::XMMATRIX viewMatrix = CameraSystem::GetActiveCameraViewMatrix(registry);
+			DirectX::XMMATRIX projectionMatrix = renderer->GetProjectionMatrix();
+			DirectX::XMMATRIX worldMatrix = transformComponent->worldMatrix;
+
+			// ImGuizmo takes the matrices as an array of floats, so I need to convert.
+			DirectX::XMFLOAT4X4 viewArray;
+			DirectX::XMStoreFloat4x4(&viewArray, viewMatrix);
+			DirectX::XMFLOAT4X4 projectionArray;
+			DirectX::XMStoreFloat4x4(&projectionArray, projectionMatrix);
+			DirectX::XMFLOAT4X4 worldArray;
+			DirectX::XMStoreFloat4x4(&worldArray, worldMatrix);
+
+			/// CHANGE MODE / OPERATION
+			///// TODO: Move to HandleInput()
+			if (ImGui::IsKeyPressed(ImGuiKey_1)) { currentImGuizmoOperation = ImGuizmo::TRANSLATE; }
+			if (ImGui::IsKeyPressed(ImGuiKey_2)) { currentImGuizmoOperation = ImGuizmo::ROTATE; }
+			if (ImGui::IsKeyPressed(ImGuiKey_3)) { currentImGuizmoOperation = ImGuizmo::SCALE; }
+			if (ImGui::IsKeyPressed(ImGuiKey_4)) { currentImGuizmoMode = ImGuizmo::WORLD; }
+			if (ImGui::IsKeyPressed(ImGuiKey_5)) { currentImGuizmoMode = ImGuizmo::LOCAL; }
+			if (ImGui::IsKeyPressed(ImGuiKey_6)) { useImGuizmoSnapping = !useImGuizmoSnapping; }
+
+			ImGuiIO& io = ImGui::GetIO();
+			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
+
+			/// DELTA WORLD MATRIX (array for manipulate tool)
+			// May not use it after all, just creating it just incase. May be useful for rotation if I change up the matrix calculation.
+			DirectX::XMFLOAT4X4 deltaArray;
+
+			/// CREATE MANIPULATE TOOL
+			ImGuizmo::Manipulate(
+				*viewArray.m,
+				*projectionArray.m,
+				currentImGuizmoOperation,
+				currentImGuizmoMode,
+				*worldArray.m,
+				*deltaArray.m,
+				useImGuizmoSnapping ? &snapImGuizmo[0] : NULL
+			);
+
+			if (ImGuizmo::IsOver()) {
+			}
+			if (ImGuizmo::IsUsing())
+			{
+				/// UPDATE TRANSFORMS
+				float position[3];
+				float rotation[3];
+				float scale[3];
+				ImGuizmo::DecomposeMatrixToComponents(*worldArray.m, position, rotation, scale);
+				auto* t = transformComponent;
+				if (currentImGuizmoOperation == ImGuizmo::OPERATION::TRANSLATE) { t->position = { position[0], position[1], position[2] }; }
+				if (currentImGuizmoOperation == ImGuizmo::OPERATION::ROTATE) { t->rotation = { rotation[0], rotation[1], rotation[2] }; } // NOTE: ImGuizmo uses degrees, 0-360
+				if (currentImGuizmoOperation == ImGuizmo::OPERATION::SCALE) { t->scale = { scale[0], scale[1], scale[2] }; }
 			}
 		}
 	}

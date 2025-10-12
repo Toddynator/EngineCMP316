@@ -31,6 +31,7 @@ namespace CMP316engine
 
 	struct TransformComponent
 	{
+		DirectX::XMMATRIX worldMatrix{};
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f,0.f,0.f);
 		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f); // TODO: Probably should replace with Quaternions in the future.
 		DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
@@ -49,7 +50,6 @@ namespace CMP316engine
 	struct MeshComponent
 	{
 		std::vector<Mesh> meshes;
-		DirectX::XMMATRIX worldMatrix{};
 		ID3D11Buffer* vertexBuffer = nullptr;
 		ID3D11Buffer* indexBuffer = nullptr;
 		std::unordered_map<std::string, Texture*> textures; // TODO: Remove once AssetManager is created, mesh struct holds texture name, it looks up texture in unordered map (which will be in assetManager at some point). Shutdown then handled by assetManager, clean!

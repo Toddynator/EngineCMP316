@@ -24,3 +24,4 @@ the header uses them, but in building it will be using the precompiled header an
 #include <SDL3/SDL.h>
 #include <ImGui.h>
 #include <entt.hpp>
+#include <ImGui/ImGuizmo/ImGuizmo.h>

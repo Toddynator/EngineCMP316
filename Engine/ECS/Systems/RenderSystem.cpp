@@ -40,10 +40,10 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 
 void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, Shader* shader, DirectX::XMMATRIX viewMatrix)
 {
-	auto meshEntities = sceneRegistry->view<MeshComponent>();
+	auto meshEntities = sceneRegistry->view<MeshComponent, TransformComponent>();
 	for (auto& entity : meshEntities) 
 	{
-		auto& meshComponent = sceneRegistry->get<MeshComponent>(entity);
+		auto [transformComponent, meshComponent] = sceneRegistry->get<TransformComponent, MeshComponent>(entity);
 
 		// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 		unsigned int stride;
@@ -60,7 +60,7 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 		int meshVertexOffset = 0;
 		for (auto& mesh : meshComponent.meshes)
 		{
-			if (!shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), meshComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), meshComponent.textures[mesh.textureName]->GetTextureView(), meshVertexOffset))
+			if (!shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), transformComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), meshComponent.textures[mesh.textureName]->GetTextureView(), meshVertexOffset))
 			{
 				std::cout << "\nShader failed to render the mesh";
 				break;
@@ -72,11 +72,40 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 
 void CMP316engine::RenderSystem::calculateWorldMatrix(TransformComponent& transformComponent, MeshComponent& meshComponent)
 {
+	auto& t = transformComponent;
 	auto& position = transformComponent.position;
 	auto& rotation = transformComponent.rotation;
+
+	/// CALCULATE MATRICES
+
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-	DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
-	meshComponent.worldMatrix = rotationMatrix * translationMatrix;
+
+	/// CLAMP ROTATION
+
+	t.rotation.x = fmod(t.rotation.x, 360.0f);
+	if (t.rotation.x < 0) { t.rotation.x += 360.0f; }
+	t.rotation.y = fmod(t.rotation.y, 360.0f);
+	if (t.rotation.y < 0) { t.rotation.y += 360.0f; }
+	t.rotation.z = fmod(t.rotation.z, 360.0f);
+	if (t.rotation.z < 0) { t.rotation.z += 360.0f; }
+
+	/// CALCULATE ROTATION MATRIX
+	// Doing it myself instead of using directX's method allows me to enforce the order. Which helps with compatability with other libraries as a bonus.
+
+	static const XMFLOAT3 directions[3] = { XMFLOAT3{1.f,0.f,0.f}, XMFLOAT3{0.f,1.f,0.f}, XMFLOAT3{0.f,0.f,1.f} };
+	XMMATRIX rotations[3];
+	float axisRotations[3] = { DirectX::XMConvertToRadians(t.rotation.x), DirectX::XMConvertToRadians(t.rotation.y), DirectX::XMConvertToRadians(t.rotation.z) };
+	for (int i = 0; i < 3; i++)
+	{
+		XMVECTOR direction = XMLoadFloat3(&directions[i]);
+		rotations[i] = DirectX::XMMatrixRotationAxis(direction, axisRotations[i]);
+	}
+	XMMATRIX rotationMatrix = XMMatrixMultiply(rotations[0], rotations[1]);
+	rotationMatrix = XMMatrixMultiply(rotationMatrix, rotations[2]);
+
+	/// FINAL MATRIX CALCULATION
+
+	transformComponent.worldMatrix = rotationMatrix * translationMatrix;
 }
 
 void CMP316engine::RenderSystem::loadModel(ModelComponent& modelComponent, MeshComponent& meshComponent)

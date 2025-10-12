@@ -6,6 +6,7 @@
 #include "../Managers/AudioManager_SoLoud.h"
 #include "../Managers/WindowManager_SDL.h"
 //#include "../Managers/PhysicsManager_Jolt.h"
+#include "../ImGui/ImGuizmo/ImGuizmo.h"
 
 
 
@@ -130,8 +131,9 @@ void CMP316engine::EngineLayer::update()
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
-	ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport*)0, ImGuiDockNodeFlags_PassthruCentralNode); // Supports docking windows to the viewport, must be rendered before other ImGui Windows
-	//ImGui::ShowDemoWindow();
+	ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport*)0, ImGuiDockNodeFlags_PassthruCentralNode); // DOCKING: Supports docking windows to the viewport, must be rendered before other ImGui Windows
+	ImGuizmo::BeginFrame(); // IMGUIZMO
+	//ImGui::ShowDemoWindow(); // IMGUI EXAMPLE WINDOW
 
 	///// APPLICATION
 

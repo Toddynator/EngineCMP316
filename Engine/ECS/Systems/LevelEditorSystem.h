@@ -6,11 +6,17 @@ for use by a game.
 #pragma once
 #include "../System.h"
 #include <entt.hpp>
+#include "../../Graphics/Renderer_DirectX11.h"
+#include "../../ImGui/ImGuizmo/ImGuizmo.h"
 
 namespace CMP316engine {
 	class LevelEditorSystem : public System
 	{
 	private:
+		/// REQUIRED SERVICES
+		Renderer_DirectX11* renderer;
+
+		/// EDITOR
 		entt::registry clipboardRegistry; // Stop entities that are copied from being active in the scene until they are pasted.
 		entt::entity  sceneRoot = entt::null;
 		entt::entity  selectedEntity = entt::null;
@@ -18,8 +24,14 @@ namespace CMP316engine {
 		entt::entity  copiedEntity = entt::null;
 		bool deletePrompt = false;
 
+		/// IMGUIZMO
+		IMGUIZMO_NAMESPACE::OPERATION currentImGuizmoOperation = IMGUIZMO_NAMESPACE::TRANSLATE;
+		IMGUIZMO_NAMESPACE::MODE currentImGuizmoMode = IMGUIZMO_NAMESPACE::WORLD;
+		bool useImGuizmoSnapping = true;
+		float snapImGuizmo[3] = { 1.f, 1.f, 1.f };
+
 	public:
-		LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRoot);
+		LevelEditorSystem(entt::registry* sceneRegistry, entt::entity sceneRoot, Renderer_DirectX11* renderer);
 
 		bool Initialize() override;
 		void Shutdown() override;
@@ -35,5 +47,7 @@ namespace CMP316engine {
 		// Cut, Copy, Paste, Delete
 		void renderSelectionWindowManipulationTools();
 		static void renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject);
+		// ImGuizmo
+		void renderImGuizmoManipulateTool();
 	};
 }

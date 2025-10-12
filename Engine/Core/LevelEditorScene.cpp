@@ -4,8 +4,8 @@
 namespace CMP316engine
 {
 	LevelEditorScene::LevelEditorScene(CMP316engine::EngineContext& context) : ECSScene(context)
-	{
-		systems.emplace_back(std::make_unique<LevelEditorSystem>(&registry, sceneRoot));
+	{		
+		systems.emplace_back(std::make_unique<LevelEditorSystem>(&registry, sceneRoot, context.renderer.get()));
 	}
 
 	bool LevelEditorScene::Initialize()
@@ -17,6 +17,10 @@ namespace CMP316engine
 		auto* hierarchyComponent = &registry.get<HierarchyComponent>(firstChild);
 		hierarchyComponent->name = "First Child";
 		ECS::AddChild(&registry, firstChild);
+		auto& modelComponent = CMP316engine::ECS::AddComponent<CMP316engine::ModelComponent>(&registry, firstChild);
+		modelComponent.filepath = "data/Models/Dug/Dug.obj";
+		auto& meshComponent = CMP316engine::ECS::AddComponent<CMP316engine::MeshComponent>(&registry, firstChild);
+
 		auto secondChild = ECS::AddChild(&registry, sceneRoot);
 		auto* hierarchyComponent2 = &registry.get<HierarchyComponent>(secondChild);
 		hierarchyComponent2->name = "Second Child";
