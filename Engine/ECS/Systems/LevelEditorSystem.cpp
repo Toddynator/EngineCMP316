@@ -35,7 +35,7 @@ namespace CMP316engine {
 		ImGui::Begin("Scene GameObject Tree");
 		renderSelectionWindowManipulationTools();
 		ImGui::Separator();
-		renderObjectSelectionWindowObjectTree(registry, sceneRoot, selectedObject);
+		renderObjectSelectionWindowObjectTree(registry, sceneRoot, selectedEntity);
 		ImGui::End();
 	}
 
@@ -55,11 +55,11 @@ namespace CMP316engine {
 	void LevelEditorSystem::renderSelectionWindowManipulationTools()
 	{
 		bool noSelectedObject = false;
-		if (selectedObject == entt::null) { noSelectedObject = true;  ImGui::BeginDisabled(); }
+		if (selectedEntity == entt::null) { noSelectedObject = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Copy"))
 		{
-			cutObject = entt::null;
-			copiedObject = selectedObject; // The actual copy will be created on pasting, unfortunately can't keep the copy if object is deleted.
+			cutEntity = entt::null;
+			copiedEntity = selectedEntity; // The actual copy will be created on pasting, unfortunately can't keep the copy if object is deleted.
 
 			//// TEMP
 			//clipboardRegistry.clear();
@@ -68,28 +68,28 @@ namespace CMP316engine {
 		}
 		ImGui::SameLine();
 		bool sceneRootSelected = false;
-		if (selectedObject == sceneRoot) { sceneRootSelected = true; ImGui::BeginDisabled(); }
+		if (selectedEntity == sceneRoot) { sceneRootSelected = true; ImGui::BeginDisabled(); }
 		if (ImGui::Button("Cut"))
 		{
-			copiedObject = entt::null;
-			cutObject = selectedObject;
+			copiedEntity = entt::null;
+			cutEntity = selectedEntity;
 		}
 		if (sceneRootSelected) { ImGui::EndDisabled(); }
 		ImGui::SameLine();
 		bool noObjectToPaste = false;
 		// ENSURE that the user doesn't paste the cut object onto itself or its own parent.
-		if ((cutObject == entt::null && copiedObject == entt::null) || (selectedObject == cutObject) || ECS::IsDescendant(registry, cutObject, selectedObject)) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
+		if ((cutEntity == entt::null && copiedEntity == entt::null) || (selectedEntity == cutEntity) || ECS::IsDescendant(registry, cutEntity, selectedEntity)) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Paste"))
 		{
-			if (cutObject != entt::null)
+			if (cutEntity != entt::null)
 			{
-				ECS::AddChild(registry, selectedObject, cutObject);
-				cutObject = entt::null;
+				ECS::AddChild(registry, selectedEntity, cutEntity);
+				cutEntity = entt::null;
 			}
-			else if (copiedObject != entt::null)
+			else if (copiedEntity != entt::null)
 			{
 				//ECS::AddChild(registry, selectedObject, ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, copiedObject));
-				ECS::AddChild(registry, selectedObject, ECS::CopyEntity(registry, copiedObject));
+				ECS::AddChild(registry, selectedEntity, ECS::CopyEntity(registry, copiedEntity));
 			}
 		}
 		if (noObjectToPaste) { ImGui::EndDisabled(); }
@@ -103,7 +103,7 @@ namespace CMP316engine {
 		ImGui::SameLine();
 		if (ImGui::Button("Add"))
 		{
-			ECS::AddChild(registry, selectedObject);
+			ECS::AddChild(registry, selectedEntity);
 		}
 		if (noSelectedObject) { ImGui::EndDisabled(); }
 
@@ -111,12 +111,12 @@ namespace CMP316engine {
 
 		ImGuiHelper::PromptUser(deletePrompt, [this]() {
 			// Remove CutObject if and only when it is deleted
-			if (selectedObject == cutObject || ECS::IsDescendant(registry, cutObject, selectedObject))
+			if (selectedEntity == cutEntity || ECS::IsDescendant(registry, cutEntity, selectedEntity))
 			{
-				cutObject = entt::null;
+				cutEntity = entt::null;
 			}
-			ECS::RemoveChild(registry, selectedObject);
-			selectedObject = entt::null;
+			ECS::RemoveChild(registry, selectedEntity);
+			selectedEntity = entt::null;
 			},
 			"Deletion Confirmation", "Are you sure you want to delete the entity?");
 	}
