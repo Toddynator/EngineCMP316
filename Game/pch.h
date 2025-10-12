@@ -6,5 +6,7 @@
 #include <filesystem>
 #include <unordered_map>
 #include <string>
+#include <optional>
+#include <fstream>
 
 #include <ImGui.h>
