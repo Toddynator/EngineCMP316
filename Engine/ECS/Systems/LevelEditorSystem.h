@@ -36,6 +36,7 @@ namespace CMP316engine {
 		bool Initialize() override;
 		void Shutdown() override;
 
+		void HandleInput() override;
 		void HandleImGui() override;
 		void Update(float deltaTime) override;
 
@@ -49,5 +50,6 @@ namespace CMP316engine {
 		static void renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject);
 		// ImGuizmo
 		void renderImGuizmoManipulateTool();
+		void renderImGuizmoStatusWindow();
 	};
 }

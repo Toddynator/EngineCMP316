@@ -21,9 +21,22 @@ namespace CMP316engine {
 
 	}
 
+	void LevelEditorSystem::HandleInput()
+	{
+		/// CHANGE IMGUIZMO MODE / OPERATION
+
+		if (ImGui::IsKeyPressed(ImGuiKey_1)) { currentImGuizmoOperation = ImGuizmo::TRANSLATE; }
+		if (ImGui::IsKeyPressed(ImGuiKey_2)) { currentImGuizmoOperation = ImGuizmo::ROTATE; }
+		if (ImGui::IsKeyPressed(ImGuiKey_3)) { currentImGuizmoOperation = ImGuizmo::SCALE; }
+		if (ImGui::IsKeyPressed(ImGuiKey_4)) { currentImGuizmoMode = ImGuizmo::WORLD; }
+		if (ImGui::IsKeyPressed(ImGuiKey_5)) { currentImGuizmoMode = ImGuizmo::LOCAL; }
+		if (ImGui::IsKeyPressed(ImGuiKey_6)) { useImGuizmoSnapping = !useImGuizmoSnapping; }
+	}
+
 	void LevelEditorSystem::HandleImGui()
 	{
 		renderImGuizmoManipulateTool();
+		renderImGuizmoStatusWindow();
 		renderSceneTreeSelectionWindow();
 		renderObjectInspectorWindow();
 	}
@@ -177,15 +190,6 @@ namespace CMP316engine {
 			DirectX::XMFLOAT4X4 worldArray;
 			DirectX::XMStoreFloat4x4(&worldArray, worldMatrix);
 
-			/// CHANGE MODE / OPERATION
-			///// TODO: Move to HandleInput()
-			if (ImGui::IsKeyPressed(ImGuiKey_1)) { currentImGuizmoOperation = ImGuizmo::TRANSLATE; }
-			if (ImGui::IsKeyPressed(ImGuiKey_2)) { currentImGuizmoOperation = ImGuizmo::ROTATE; }
-			if (ImGui::IsKeyPressed(ImGuiKey_3)) { currentImGuizmoOperation = ImGuizmo::SCALE; }
-			if (ImGui::IsKeyPressed(ImGuiKey_4)) { currentImGuizmoMode = ImGuizmo::WORLD; }
-			if (ImGui::IsKeyPressed(ImGuiKey_5)) { currentImGuizmoMode = ImGuizmo::LOCAL; }
-			if (ImGui::IsKeyPressed(ImGuiKey_6)) { useImGuizmoSnapping = !useImGuizmoSnapping; }
-
 			ImGuiIO& io = ImGui::GetIO();
 			ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
 
@@ -219,5 +223,54 @@ namespace CMP316engine {
 				if (currentImGuizmoOperation == ImGuizmo::OPERATION::SCALE) { t->scale = { scale[0], scale[1], scale[2] }; }
 			}
 		}
+	}
+
+	void LevelEditorSystem::renderImGuizmoStatusWindow()
+	{
+		/// IMGUIZMO STATUS
+
+		ImGui::Begin("ImGuizmo");
+		auto DrawToggleButton = [](const char* label, bool active) {
+			ImGui::PushStyleColor(ImGuiCol_Button, active ? ImVec4(0.2f, 0.6f, 1.0f, 1.0f) : ImVec4(0.3f, 0.3f, 0.3f, 0.7f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, active ? ImVec4(0.4f, 0.7f, 1.0f, 1.0f) : ImVec4(0.4f, 0.4f, 0.4f, 0.8f));
+			bool clicked = ImGui::Button(label, ImVec2(80, 0));
+			ImGui::PopStyleColor(2);
+			return clicked;
+			};
+
+		ImGui::SameLine();
+		ImGui::Text("OPERATION:");
+		ImGui::SameLine();
+		if (DrawToggleButton("Translate", currentImGuizmoOperation == IMGUIZMO_NAMESPACE::TRANSLATE)) {
+			currentImGuizmoOperation = IMGUIZMO_NAMESPACE::TRANSLATE;
+		}
+		ImGui::SameLine();
+		if (DrawToggleButton("Rotate", currentImGuizmoOperation == IMGUIZMO_NAMESPACE::ROTATE)) {
+			currentImGuizmoOperation = IMGUIZMO_NAMESPACE::ROTATE;
+		}
+		ImGui::SameLine();
+		if (DrawToggleButton("Scale", currentImGuizmoOperation == IMGUIZMO_NAMESPACE::SCALE)) {
+			currentImGuizmoOperation = IMGUIZMO_NAMESPACE::SCALE;
+		}
+
+		ImGui::SameLine();
+		ImGui::Text("MODE:");
+		ImGui::SameLine();
+		if (DrawToggleButton("World", currentImGuizmoMode == IMGUIZMO_NAMESPACE::WORLD)) {
+			currentImGuizmoMode = IMGUIZMO_NAMESPACE::WORLD;
+		}
+		ImGui::SameLine();
+		if (DrawToggleButton("Local", currentImGuizmoMode == IMGUIZMO_NAMESPACE::LOCAL)) {
+			currentImGuizmoMode = IMGUIZMO_NAMESPACE::LOCAL;
+		}
+
+		ImGui::SameLine();
+		ImGui::Text("			");
+		ImGui::SameLine();
+		bool snappingActive = useImGuizmoSnapping;
+		if (DrawToggleButton("Snap", snappingActive)) {
+			useImGuizmoSnapping = !useImGuizmoSnapping;
+		}
+		ImGui::End();
 	}
 }
