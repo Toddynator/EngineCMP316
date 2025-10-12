@@ -125,6 +125,7 @@ void CMP316engine::EngineLayer::update()
 	///// TIME
 
 	engineContext.timeManager->Update();
+	float deltaTime = engineContext.timeManager->getDeltaTime();
 
 	///// IMGUI  
 
@@ -137,11 +138,13 @@ void CMP316engine::EngineLayer::update()
 
 	///// APPLICATION
 
-	application->HandleInput();
+	application->HandleInput(deltaTime);
 	application->HandleImGui();
-	application->Update(engineContext.timeManager->getDeltaTime());
+	application->Update(deltaTime);
 
-	engineContext.physicsManager->Update(engineContext.timeManager->getDeltaTime());
+	///// MANAGERS
+
+	engineContext.physicsManager->Update(deltaTime);
 	engineContext.inputManager->EndFrame();
 }
 

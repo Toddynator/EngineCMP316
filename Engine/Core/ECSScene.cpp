@@ -30,11 +30,11 @@ namespace CMP316engine {
 		}
 	}
 
-	void ECSScene::HandleInput()
+	void ECSScene::HandleInput(float deltaTime)
 	{
 		for (auto& system : systems)
 		{
-			system->HandleInput();
+			system->HandleInput(deltaTime);
 		}
 	}
 

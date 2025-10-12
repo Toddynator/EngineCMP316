@@ -12,10 +12,19 @@ namespace CMP316engine
 	{
 		ECSScene::Initialize();
 
+		auto cameraEntity = ECS::AddChild(&registry, sceneRoot);
+		auto* camComponent = &ECS::AddComponent<CameraComponent>(&registry, cameraEntity);
+		camComponent->active = true;
+		auto* camHierarchyComponent = &registry.get<HierarchyComponent>(cameraEntity);
+		camHierarchyComponent->name = "Camera Entity 1";
+		auto* camTransformComponent = &registry.get<TransformComponent>(cameraEntity);
+		camTransformComponent->position = { 0.f,0.f,-5.0f };
+
+
 		/// TEMP TEST
 		auto firstChild = ECS::AddChild(&registry, sceneRoot);
 		auto* hierarchyComponent = &registry.get<HierarchyComponent>(firstChild);
-		hierarchyComponent->name = "First Child";
+		hierarchyComponent->name = "Test Model Entity";
 		ECS::AddChild(&registry, firstChild);
 		auto& modelComponent = CMP316engine::ECS::AddComponent<CMP316engine::ModelComponent>(&registry, firstChild);
 		modelComponent.filepath = "data/Models/Dug/Dug.obj";

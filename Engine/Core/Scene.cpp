@@ -11,7 +11,7 @@ void CMP316engine::Scene::Shutdown()
 	
 }
 
-void CMP316engine::Scene::HandleInput()
+void CMP316engine::Scene::HandleInput(float deltaTime)
 {
 
 }

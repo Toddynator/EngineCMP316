@@ -20,7 +20,7 @@ namespace CMP316engine {
 		bool Initialize() override;
 		void Shutdown() override;
 
-		void HandleInput() override;
+		void HandleInput(float deltaTime) override;
 		void HandleImGui() override;
 		void Update(float deltaTime) override;
 		void Render() override;

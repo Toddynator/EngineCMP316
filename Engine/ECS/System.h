@@ -18,7 +18,7 @@ namespace CMP316engine {
 		virtual bool Initialize() = 0;
 		virtual void Shutdown() = 0;
 
-		virtual void HandleInput() {};
+		virtual void HandleInput(float deltaTime) {};
 		virtual void HandleImGui() {};
 		virtual void Update(float deltaTime) = 0;
 

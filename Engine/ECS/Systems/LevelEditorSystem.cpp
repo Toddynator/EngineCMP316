@@ -21,7 +21,7 @@ namespace CMP316engine {
 
 	}
 
-	void LevelEditorSystem::HandleInput()
+	void LevelEditorSystem::HandleInput(float deltaTime)
 	{
 		/// CHANGE IMGUIZMO MODE / OPERATION
 

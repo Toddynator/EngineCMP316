@@ -14,7 +14,7 @@ void PlayerSystem::Shutdown()
 {
 }
 
-void PlayerSystem::HandleInput()
+void PlayerSystem::HandleInput(float deltaTime)
 {
 	auto playerEntities = registry->view<PlayerComponent>();
 	for (auto& entity : playerEntities) {

@@ -19,10 +19,10 @@ void Game::Shutdown()
 	if (activeScene) { activeScene->Shutdown(); }
 }
 
-void Game::HandleInput()
+void Game::HandleInput(float deltaTime)
 {
-	Application::HandleInput();
-	activeScene->HandleInput();
+	Application::HandleInput(deltaTime);
+	activeScene->HandleInput(deltaTime);
 
 	/// TEMP
 	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_ESCAPE))

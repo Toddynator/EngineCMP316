@@ -16,6 +16,22 @@ void CMP316engine::CameraSystem::Shutdown()
 
 }
 
+void CMP316engine::CameraSystem::HandleInput(float deltaTime)
+{
+	if (activeCamera == entt::null) { return; }
+
+	/// TODO: Use inputManager (should just pass it into every system), it has mouseButtonHold for checking RMB, and also I should add a drag function if I haven't already,
+	/// inputManager should just calculate and store the drag delta.
+
+	if (ImGui::GetMouseDragDelta().x != 0.f)
+	{
+		DirectX::XMFLOAT2 mouseDelta = { ImGui::GetMouseDragDelta().x, ImGui::GetMouseDragDelta().y };
+		auto& transformComponent = registry->get<TransformComponent>(activeCamera);
+		transformComponent.rotation.x += (-mouseDelta.y) * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+		transformComponent.rotation.y += mouseDelta.x * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+	}
+}
+
 void CMP316engine::CameraSystem::Update(float deltaTime)
 {
 	auto cameraEntities = registry->view<CameraComponent, TransformComponent>();
@@ -28,9 +44,7 @@ void CMP316engine::CameraSystem::Update(float deltaTime)
 		I guess they had a valid reason not to use operators for vector math.
 		*/
 
-		cameraComponent.active = true; // TEMP
-		transformComponent.up = DirectX::XMFLOAT3(0.f, 1.f, 0.f); // TEMP
-		transformComponent.forward = DirectX::XMFLOAT3(0.f, 0.f, 1.f); // TEMP // Default Look direction
+		if (cameraComponent.active) { activeCamera = entity; }
 
 		// Load into XMVECTOR structures.
 		DirectX::XMVECTOR upVector = XMLoadFloat3(&transformComponent.up);

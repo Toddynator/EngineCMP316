@@ -14,6 +14,6 @@ public:
 	bool Initialize() override;
 	void Shutdown() override;
 
-	void HandleInput() override;
+	void HandleInput(float deltaTime) override;
 	void Update(float deltaTime) override;
 };

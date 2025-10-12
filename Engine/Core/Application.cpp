@@ -11,7 +11,7 @@ void CMP316engine::Application::Shutdown()
 
 }
 
-void CMP316engine::Application::HandleInput()
+void CMP316engine::Application::HandleInput(float deltaTime)
 {
 	if (engineContext.inputManager->IsKeyBindingPressed("fullscreen")) 
 	{
