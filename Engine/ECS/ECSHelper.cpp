@@ -181,4 +181,64 @@ namespace CMP316engine::ECS
 		}
 		return false;
 	}
+
+	entt::entity CopyEntity(entt::registry* homeRegistry, entt::entity entityToCopy)
+	{
+		/*
+		Copying of all entities that are children of the copied entity, and adjusting all the hierarchy components to the new entity handles.
+		*/
+
+		// Copy every component into the new entity
+		entt::entity copyEntity = homeRegistry->create();
+		for (auto [id, storage] : homeRegistry->storage()) {
+			// Checks every component storage, and copies to the new entity
+			if (storage.contains(entityToCopy)) {
+				storage.push(copyEntity, storage.value(entityToCopy));
+			}
+		}
+		return copyEntity;
+	}
+
+	entt::entity CopyEntityBetweenRegistries(entt::registry* homeRegistry, entt::registry* newRegistry, entt::entity entityToCopy)
+	{
+		/*
+		Creates a temporary entity in current registry by copying all the components from every storage.
+		Then it inserts the entity into the new reigistry and deletes the entity in the current.
+
+		PROBLEM:
+		Don't know how to dynamically create the storages in the new registry without knowing the types of the components.
+		One solution is that I maybe just create a dummy entity in the clipboard registry that has ALL the components. Still requires
+		manual work though so that every time a new component is added that it must be added to the clipboard registry. Not Ideal.
+		ALTERNATIVE: If I add/use reflection then that might solve this issue.
+		*/
+
+		// Copy every component into the new entity
+
+		/* /// TEMP
+		entt::entity copyEntity = homeRegistry->create();
+		for (auto [id, storage] : homeRegistry->storage()) {
+			// Checks every component storage, and copies to the new entity
+			if (storage.contains(entityToCopy)) {
+				storage.push(copyEntity, storage.value(entityToCopy));
+			}
+		}
+		*/ /// TEMP
+
+		entt::entity copyEntity = newRegistry->create();
+		for (auto [id, storage] : homeRegistry->storage()) {
+			// Checks every component storage, and copies to the new entity
+			if (storage.contains(entityToCopy)) {
+				auto* destinationStorage = newRegistry->storage(id);
+				destinationStorage->push(copyEntity, storage.value(entityToCopy));
+			}
+		}
+
+		// Assign entity // TODO
+		//newRegistry->
+		
+		// Delete Temp Entity // TODO
+		//// TODO
+
+		return copyEntity;
+	}
 }

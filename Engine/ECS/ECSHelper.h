@@ -32,6 +32,10 @@ namespace CMP316engine::ECS
 	void CallForAllChildren(entt::registry* registry, entt::entity parentEntity, const std::function<void(entt::registry*, entt::entity)>& functionToCall);
 	// @brief check if entityToCheck is a descendant of 'ancestor'
 	bool IsDescendant(entt::registry* registry, entt::entity ancestor, entt::entity entityToCheck);
+	// @return returns the entityHandle of the new entity, automatically handles updating the hierarchyComponents of the entity and its children.
+	entt::entity CopyEntity(entt::registry* registry, entt::entity entityToCopy);
+	// @return returns the entityHandle in the COPIED TO REGISTRY. This will likely be a clipboard registry for copy and pasting.
+	entt::entity CopyEntityBetweenRegistries(entt::registry* homeRegistry, entt::registry* newRegistry, entt::entity entityToCopy);
 
 
 	/////////////////

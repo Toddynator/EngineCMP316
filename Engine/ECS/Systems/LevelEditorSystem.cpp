@@ -42,6 +42,12 @@ namespace CMP316engine {
 	void LevelEditorSystem::renderObjectInspectorWindow()
 	{
 		ImGui::Begin("Object Inspector");
+		
+		/*
+		TODO:
+		- Add Reflection, and loop through components, using a ImGuiUIOperator class to generate the ImGui Controls for each variable.
+		- An Add Button at the bottom which creates a dropdown of all the components that haven't been added yet to the entity.
+		*/
 
 		ImGui::End();
 	}
@@ -54,6 +60,11 @@ namespace CMP316engine {
 		{
 			cutObject = entt::null;
 			//copiedObject = selectedObject->Clone(); //// TODO
+
+			//// TEMP
+			//clipboardRegistry.clear();
+			//copiedObject = ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, selectedObject);
+			//// TEMP
 		}
 		ImGui::SameLine();
 		bool sceneRootSelected = false;
@@ -77,7 +88,7 @@ namespace CMP316engine {
 			}
 			else if (copiedObject != entt::null)
 			{
-				//selectedObject->AddChild(copiedObject->Clone());
+				//ECS::AddChild(registry, selectedObject, ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, copiedObject));
 			}
 		}
 		if (noObjectToPaste) { ImGui::EndDisabled(); }
