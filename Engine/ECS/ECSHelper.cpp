@@ -1,5 +1,6 @@
 #include "ECSHelper.h"
 #include "Components.h"
+#include <unordered_map>
 
 namespace CMP316engine::ECS
 {
@@ -188,22 +189,58 @@ namespace CMP316engine::ECS
 		Copying of all entities that are children of the copied entity, and adjusting all the hierarchy components to the new entity handles.
 		*/
 
-		// Copy every component into the new entity
-		entt::entity copyEntity = registry->create();
-		for (auto [id, storage] : registry->storage()) {
-			// Checks every component storage, and copies to the new entity
-			if (storage.contains(entityToCopy)) {
-				storage.push(copyEntity, storage.value(entityToCopy));
+		/// Map to store original entity handle with its new handle, used for recreating the hierarchy links
+
+		std::unordered_map<entt::entity, entt::entity> entityMap; // Old Handle first, New Handle second
+		entt::entity rootCopyEntity = entt::null;
+
+		/// Define the recursive Copy Operation
+
+		std::function<void(entt::registry*, entt::entity)>  entityCopyFunction = [&](entt::registry* registry, entt::entity childEntity) {
+			entt::entity childCopy = registry->create();
+
+			// Copy every component into the new entity
+			for (auto [id, storage] : registry->storage()) {
+				// Checks every component storage, and copies to the new entity
+				if (storage.contains(childEntity)) {
+					storage.push(childCopy, storage.value(childEntity));
+				}
 			}
-		}
 
-		auto& copyHierarchyComponent = registry->get<HierarchyComponent>(copyEntity);
-		copyHierarchyComponent.firstChild = entt::null; // TEMP // Just to see if I can copy one entity at a time.
-		copyHierarchyComponent.nextNeighbour = entt::null;
-		copyHierarchyComponent.prevNeighbour = entt::null;
-		copyHierarchyComponent.parent = entt::null;
+			// Reset the hierarchyComponent for later relinking
+			auto* copyHierarchyComponent = &registry->get<HierarchyComponent>(childCopy);
+			copyHierarchyComponent->firstChild = entt::null;
+			copyHierarchyComponent->nextNeighbour = entt::null;
+			copyHierarchyComponent->prevNeighbour = entt::null;
+			copyHierarchyComponent->parent = entt::null;
 
-		return copyEntity;
+			// Map the new copy to its original
+			entityMap[childEntity] = childCopy; // Mark the copy of the original entity for later relinking
+
+			// Find the new parent in the map
+			auto* originalHierarchyComponent = &registry->get<HierarchyComponent>(childEntity);
+			entt::entity newParent = entt::null;
+			// Check if parent is in entry (won't be for the root copied node).
+			auto it = entityMap.find(originalHierarchyComponent->parent);
+			if (it != entityMap.end()) {
+				newParent = it->second;
+			}
+			else {
+				rootCopyEntity = childCopy;
+			}
+
+			// Utilize AddChild to now move the copy and link it to the new parent.
+			if (newParent != entt::null)
+			{
+				auto* parentHierarchyComponent = &registry->get<HierarchyComponent>(newParent);
+				AddChild(registry, newParent, childCopy);
+			}
+
+			CallForAllChildren(registry, childEntity, entityCopyFunction);
+			};
+
+		entityCopyFunction(registry, entityToCopy);
+		return rootCopyEntity;
 	}
 
 	entt::entity CopyEntityBetweenRegistries(entt::registry* homeRegistry, entt::registry* newRegistry, entt::entity entityToCopy)
