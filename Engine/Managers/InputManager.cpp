@@ -50,6 +50,7 @@ void CMP316engine::InputManager::EndFrame()
 	{
 		prevMouseButtons[button] = mouseButtons[button];
 	}
+	SDL_GetMouseState(&mousePositionLastFrame.x, &mousePositionLastFrame.y);
 }
 
 void CMP316engine::InputManager::UpdateInputStates(const SDL_Event* event)
@@ -167,4 +168,20 @@ bool CMP316engine::InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mous
 {
 	if (!mouseButtons[mouseButton] && prevMouseButtons[mouseButton]) { return true; }
 	return false;
+}
+
+float CMP316engine::InputManager::GetMouseDeltaX()
+{
+	DirectX::XMFLOAT2 currentMousePosition;
+	SDL_GetMouseState(&currentMousePosition.x, &currentMousePosition.y);
+	mouseDeltaX = mousePositionLastFrame.x - currentMousePosition.x;
+	return mouseDeltaX;
+}
+
+float CMP316engine::InputManager::GetMouseDeltaY()
+{
+	DirectX::XMFLOAT2 currentMousePosition;
+	SDL_GetMouseState(&currentMousePosition.x, &currentMousePosition.y);
+	mouseDeltaY = mousePositionLastFrame.y - currentMousePosition.y;
+	return mouseDeltaY;
 }

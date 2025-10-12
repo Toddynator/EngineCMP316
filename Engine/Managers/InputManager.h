@@ -21,6 +21,7 @@ This also allows for better support on other platforms, of which I can then have
 #include "Manager.h"
 #include <SDL3/SDL.h>
 #include <functional>
+#include <DirectXMath.h>
 
 namespace CMP316engine {
 	/*
@@ -58,6 +59,10 @@ namespace CMP316engine {
 		bool mouseButtons[NUM_MOUSE_BUTTONS]; // SDL_MouseButtonFlags
 		bool prevMouseButtons[NUM_MOUSE_BUTTONS];
 
+		DirectX::XMFLOAT2 mousePositionLastFrame;
+		float mouseDeltaX;
+		float mouseDeltaY;
+
 	public:
 		InputManager();
 		~InputManager() = default;
@@ -79,6 +84,9 @@ namespace CMP316engine {
 		bool IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton) const;
 		bool IsMouseButtonDown(SDL_MouseButtonFlags mouseButton) const;
 		bool IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton) const;
+
+		float GetMouseDeltaX();
+		float GetMouseDeltaY();
 
 	private:
 		enum CheckType

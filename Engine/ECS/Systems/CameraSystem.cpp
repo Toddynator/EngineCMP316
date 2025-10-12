@@ -20,15 +20,15 @@ void CMP316engine::CameraSystem::HandleInput(float deltaTime)
 {
 	if (activeCamera == entt::null) { return; }
 
-	/// TODO: Use inputManager (should just pass it into every system), it has mouseButtonHold for checking RMB, and also I should add a drag function if I haven't already,
-	/// inputManager should just calculate and store the drag delta.
+	/// CAMERA TURNING
 
-	if (ImGui::GetMouseDragDelta().x != 0.f)
+	float mouseDeltaX = inputManager->GetMouseDeltaX();
+	float mouseDeltaY = inputManager->GetMouseDeltaY();
+	if (inputManager->IsMouseButtonDown(SDL_BUTTON_RIGHT) && (mouseDeltaX != 0.f || mouseDeltaY != 0.f))
 	{
-		DirectX::XMFLOAT2 mouseDelta = { ImGui::GetMouseDragDelta().x, ImGui::GetMouseDragDelta().y };
 		auto& transformComponent = registry->get<TransformComponent>(activeCamera);
-		transformComponent.rotation.x += (-mouseDelta.y) * deltaTime * BASE_CAMERA_ROTATION_SPEED;
-		transformComponent.rotation.y += mouseDelta.x * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+		transformComponent.rotation.x += mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+		transformComponent.rotation.y += mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED;
 	}
 }
 
