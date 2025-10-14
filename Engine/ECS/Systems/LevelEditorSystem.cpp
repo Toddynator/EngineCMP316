@@ -86,49 +86,44 @@ namespace CMP316engine {
 
 	void LevelEditorSystem::renderObjectInspectorWindow()
 	{
-		ImGui::Begin("Object Inspector");
-		
 		/*
 		TODO:
-		- Add Reflection, and loop through components, using a ImGuiUIOperator class to generate the ImGui Controls for each variable.
+		- Add Reflection, and loop through components, using a ImGuiHelper class to generate the ImGui Controls for each variable.
 		- An Add Button at the bottom which creates a dropdown of all the components that haven't been added yet to the entity.
 		*/
 
-
-
-
-		// Iterate over all entities.
-		for (auto entity : registry->view<entt::entity>())
+		ImGui::Begin("Object Inspector");
+		
+		// No Selected Entity
+		if (selectedEntity == entt::null)
 		{
-			if (ImGui::TreeNode("entity", "%u (v%u)", entt::to_entity(selectedEntity), entt::to_version(selectedEntity)))
-			{
-				ImGui::PushID((int)entity); // Don't worry about the potential UB..
-				// Iterate over all components in the registry.
-				int i = 0;
-				for (auto&& [id, storage] : registry->storage())
-				{
-					if (!storage.contains(selectedEntity))
-					{
-						continue;
-					}
-
-					// The name of the component is helpfully already stored in the registry without our intervention.
-					ImGui::SeparatorText(std::string(storage.type().name()).c_str());
-
-					if (auto meta = entt::resolve(id))
-					{
-						DrawComponentHelper(meta.from_void(storage.value(selectedEntity)), meta.custom(), i);
-					}
-					i++;
-				}
-				ImGui::PopID();
-				ImGui::TreePop();
-			}
+			ImGui::TextDisabled("No Entity Selected");
+			ImGui::Separator();
+			ImGui::End();
+			return;
 		}
 
+		// Iterate over all entities.
+		ImGui::PushID((int)selectedEntity);
+		// Iterate over all components in the registry.
+		int i = 0;
+		for (auto&& [id, storage] : registry->storage())
+		{
+			if (!storage.contains(selectedEntity))
+			{
+				continue;
+			}
 
+			// The name of the component is helpfully already stored in the registry without our intervention.
+			ImGui::SeparatorText(std::string(storage.type().name()).c_str());
 
-
+			if (auto meta = entt::resolve(id))
+			{
+				DrawComponentHelper(meta.from_void(storage.value(selectedEntity)), meta.custom(), i);
+			}
+			i++;
+		}
+		ImGui::PopID();
 
 		ImGui::End();
 	}
