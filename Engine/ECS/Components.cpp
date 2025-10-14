@@ -50,14 +50,30 @@ namespace CMP316engine
 	static bool DrawEditorString(std::string& f, const PropertiesMap& properties)
 	{
 		const char* label = "string";
+		char textBuffer[256];
 
 		if (auto it = properties.find("name"_hs); it != properties.end())
 		{
 			label = *it->second.try_cast<const char*>();
 		}
+		if (auto it = properties.find("textBuffer"_hs); it != properties.end())
+		{
+			if (auto array = it->second.try_cast<std::array<char, 256>>()) {
+				std::memcpy(textBuffer, array->data(), sizeof(textBuffer));
+			}
+			else
+			{
+				// Invalid buffer
+				ImGui::TextDisabled("Invalid Buffer");
+				return false;
+			}
+		}
+		else {
+			ImGui::TextDisabled("No Buffer was added to the reflected components custom data!");
+			return false;
+		}
 
-		//return ImGui::InputText(name)
-		return false;
+		return ImGuiHelper::InputAny(label, f, textBuffer, sizeof(textBuffer));
 	}
 
 	/*
@@ -100,7 +116,11 @@ namespace CMP316engine
 			.traits(Traits::EDITOR)
 			.traits(Traits::SERIALIZE)
 			.data<&TransformComponent::rotation, entt::as_ref_t>("rotation"_hs)
-			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "rotation" }, { "min"_hs, -180.f }, { "max"_hs, 180.f } })
+			.custom<PropertiesMap>(PropertiesMap{ 
+				{ "name"_hs, "rotation" }, 
+				{ "min"_hs, -180.f }, 
+				{ "max"_hs, 180.f }
+			})
 			.traits(Traits::EDITOR)
 			.data<&TransformComponent::scale, entt::as_ref_t>("scale"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "scale" } })
@@ -112,7 +132,10 @@ namespace CMP316engine
 
 		entt::meta<ModelComponent>()
 			.data<&ModelComponent::filepath, entt::as_ref_t>("filepath"_hs)
-			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "filepath" } })
+			.custom<PropertiesMap>(PropertiesMap{ 
+				{ "name"_hs, "filepath" }, 
+				{ "textBuffer"_hs, std::array<char, 256>{"Enter Text"}} 
+			})
 			.traits(Traits::EDITOR)
 			;
 	}
