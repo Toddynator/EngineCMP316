@@ -79,6 +79,11 @@ namespace CMP316engine
 			return false;
 		}
 
+		/*
+		TODO:
+		- Filepath Custom Data property ~ Should open a file dialog (Add an ImGui File Dialog Library)
+		*/
+
 		return ImGuiHelper::InputAny(label, f, textBuffer, sizeof(textBuffer));
 	}
 
@@ -160,8 +165,8 @@ namespace CMP316engine
 		entt::meta<ModelComponent>()
 			.traits(Traits::COMPONENT)
 			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<ModelComponent>)>("HasComponent"_hs)
-			//.func<static_cast<ModelComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<ModelComponent>),
-			//entt::as_ref_t>("AddComponent"_hs)
+			.func<static_cast<ModelComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<ModelComponent>),
+			entt::as_ref_t>("AddComponent"_hs)
 			.data<&ModelComponent::filepath, entt::as_ref_t>("filepath"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ 
 				{ "name"_hs, "filepath" }, 

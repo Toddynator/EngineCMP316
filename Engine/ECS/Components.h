@@ -76,7 +76,7 @@ namespace CMP316engine
 
 	struct ModelComponent
 	{
-		std::string filepath = ""; // This is the filepath from inside the data/Models directory!
+		std::string filepath = "data/Models/Dug/Dug.obj"; // This is the filepath from inside the data/Models directory!
 		bool modelLoaded = false;
 	};
 

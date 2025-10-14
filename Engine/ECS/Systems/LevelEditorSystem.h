@@ -29,7 +29,7 @@ namespace CMP316engine {
 		/// IMGUIZMO
 		IMGUIZMO_NAMESPACE::OPERATION currentImGuizmoOperation = IMGUIZMO_NAMESPACE::TRANSLATE;
 		IMGUIZMO_NAMESPACE::MODE currentImGuizmoMode = IMGUIZMO_NAMESPACE::WORLD;
-		bool useImGuizmoSnapping = true;
+		bool useImGuizmoSnapping = false;
 		float snapImGuizmo[3] = { 1.f, 1.f, 1.f };
 
 	public:
