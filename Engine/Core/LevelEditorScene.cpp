@@ -40,6 +40,11 @@ namespace CMP316engine
 		ECS::AddChild(&registry, ent21);
 		/// TEMP TEST
 
+
+		/// REFLECTION TEST
+		InitializeReflection(); // Once this works, I should test out using a static global class that intializes on construction.
+		///
+
 		return true;
 	}
 

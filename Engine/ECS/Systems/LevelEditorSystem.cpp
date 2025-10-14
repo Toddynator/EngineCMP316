@@ -55,6 +55,35 @@ namespace CMP316engine {
 		ImGui::End();
 	}
 
+	static void DrawComponentHelper(entt::meta_any instance, entt::meta_custom custom, int& guiId)
+	{
+		auto meta = instance.type();
+
+		// If the type has a bespoke DrawEditor function, use that. Otherwise, recurse over data members.
+		// Currently, there is no behavior if the type/member has no DrawEditor function or any registered data members.
+		if (auto func = meta.func("DrawEditor"_hs))
+		{
+			PropertiesMap map = {};
+			if (auto* mp = static_cast<const PropertiesMap*>(custom))
+			{
+				map = *mp;
+			}
+			func.invoke(instance, map);
+		}
+		else
+		{
+			for (auto [id, data] : meta.data())
+			{
+				if (data.traits<Traits>() & Traits::EDITOR)
+				{
+					ImGui::PushID(guiId++);
+					DrawComponentHelper(data.get(instance), data.custom(), guiId);
+					ImGui::PopID();
+				}
+			}
+		}
+	}
+
 	void LevelEditorSystem::renderObjectInspectorWindow()
 	{
 		ImGui::Begin("Object Inspector");
@@ -64,6 +93,42 @@ namespace CMP316engine {
 		- Add Reflection, and loop through components, using a ImGuiUIOperator class to generate the ImGui Controls for each variable.
 		- An Add Button at the bottom which creates a dropdown of all the components that haven't been added yet to the entity.
 		*/
+
+
+
+
+		// Iterate over all entities.
+		for (auto entity : registry->view<entt::entity>())
+		{
+			if (ImGui::TreeNode("entity", "%u (v%u)", entt::to_entity(selectedEntity), entt::to_version(selectedEntity)))
+			{
+				ImGui::PushID((int)entity); // Don't worry about the potential UB..
+				// Iterate over all components in the registry.
+				int i = 0;
+				for (auto&& [id, storage] : registry->storage())
+				{
+					if (!storage.contains(selectedEntity))
+					{
+						continue;
+					}
+
+					// The name of the component is helpfully already stored in the registry without our intervention.
+					ImGui::SeparatorText(std::string(storage.type().name()).c_str());
+
+					if (auto meta = entt::resolve(id))
+					{
+						DrawComponentHelper(meta.from_void(storage.value(selectedEntity)), meta.custom(), i);
+					}
+					i++;
+				}
+				ImGui::PopID();
+				ImGui::TreePop();
+			}
+		}
+
+
+
+
 
 		ImGui::End();
 	}
@@ -156,7 +221,7 @@ namespace CMP316engine {
 		if (rootHierarchyComponent.firstChild != entt::null) 
 		{
 			ImGui::SameLine();
-			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) 
+			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				int childNum = 0; // For ImGui ID
 				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject](entt::registry* registry, entt::entity childEntity) {

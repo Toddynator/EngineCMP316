@@ -6,6 +6,8 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/Body.h>
 
+using namespace entt::literals;
+
 /*
 Components should purely store data, only Systems should handle functionality.
 
@@ -15,6 +17,18 @@ COMPONENT IDEAS:
 
 namespace CMP316engine 
 {
+	///// REFLECTION
+
+	enum Traits : uint16_t
+	{
+		EDITOR = 1 << 0,
+		SERIALIZE = 1 << 1
+	};
+	using PropertiesMap = std::unordered_map<entt::id_type, entt::meta_any>;
+	void InitializeReflection();
+
+	///// COMPONENTS
+
 	/*
 	The component that all entities should use to define their position in the scene hierarchy.
 	If I want propagating changes from parent to child, then this must be added to an entity.
@@ -39,6 +53,8 @@ namespace CMP316engine
 		DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.f, 1.f, 0.f);
 		DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
 		DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(1.f, 0.f, 0.f);
+
+		float testFloatInTransform = 1.f;
 	};
 
 	struct ModelComponent
