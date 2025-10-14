@@ -86,11 +86,6 @@ namespace CMP316engine {
 
 	void LevelEditorSystem::renderObjectInspectorWindow()
 	{
-		/*
-		TODO:
-		- An Add Button at the bottom which creates a dropdown of all the components that haven't been added yet to the entity.
-		*/
-
 		ImGui::Begin("Object Inspector");
 		
 		// No Selected Entity
@@ -135,15 +130,10 @@ namespace CMP316engine {
 			i++;
 		}
 		
-		// Add Button
-		if (ImGui::Button("Add Component"))
+		ImGui::SeparatorText("");
+		if (ImGui::BeginCombo("##AddComponentCombo", "Add Component"))
 		{
-			addComponentPrompt = true;
-		}
-
-		/// TEMP, should be a dropdown / popup window
-		if (addComponentPrompt)
-		{
+			bool anyComponentsToAdd = false;
 			for (auto [id, meta] : entt::resolve())
 			{
 				std::string_view name = meta.info().name();
@@ -158,14 +148,14 @@ namespace CMP316engine {
 							}
 						}
 					}
+					anyComponentsToAdd = true;
 
-					if (ImGui::Button(name.data()))
+					if (ImGui::Selectable(name.data()))
 					{
 						if (auto func = meta.func("AddComponent"_hs))
 						{
 							if (auto result = func.invoke({}, entt::forward_as_meta(*registry), selectedEntity); result) {
 								// Success
-								addComponentPrompt = false;
 							}
 							else {
 								// Fail
@@ -178,6 +168,12 @@ namespace CMP316engine {
 					}
 				}
 			}
+			if (anyComponentsToAdd == false)
+			{
+				ImGui::TextDisabled("No Components Left to Add");
+			}
+
+			ImGui::EndCombo();
 		}
 
 		ImGui::End();
