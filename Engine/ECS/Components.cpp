@@ -4,6 +4,11 @@
 
 namespace CMP316engine
 {
+	/*
+	TODO:
+	- Move the editor functions to a ReflectionUIHelper class or something of similar name!
+	- Define checks for a file-dialog custom data bool inn DrawEditorString() so that it can create fileDialog functionality!
+	*/
 
 	static void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max)
 	{

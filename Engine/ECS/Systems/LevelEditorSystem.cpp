@@ -88,7 +88,6 @@ namespace CMP316engine {
 	{
 		/*
 		TODO:
-		- Add Reflection, and loop through components, using a ImGuiHelper class to generate the ImGui Controls for each variable.
 		- An Add Button at the bottom which creates a dropdown of all the components that haven't been added yet to the entity.
 		*/
 
@@ -103,21 +102,45 @@ namespace CMP316engine {
 			return;
 		}
 
+		// Deletion container for deferred removals of components
+		std::vector<entt::id_type> componentsToDelete;
+
 		// Iterate over all components in the registry.
 		int i = 0;
 		for (auto&& [id, storage] : registry->storage())
 		{
+			// Skip HierarchyComponent, which should not appear in the inspector
+			if (id == entt::type_hash<HierarchyComponent>::value()) { continue; }
+
 			// The entity does not have the component
 			if (!storage.contains(selectedEntity)) { continue; }
 
 			// The name of the component is stored in the registry (not reflection as it turns out!) Create a header for the component.
+			ImGui::PushID(("." + std::to_string(i)).c_str());
 			ImGui::SeparatorText(std::string(storage.type().name()).c_str());
 
+			// Remove Button
+			if (ImGui::Button("Remove"))
+			{
+				componentsToDelete.emplace_back(id);
+			}
+
+			// Reflect the components
 			if (auto meta = entt::resolve(id))
 			{
 				DrawComponentHelper(meta.from_void(storage.value(selectedEntity)), meta.custom(), i);
 			}
+
+			ImGui::PopID();
 			i++;
+		}
+
+		// Handle deletion of components
+		for (auto& storageID : componentsToDelete)
+		{
+			if (auto storage = registry->storage(storageID)) {
+				storage->remove(selectedEntity);
+			}		
 		}
 
 		ImGui::End();

@@ -25,7 +25,25 @@ namespace CMP316engine
 		SERIALIZE = 1 << 1 // Set to any reflected member variables that should be serialized
 	};
 	using PropertiesMap = std::unordered_map<entt::id_type, entt::meta_any>;
+	/*
+	Where all the reflection definitions for components will go.
+	*/
 	void InitializeReflection();
+
+	/*
+	This automatically handles initializing reflection for the engine
+	by utilizing the constructor.
+	Since it is a global static, it ensures it is called ONCE and called on startup.
+	*/
+	static class Reflector
+	{
+	public:
+		Reflector()
+		{
+			InitializeReflection();
+		}
+	};
+	inline static Reflector reflector;
 
 	///// COMPONENTS
 
