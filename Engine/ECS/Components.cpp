@@ -89,6 +89,7 @@ namespace CMP316engine
 
 	Any custom data, like a name, or a min and max for editor sliders will be placed inside my UnorderedMap of properties.
 
+	////////////////
 	HOW TO USE:
 	For each component that should have reflected data, you should call entt::meta<ComponentType>() to create the initial meta factory object,
 	then append calls to define the reflected data. 
@@ -96,7 +97,8 @@ namespace CMP316engine
 	entt::resolve can be looped through, or alternatively, the id of one of the meta objects (components) can be passed in to get the specific meta object.
 	Each functions returns the meta factory object, so that you can chain the calls together for each member variable you add.
 	
-	Functions:
+	////////////////
+	FUNCTIONS:
 	.type : OPTIONAL : The identifier of the meta object in the entt reflection system, call this if you want to create a custom name for it.
 	.data : Append this when you want to define the next member variable, any .trait or .custom calls after will be modifying the reflection data of that variable.
 	.traits : Uses my engine-defined traits to allow me to check what type of functionality is available to the member variable (Can be applied to the meta object itself as well!). You can use more than one trait, just call it more than once!!
@@ -105,10 +107,18 @@ namespace CMP316engine
 	You should only have ONE custom call per variable, add the extra data as an extra parameter. 
 	Each custom variable added is a pair of name/id the reflection systems will look for and the value they are set to / store.
 
-	Polices:
+	////////////////
+	POLICIES:
 	entt::as_ref_t means meta_any objects will not copy the data, which allows our DrawEditor* functions to work as they take a reference and modify it.
 
 	The properties map is used to register the label name of the field in the editor as well as things like the min and max for a slider.
+
+	////////////////
+	RECOMMENDED SYNTAX FOR EACH COMPONENT:
+	entt::meta<COMPONENT_TYPE>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<COMPONENT_TYPE& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<COMPONENT_TYPE>),
+			entt::as_ref_t>("AddComponent"_hs)
 	*/
 	void CMP316engine::InitializeReflection()
 	{
@@ -124,10 +134,11 @@ namespace CMP316engine
 
 		entt::meta<TransformComponent>()
 			.traits(Traits::COMPONENT)
-			/*.func<static_cast<TransformComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::get<TransformComponent>),
-			entt::as_ref_t>("GetComponent"_hs)
-			.func<entt::overload(static_cast<const TransformComponent& (entt::registry::*)(const entt::entity) const>(
-				&entt::registry::get<TransformComponent>))>("GetComponent"_hs)*/
+			//.func<static_cast<TransformComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::get<TransformComponent>),
+			//entt::as_ref_t>("GetComponent"_hs)
+			//.func<entt::overload(static_cast<const TransformComponent& (entt::registry::*)(const entt::entity) const>(
+			//	&entt::registry::get<TransformComponent>))>("GetComponent"_hs)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<TransformComponent>)>("HasComponent"_hs)
 			.func<static_cast<TransformComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<TransformComponent>),
 			entt::as_ref_t>("AddComponent"_hs)
 			.data<&TransformComponent::position, entt::as_ref_t>("position"_hs)
@@ -147,11 +158,25 @@ namespace CMP316engine
 			;
 
 		entt::meta<ModelComponent>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<ModelComponent>)>("HasComponent"_hs)
+			//.func<static_cast<ModelComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<ModelComponent>),
+			//entt::as_ref_t>("AddComponent"_hs)
 			.data<&ModelComponent::filepath, entt::as_ref_t>("filepath"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ 
 				{ "name"_hs, "filepath" }, 
 				{ "textBuffer"_hs, std::array<char, 256>{"Enter Text"}} 
 			})
+			.traits(Traits::EDITOR)
+			;
+
+		entt::meta<MovementComponent>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<MovementComponent>)>("HasComponent"_hs)
+			.func<static_cast<MovementComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<MovementComponent>),
+			entt::as_ref_t>("AddComponent"_hs)
+			.data<&MovementComponent::linearVelocity, entt::as_ref_t>("linearVelocity"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "linearVelocity" }, })
 			.traits(Traits::EDITOR)
 			;
 	}

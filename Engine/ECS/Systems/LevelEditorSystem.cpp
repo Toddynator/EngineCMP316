@@ -136,23 +136,44 @@ namespace CMP316engine {
 		}
 		
 		// Add Button
-		for (auto [id, meta] : entt::resolve())
+		if (ImGui::Button("Add Component"))
 		{
-			std::string_view name = meta.info().name();
-			if (meta.traits<Traits>() & Traits::COMPONENT)
+			addComponentPrompt = true;
+		}
+
+		/// TEMP, should be a dropdown / popup window
+		if (addComponentPrompt)
+		{
+			for (auto [id, meta] : entt::resolve())
 			{
-				//std::cout << "\nReflected Component Names: " << name;
-				if (ImGui::Button(name.data()))
-				//if (ImGui::Button("Add Component"))
+				std::string_view name = meta.info().name();
+				if (meta.traits<Traits>() & Traits::COMPONENT)
 				{
-					if (auto func = meta.func("AddComponent"_hs))
+					if (auto func = meta.func("HasComponent"_hs))
 					{
 						if (auto result = func.invoke({}, entt::forward_as_meta(*registry), selectedEntity); result) {
-							// Success
+							if (result.cast<bool>() == true) {
+								// Entity already has this component
+								continue;
+							}
+						}
+					}
+
+					if (ImGui::Button(name.data()))
+					{
+						if (auto func = meta.func("AddComponent"_hs))
+						{
+							if (auto result = func.invoke({}, entt::forward_as_meta(*registry), selectedEntity); result) {
+								// Success
+								addComponentPrompt = false;
+							}
+							else {
+								// Fail
+								std::cout << "\nAddComponent Invoke call did not match reflected function signature";
+							}
 						}
 						else {
-							// Fail
-							std::cout << "\nAddComponent Invoke call did not match reflected function signature";
+							std::cout << "\nComponent hasn't got an 'AddComponent' function defined in the reflection system!";
 						}
 					}
 				}

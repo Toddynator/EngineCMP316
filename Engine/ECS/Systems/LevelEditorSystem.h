@@ -23,6 +23,7 @@ namespace CMP316engine {
 		entt::entity  cutEntity = entt::null;
 		entt::entity  copiedEntity = entt::null;
 		bool deletePrompt = false;
+		bool addComponentPrompt = false;
 
 		/// IMGUIZMO
 		IMGUIZMO_NAMESPACE::OPERATION currentImGuizmoOperation = IMGUIZMO_NAMESPACE::TRANSLATE;
