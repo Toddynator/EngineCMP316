@@ -21,8 +21,8 @@ namespace CMP316engine
 
 	enum Traits : uint16_t
 	{
-		EDITOR = 1 << 0,
-		SERIALIZE = 1 << 1
+		EDITOR = 1 << 0, // Set to any reflected member variables that should have an editor control
+		SERIALIZE = 1 << 1 // Set to any reflected member variables that should be serialized
 	};
 	using PropertiesMap = std::unordered_map<entt::id_type, entt::meta_any>;
 	void InitializeReflection();

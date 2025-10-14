@@ -103,18 +103,14 @@ namespace CMP316engine {
 			return;
 		}
 
-		// Iterate over all entities.
-		ImGui::PushID((int)selectedEntity);
 		// Iterate over all components in the registry.
 		int i = 0;
 		for (auto&& [id, storage] : registry->storage())
 		{
-			if (!storage.contains(selectedEntity))
-			{
-				continue;
-			}
+			// The entity does not have the component
+			if (!storage.contains(selectedEntity)) { continue; }
 
-			// The name of the component is helpfully already stored in the registry without our intervention.
+			// The name of the component is stored in the registry (not reflection as it turns out!) Create a header for the component.
 			ImGui::SeparatorText(std::string(storage.type().name()).c_str());
 
 			if (auto meta = entt::resolve(id))
@@ -123,7 +119,6 @@ namespace CMP316engine {
 			}
 			i++;
 		}
-		ImGui::PopID();
 
 		ImGui::End();
 	}
