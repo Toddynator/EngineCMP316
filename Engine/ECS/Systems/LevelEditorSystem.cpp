@@ -97,9 +97,6 @@ namespace CMP316engine {
 			return;
 		}
 
-		// Deletion container for deferred removals of components
-		std::vector<entt::id_type> componentsToDelete;
-
 		// Iterate over all components in the registry.
 		int i = 0;
 		for (auto&& [id, storage] : registry->storage())
@@ -112,13 +109,15 @@ namespace CMP316engine {
 
 			// The name of the component is stored in the registry (not reflection as it turns out!) Create a header for the component.
 			ImGui::PushID(("." + std::to_string(i)).c_str());
-			ImGui::SeparatorText(std::string(storage.type().name()).c_str());
-
-			// Remove Button
+			//ImGui::SeparatorText(std::string(storage.type().name()).c_str());
+			//ImGui::SameLine();
 			if (ImGui::Button("Remove"))
 			{
-				componentsToDelete.emplace_back(id);
+				componentDeletePrompt = true;
+				componentToDelete = id;
 			}
+			ImGui::SameLine();
+			ImGui::SeparatorText(std::string(storage.type().name()).c_str());
 
 			// Reflect the components
 			if (auto meta = entt::resolve(id))
@@ -176,15 +175,18 @@ namespace CMP316engine {
 			ImGui::EndCombo();
 		}
 
-		ImGui::End();
 
-		// Handle deletion of components
-		for (auto& storageID : componentsToDelete)
-		{
-			if (auto storage = registry->storage(storageID)) {
+		/// PROMPTS
+
+		ImGuiHelper::PromptUser(componentDeletePrompt, [this]() {
+			if (auto storage = registry->storage(componentToDelete)) {
 				storage->remove(selectedEntity);
 			}
-		}
+			componentToDelete = entt::null;
+			},
+			"Deletion Confirmation", "Are you sure you want to delete the component?");
+
+		ImGui::End();
 	}
 
 	void LevelEditorSystem::renderSelectionWindowManipulationTools()
