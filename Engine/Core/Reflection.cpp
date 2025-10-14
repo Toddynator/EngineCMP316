@@ -11,6 +11,7 @@ namespace CMP316engine
 		entt::meta<DirectX::XMFLOAT3>().func<&DrawEditorFloat3>("DrawEditor"_hs);
 		entt::meta<std::string>().func<&DrawEditorString>("DrawEditor"_hs);
 		entt::meta<int>().func<&DrawEditorInt>("DrawEditor"_hs);
+		entt::meta<bool>().func<&DrawEditorBool>("DrawEditor"_hs);
 	}
 
 	void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max)
@@ -103,5 +104,15 @@ namespace CMP316engine
 			return ImGuiHelper::InputAny(label, f, min, max);
 		}
 		return ImGuiHelper::InputAny(label, f);
+	}
+	bool DrawEditorBool(bool& f, const PropertiesMap& properties)
+	{
+		const char* label = "bool";
+
+		if (auto it = properties.find("name"_hs); it != properties.end())
+		{
+			label = *it->second.try_cast<const char*>();
+		}
+		return ImGui::Checkbox(label, &f);
 	}
 }

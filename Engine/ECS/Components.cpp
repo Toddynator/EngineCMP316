@@ -41,8 +41,10 @@ namespace CMP316engine
 	RECOMMENDED SYNTAX FOR EACH COMPONENT:
 	entt::meta<COMPONENT_TYPE>()
 			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<COMPONENT_TYPE>)>("HasComponent"_hs)
 			.func<static_cast<COMPONENT_TYPE& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<COMPONENT_TYPE>),
 			entt::as_ref_t>("AddComponent"_hs)
+			;
 	*/
 	void CMP316engine::InitializeReflection()
 	{
@@ -96,6 +98,33 @@ namespace CMP316engine
 			.data<&MovementComponent::linearVelocity, entt::as_ref_t>("linearVelocity"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "linearVelocity" }, })
 			.traits(Traits::EDITOR)
+			;
+
+		entt::meta<MeshComponent>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<MeshComponent>)>("HasComponent"_hs)
+			.func<static_cast<MeshComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<MeshComponent>),
+			entt::as_ref_t>("AddComponent"_hs)
+			.data<&MeshComponent::meshNeedsCalculated, entt::as_ref_t>("meshNeedsCalculated"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "meshNeedsCalculated" }, })
+			.traits(Traits::EDITOR)
+			;
+
+		entt::meta<CameraComponent>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<CameraComponent>)>("HasComponent"_hs)
+			.func<static_cast<CameraComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<CameraComponent>),
+			entt::as_ref_t>("AddComponent"_hs)
+			.data<&CameraComponent::active, entt::as_ref_t>("active"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "active" }, })
+			.traits(Traits::EDITOR)
+			;
+
+		entt::meta<RigidBodyComponent>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<RigidBodyComponent>)>("HasComponent"_hs)
+			.func<static_cast<RigidBodyComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<RigidBodyComponent>),
+			entt::as_ref_t>("AddComponent"_hs)
 			;
 	}
 }

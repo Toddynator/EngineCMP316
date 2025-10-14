@@ -39,4 +39,5 @@ namespace CMP316engine
 	bool DrawEditorFloat3(DirectX::XMFLOAT3& f, const PropertiesMap& properties);
 	bool DrawEditorString(std::string& f, const PropertiesMap& properties);
 	bool DrawEditorInt(int& f, const PropertiesMap& properties);
+	bool DrawEditorBool(bool& f, const PropertiesMap& properties);
 }
