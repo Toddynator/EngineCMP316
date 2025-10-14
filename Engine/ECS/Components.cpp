@@ -2,6 +2,7 @@
 #include "Components.h"
 #include "../Utility/ImGuiHelper.h"
 #include "ECS/ECSHelper.h"
+#include "../Core/Reflection.h"
 
 namespace CMP316engine
 {
@@ -84,7 +85,24 @@ namespace CMP316engine
 		- Filepath Custom Data property ~ Should open a file dialog (Add an ImGui File Dialog Library)
 		*/
 
-		return ImGuiHelper::InputAny(label, f, textBuffer, sizeof(textBuffer));
+		ImGui::Separator();
+		ImGui::Text(f.c_str());
+		bool result = ImGuiHelper::InputAny(label, f, textBuffer, sizeof(textBuffer));
+		ImGui::Separator();
+		return result;
+	}
+	static bool DrawEditorInt(int& f, const PropertiesMap& properties)
+	{
+		const char* label = "int";
+		float min = 0;
+		float max = 0;
+		GetEditorCustomData(properties, label, min, max);
+
+		return ImGuiHelper::InputAny(label, f);
+		if (min != 0 || max != 0) {
+			return ImGuiHelper::InputAny(label, f, min, max);
+		}
+		return ImGuiHelper::InputAny(label, f);
 	}
 
 	/*
@@ -127,13 +145,14 @@ namespace CMP316engine
 	*/
 	void CMP316engine::InitializeReflection()
 	{
-		entt::meta_reset();
+		//entt::meta_reset();
 		
 		/// THE FUNCTIONS
 
 		entt::meta<float>().func<&DrawEditorFloat>("DrawEditor"_hs);
 		entt::meta<DirectX::XMFLOAT3>().func<&DrawEditorFloat3>("DrawEditor"_hs);
 		entt::meta<std::string>().func<&DrawEditorString>("DrawEditor"_hs);
+		entt::meta<int>().func<&DrawEditorInt>("DrawEditor"_hs);
 
 		/// THE COMPONENTS
 

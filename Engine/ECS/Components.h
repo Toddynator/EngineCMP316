@@ -6,8 +6,6 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/Body.h>
 
-using namespace entt::literals;
-
 /*
 Components should purely store data, only Systems should handle functionality.
 
@@ -19,13 +17,6 @@ namespace CMP316engine
 {
 	///// REFLECTION
 
-	enum Traits : uint16_t
-	{
-		EDITOR = 1 << 0, // Set to any reflected member variables that should have an editor control
-		SERIALIZE = 1 << 1, // Set to any reflected member variables that should be serialized
-		COMPONENT = 1 << 2 // Add to components so that components can be identified from other reflected data, can be useful for Component specific UI's
-	};
-	using PropertiesMap = std::unordered_map<entt::id_type, entt::meta_any>;
 	/*
 	Where all the reflection definitions for components will go.
 	*/

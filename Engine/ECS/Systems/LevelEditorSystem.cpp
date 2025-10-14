@@ -3,6 +3,7 @@
 #include "../ECSHelper.h"
 #include "../../Utility/ImGuiHelper.h"
 #include "CameraSystem.h"
+#include "Core/Reflection.h"
 
 namespace CMP316engine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
