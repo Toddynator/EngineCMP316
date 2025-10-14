@@ -5,13 +5,8 @@
 namespace CMP316engine
 {
 
-	static bool DrawEditorFloat(float& f, const PropertiesMap& properties)
+	static void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max)
 	{
-		const char* label = "float"; // Use the type as the name incase a name wasn't registered in custom data.
-		float min = 0;
-		float max = 0;
-
-		// This is kinda hideous, but it works.
 		if (auto it = properties.find("name"_hs); it != properties.end())
 		{
 			// Note that these casts will return nullptr if you supply the wrong type in the property map.
@@ -25,6 +20,14 @@ namespace CMP316engine
 		{
 			max = *it->second.try_cast<float>();
 		}
+	}
+
+	static bool DrawEditorFloat(float& f, const PropertiesMap& properties)
+	{
+		const char* label = "float"; // Use the type as the name incase a name wasn't registered in custom data.
+		float min = 0;
+		float max = 0;
+		GetEditorCustomData(properties, label, min, max);
 
 		return ImGuiHelper::InputAny(label, f);
 		if (min != 0 || max != 0) {
@@ -37,19 +40,7 @@ namespace CMP316engine
 		const char* label = "float3";
 		float min = 0;
 		float max = 0;
-
-		if (auto it = properties.find("name"_hs); it != properties.end())
-		{
-			label = *it->second.try_cast<const char*>();
-		}
-		if (auto it = properties.find("min"_hs); it != properties.end())
-		{
-			min = *it->second.try_cast<float>();
-		}
-		if (auto it = properties.find("max"_hs); it != properties.end())
-		{
-			max = *it->second.try_cast<float>();
-		}
+		GetEditorCustomData(properties, label, min, max);
 
 		if (min != 0 || max != 0) {
 			return ImGuiHelper::InputAny(label, f, min, max);
@@ -87,15 +78,18 @@ namespace CMP316engine
 	You should only have ONE custom call per variable, add the extra data as an extra parameter. 
 	Each custom variable added is a pair of the name the reflection systems will look for and the arbitrary value they are set to. I don't believe you can edit them at runtime, they should be treated as constants.
 	Could use it for bools, floats, etc.
-
 	*/
 	void CMP316engine::InitializeReflection()
 	{
 		entt::meta_reset();
+		
+		/// THE FUNCTIONS
 
 		entt::meta<float>().func<&DrawEditorFloat>("DrawEditor"_hs);
 		entt::meta<DirectX::XMFLOAT3>().func<&DrawEditorFloat3>("DrawEditor"_hs);
 		entt::meta<std::string>().func<&DrawEditorString>("DrawEditor"_hs);
+
+		/// THE COMPONENTS
 
 		entt::meta<TransformComponent>()
 			// Hashed strings are used to give them unique identifiers. A macro could be used...
