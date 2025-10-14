@@ -134,16 +134,40 @@ namespace CMP316engine {
 			ImGui::PopID();
 			i++;
 		}
+		
+		// Add Button
+		for (auto [id, meta] : entt::resolve())
+		{
+			std::string_view name = meta.info().name();
+			if (meta.traits<Traits>() & Traits::COMPONENT)
+			{
+				//std::cout << "\nReflected Component Names: " << name;
+				if (ImGui::Button(name.data()))
+				//if (ImGui::Button("Add Component"))
+				{
+					if (auto func = meta.func("AddComponent"_hs))
+					{
+						if (auto result = func.invoke({}, entt::forward_as_meta(*registry), selectedEntity); result) {
+							// Success
+						}
+						else {
+							// Fail
+							std::cout << "\nAddComponent Invoke call did not match reflected function signature";
+						}
+					}
+				}
+			}
+		}
+
+		ImGui::End();
 
 		// Handle deletion of components
 		for (auto& storageID : componentsToDelete)
 		{
 			if (auto storage = registry->storage(storageID)) {
 				storage->remove(selectedEntity);
-			}		
+			}
 		}
-
-		ImGui::End();
 	}
 
 	void LevelEditorSystem::renderSelectionWindowManipulationTools()

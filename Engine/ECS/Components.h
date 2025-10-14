@@ -22,7 +22,8 @@ namespace CMP316engine
 	enum Traits : uint16_t
 	{
 		EDITOR = 1 << 0, // Set to any reflected member variables that should have an editor control
-		SERIALIZE = 1 << 1 // Set to any reflected member variables that should be serialized
+		SERIALIZE = 1 << 1, // Set to any reflected member variables that should be serialized
+		COMPONENT = 1 << 2 // Add to components so that components can be identified from other reflected data, can be useful for Component specific UI's
 	};
 	using PropertiesMap = std::unordered_map<entt::id_type, entt::meta_any>;
 	/*
@@ -71,8 +72,6 @@ namespace CMP316engine
 		DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.f, 1.f, 0.f);
 		DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
 		DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(1.f, 0.f, 0.f);
-
-		float testFloatInTransform = 1.f;
 	};
 
 	struct ModelComponent
