@@ -40,8 +40,8 @@ namespace CMP316engine {
 			inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
 
 			/// TURN CAMERA
-			transformComponent.rotation.x += mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
-			transformComponent.rotation.y += mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+			transformComponent.rotation.x += -mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+			transformComponent.rotation.y += -mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED;
 		}
 		else if (inputManager->IsMouseButtonReleased(SDL_BUTTON_RIGHT))
 		{
@@ -99,33 +99,12 @@ namespace CMP316engine {
 		for (auto& entity : cameraEntities) {
 			auto [cameraComponent, transformComponent] = registry->get<CameraComponent, TransformComponent>(entity);
 
-			/*
-			With DirectX math, its better to do calculations using their Vector variable instead of the float variable.
-			Apparently. I need to profile this.
-			I guess they had a valid reason not to use operators for vector math.
-			*/
-
 			if (cameraComponent.active) { activeCamera = entity; }
 
 			// Load into XMVECTOR structures.
 			DirectX::XMVECTOR upVector = XMLoadFloat3(&transformComponent.up);
 			DirectX::XMVECTOR positionVector = XMLoadFloat3(&transformComponent.position);
-			//DirectX::XMVECTOR forwardVector = XMLoadFloat3(&transformComponent.forward);
-			//DirectX::XMVECTOR lookAtVector = DirectX::XMVectorAdd(forwardVector, positionVector);
 			DirectX::XMVECTOR lookAtVector = XMLoadFloat3(&transformComponent.forward);
-
-			// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-			float pitch = transformComponent.rotation.x * 0.0174532925f;
-			float yaw = transformComponent.rotation.y * 0.0174532925f;
-			float roll = transformComponent.rotation.z * 0.0174532925f;
-
-			// Create the rotation matrix from the yaw, pitch, and roll values.
-			DirectX::XMMATRIX rotationMatrix;
-			rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-
-			// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-			lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
-			upVector = XMVector3TransformCoord(upVector, rotationMatrix);
 
 			// Translate the rotated camera position to the location of the viewer.
 			lookAtVector = DirectX::XMVectorAdd(positionVector, lookAtVector);

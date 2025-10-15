@@ -75,6 +75,18 @@ namespace CMP316engine
 			.data<&TransformComponent::scale, entt::as_ref_t>("scale"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "scale" } })
 			.traits(Traits::EDITOR)
+			.data<&TransformComponent::origin, entt::as_ref_t>("origin"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "origin" } })
+			.traits(Traits::EDITOR)
+			.data<&TransformComponent::up, entt::as_ref_t>("up"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "up" } })
+			.traits(Traits::EDITOR)
+			.data<&TransformComponent::forward, entt::as_ref_t>("forward"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "forward" } })
+			.traits(Traits::EDITOR)
+			.data<&TransformComponent::right, entt::as_ref_t>("right"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "right" } })
+			.traits(Traits::EDITOR)
 			;
 
 		entt::meta<ModelComponent>()

@@ -15,5 +15,6 @@ namespace CMP316engine {
 
 	private:
 		void calculateWorldMatrix(TransformComponent& transformComponent);
+		DirectX::XMMATRIX calculateRotationMatrix(TransformComponent& transformComponent);
 	};
 }
