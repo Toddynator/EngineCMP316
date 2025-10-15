@@ -104,9 +104,6 @@ namespace CMP316engine {
 		int i = 0;
 		for (auto&& [id, storage] : registry->storage())
 		{
-			// Skip HierarchyComponent, which should not appear in the inspector
-			if (id == entt::type_hash<HierarchyComponent>::value()) { continue; }
-
 			// The entity does not have the component
 			if (!storage.contains(selectedEntity)) { continue; }
 

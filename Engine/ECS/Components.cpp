@@ -89,6 +89,19 @@ namespace CMP316engine
 			.traits(Traits::EDITOR)
 			;
 
+		entt::meta<HierarchyComponent>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<HierarchyComponent>)>("HasComponent"_hs)
+			.func<static_cast<HierarchyComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<HierarchyComponent>),
+			entt::as_ref_t>("AddComponent"_hs)
+			.data<&HierarchyComponent::name, entt::as_ref_t>("name"_hs)
+			.custom<PropertiesMap>(PropertiesMap{
+				{ "name"_hs, "name" },
+				{ "textBuffer"_hs, std::array<char, 256>{"Enter Name"}}
+				})
+			.traits(Traits::EDITOR)
+			;
+
 		entt::meta<ModelComponent>()
 			.traits(Traits::COMPONENT)
 			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<ModelComponent>)>("HasComponent"_hs)

@@ -9,7 +9,8 @@ std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine:
 
 bool Game::Initialize()
 {
-	activeScene = std::make_unique<TestScene>(engineContext);
+	/*activeScene = std::make_unique<TestScene>(engineContext);*/
+	activeScene = std::make_unique<CMP316engine::LevelEditorScene>(engineContext);
 	activeScene->Initialize();
 	return true;
 }
