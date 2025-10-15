@@ -23,11 +23,11 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 		if (modelComponent.modelLoaded == false) { loadModel(modelComponent, meshComponent); }
 	}
 
-	auto transformableMeshEntities = registry->view<TransformComponent, MeshComponent>();
-	for (auto& entity : transformableMeshEntities) {
-		auto [transformComponent, meshComponent] = registry->get<TransformComponent, MeshComponent>(entity);
+	auto transformableEntities = registry->view<TransformComponent>();
+	for (auto& entity : transformableEntities) {
+		auto& transformComponent = registry->get<TransformComponent>(entity);
 
-		calculateWorldMatrix(transformComponent, meshComponent);
+		calculateWorldMatrix(transformComponent);
 	}
 
 	auto meshEntities = registry->view<MeshComponent>();
@@ -70,7 +70,7 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 	}
 }
 
-void CMP316engine::RenderSystem::calculateWorldMatrix(TransformComponent& transformComponent, MeshComponent& meshComponent)
+void CMP316engine::RenderSystem::calculateWorldMatrix(TransformComponent& transformComponent)
 {
 	auto& t = transformComponent;
 	auto& position = transformComponent.position;

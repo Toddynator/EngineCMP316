@@ -19,6 +19,7 @@ void CMP316engine::CameraSystem::Shutdown()
 void CMP316engine::CameraSystem::HandleInput(float deltaTime)
 {
 	if (activeCamera == entt::null) { return; }
+	if (!registry->valid(activeCamera)) { activeCamera = entt::null; }
 
 	/// CAMERA TURNING
 

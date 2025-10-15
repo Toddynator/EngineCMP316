@@ -23,11 +23,13 @@ namespace CMP316engine {
 		entt::entity  cutEntity = entt::null;
 		entt::entity  copiedEntity = entt::null;
 		bool deletePrompt = false;
+		bool componentDeletePrompt = false;
+		entt::id_type componentToDelete = entt::null;
 
 		/// IMGUIZMO
 		IMGUIZMO_NAMESPACE::OPERATION currentImGuizmoOperation = IMGUIZMO_NAMESPACE::TRANSLATE;
 		IMGUIZMO_NAMESPACE::MODE currentImGuizmoMode = IMGUIZMO_NAMESPACE::WORLD;
-		bool useImGuizmoSnapping = true;
+		bool useImGuizmoSnapping = false;
 		float snapImGuizmo[3] = { 1.f, 1.f, 1.f };
 
 	public:

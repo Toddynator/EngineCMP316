@@ -3,6 +3,7 @@
 #include "../ECSHelper.h"
 #include "../../Utility/ImGuiHelper.h"
 #include "CameraSystem.h"
+#include "Core/Reflection.h"
 
 namespace CMP316engine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
@@ -55,15 +56,136 @@ namespace CMP316engine {
 		ImGui::End();
 	}
 
+	static void DrawComponentHelper(entt::meta_any instance, entt::meta_custom custom, int& guiId)
+	{
+		auto meta = instance.type();
+
+		// If the type has a bespoke DrawEditor function, use that. Otherwise, recurse over data members.
+		// Currently, there is no behavior if the type/member has no DrawEditor function or any registered data members.
+		if (auto func = meta.func("DrawEditor"_hs))
+		{
+			PropertiesMap map = {};
+			if (auto* mp = static_cast<const PropertiesMap*>(custom))
+			{
+				map = *mp;
+			}
+			func.invoke(instance, map);
+		}
+		else
+		{
+			for (auto [id, data] : meta.data())
+			{
+				if (data.traits<Traits>() & Traits::EDITOR)
+				{
+					ImGui::PushID(guiId++);
+					DrawComponentHelper(data.get(instance), data.custom(), guiId);
+					ImGui::PopID();
+				}
+			}
+		}
+	}
+
 	void LevelEditorSystem::renderObjectInspectorWindow()
 	{
 		ImGui::Begin("Object Inspector");
 		
-		/*
-		TODO:
-		- Add Reflection, and loop through components, using a ImGuiUIOperator class to generate the ImGui Controls for each variable.
-		- An Add Button at the bottom which creates a dropdown of all the components that haven't been added yet to the entity.
-		*/
+		// No Selected Entity
+		if (selectedEntity == entt::null)
+		{
+			ImGui::TextDisabled("No Entity Selected");
+			ImGui::Separator();
+			ImGui::End();
+			return;
+		}
+
+		// Iterate over all components in the registry.
+		int i = 0;
+		for (auto&& [id, storage] : registry->storage())
+		{
+			// Skip HierarchyComponent, which should not appear in the inspector
+			if (id == entt::type_hash<HierarchyComponent>::value()) { continue; }
+
+			// The entity does not have the component
+			if (!storage.contains(selectedEntity)) { continue; }
+
+			// The name of the component is stored in the registry (not reflection as it turns out!) Create a header for the component.
+			ImGui::PushID(("." + std::to_string(i)).c_str());
+			//ImGui::SeparatorText(std::string(storage.type().name()).c_str());
+			//ImGui::SameLine();
+			if (ImGui::Button("Remove"))
+			{
+				componentDeletePrompt = true;
+				componentToDelete = id;
+			}
+			ImGui::SameLine();
+			ImGui::SeparatorText(std::string(storage.type().name()).c_str());
+
+			// Reflect the components
+			if (auto meta = entt::resolve(id))
+			{
+				DrawComponentHelper(meta.from_void(storage.value(selectedEntity)), meta.custom(), i);
+			}
+
+			ImGui::PopID();
+			i++;
+		}
+		
+		ImGui::SeparatorText("");
+		if (ImGui::BeginCombo("##AddComponentCombo", "Add Component"))
+		{
+			bool anyComponentsToAdd = false;
+			for (auto [id, meta] : entt::resolve())
+			{
+				std::string_view name = meta.info().name();
+				if (meta.traits<Traits>() & Traits::COMPONENT)
+				{
+					if (auto func = meta.func("HasComponent"_hs))
+					{
+						if (auto result = func.invoke({}, entt::forward_as_meta(*registry), selectedEntity); result) {
+							if (result.cast<bool>() == true) {
+								// Entity already has this component
+								continue;
+							}
+						}
+					}
+					anyComponentsToAdd = true;
+
+					if (ImGui::Selectable(name.data()))
+					{
+						if (auto func = meta.func("AddComponent"_hs))
+						{
+							if (auto result = func.invoke({}, entt::forward_as_meta(*registry), selectedEntity); result) {
+								// Success
+							}
+							else {
+								// Fail
+								std::cout << "\nAddComponent Invoke call did not match reflected function signature";
+							}
+						}
+						else {
+							std::cout << "\nComponent hasn't got an 'AddComponent' function defined in the reflection system!";
+						}
+					}
+				}
+			}
+			if (anyComponentsToAdd == false)
+			{
+				ImGui::TextDisabled("No Components Left to Add");
+			}
+
+			ImGui::EndCombo();
+		}
+
+
+		/// PROMPTS
+
+		ImGuiHelper::PromptUser(componentDeletePrompt, [this]() {
+			if (auto storage = registry->storage(componentToDelete)) {
+				storage->remove(selectedEntity);
+			}
+			componentToDelete = entt::null;
+			},
+			"Deletion Confirmation", "Are you sure you want to delete the component?");
 
 		ImGui::End();
 	}
@@ -156,7 +278,7 @@ namespace CMP316engine {
 		if (rootHierarchyComponent.firstChild != entt::null) 
 		{
 			ImGui::SameLine();
-			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen)) 
+			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				int childNum = 0; // For ImGui ID
 				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject](entt::registry* registry, entt::entity childEntity) {

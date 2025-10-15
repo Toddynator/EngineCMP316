@@ -15,6 +15,30 @@ COMPONENT IDEAS:
 
 namespace CMP316engine 
 {
+	///// REFLECTION
+
+	/*
+	Where all the reflection definitions for components will go.
+	*/
+	void InitializeReflection();
+
+	/*
+	This automatically handles initializing reflection for the engine
+	by utilizing the constructor.
+	Since it is a global static, it ensures it is called ONCE and called on startup.
+	*/
+	static class Reflector
+	{
+	public:
+		Reflector()
+		{
+			InitializeReflection();
+		}
+	};
+	inline static Reflector reflector;
+
+	///// COMPONENTS
+
 	/*
 	The component that all entities should use to define their position in the scene hierarchy.
 	If I want propagating changes from parent to child, then this must be added to an entity.
@@ -43,7 +67,7 @@ namespace CMP316engine
 
 	struct ModelComponent
 	{
-		std::string filepath = ""; // This is the filepath from inside the data/Models directory!
+		std::string filepath = "data/Models/Dug/Dug.obj"; // This is the filepath from inside the data/Models directory!
 		bool modelLoaded = false;
 	};
 
