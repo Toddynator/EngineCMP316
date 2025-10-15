@@ -24,6 +24,7 @@ namespace CMP316engine {
 
 	void ECSScene::Shutdown()
 	{
+		Scene::Shutdown();
 		for (auto& system : systems)
 		{
 			system->Shutdown();

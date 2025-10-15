@@ -8,7 +8,7 @@ bool CMP316engine::Scene::Initialize()
 
 void CMP316engine::Scene::Shutdown()
 {
-	
+	if (engineContext.audioManager) { engineContext.audioManager->StopAll(); }
 }
 
 void CMP316engine::Scene::HandleInput(float deltaTime)
