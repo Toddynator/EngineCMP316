@@ -6,7 +6,7 @@ class PlayerSystem :
 	public CMP316engine::System
 {
 public:
-	PlayerSystem(entt::registry* sceneRegistry, CMP316engine::InputManager* sceneInputManager);
+	PlayerSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext);
 
 	bool Initialize() override;
 	void Shutdown() override;

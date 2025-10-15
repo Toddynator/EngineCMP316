@@ -1,7 +1,7 @@
 #include "PlayerSystem.h"
 #include "Components.h"
 
-PlayerSystem::PlayerSystem(entt::registry* sceneRegistry, CMP316engine::InputManager* sceneInputManager) : System(sceneRegistry, sceneInputManager)
+PlayerSystem::PlayerSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext)
 {
 }
 

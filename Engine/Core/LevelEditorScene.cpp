@@ -5,7 +5,7 @@ namespace CMP316engine
 {
 	LevelEditorScene::LevelEditorScene(CMP316engine::EngineContext& context) : ECSScene(context)
 	{		
-		systems.emplace_back(std::make_unique<LevelEditorSystem>(&registry, engineContext.inputManager.get(), sceneRoot, context.renderer.get()));
+		systems.emplace_back(std::make_unique<LevelEditorSystem>(&registry, &engineContext, sceneRoot, context.renderer.get()));
 	}
 
 	bool LevelEditorScene::Initialize()

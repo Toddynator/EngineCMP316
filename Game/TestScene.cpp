@@ -6,8 +6,8 @@
 
 TestScene::TestScene(CMP316engine::EngineContext& context) : ECSScene(context)
 {
-	systems.push_back(std::make_unique<CMP316engine::PhysicsSystem>(&registry, engineContext.inputManager.get(), engineContext.physicsManager.get()));
-	systems.push_back(std::make_unique<PlayerSystem>(&registry, engineContext.inputManager.get()));
+	systems.push_back(std::make_unique<CMP316engine::PhysicsSystem>(&registry, &engineContext));
+	systems.push_back(std::make_unique<PlayerSystem>(&registry, &engineContext));
 }
 
 bool TestScene::Initialize()

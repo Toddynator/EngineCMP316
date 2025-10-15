@@ -17,7 +17,7 @@ namespace CMP316engine {
 		CMP316engine::PhysicsManager* physicsManager;
 
 	public:
-		PhysicsSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, CMP316engine::PhysicsManager* scenePhysicsManager);
+		PhysicsSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext);
 
 		bool Initialize() override;
 		void Shutdown() override;

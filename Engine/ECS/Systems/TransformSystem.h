@@ -6,7 +6,7 @@ namespace CMP316engine {
 		: public System
 	{
 	public:
-		TransformSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager) : System(sceneRegistry, sceneInputManager) {}
+		TransformSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext) {}
 
 		bool Initialize() override { return true; }
 		void Shutdown() override {}

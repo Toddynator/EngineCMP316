@@ -1,15 +1,18 @@
 #pragma once
 #include "../System.h"
+#include "Managers/WindowManager.h"
 
 namespace CMP316engine {
 	class CameraSystem : public System
 	{
 	private:
+		WindowManager* windowManager = nullptr;
+
 		entt::entity activeCamera = entt::null;
 		inline static constexpr float BASE_CAMERA_ROTATION_SPEED = 40.f;
 
 	public:
-		CameraSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager);
+		CameraSystem(entt::registry* sceneRegistry, EngineContext* engineContext);
 
 		bool Initialize() override;
 		void Shutdown() override;

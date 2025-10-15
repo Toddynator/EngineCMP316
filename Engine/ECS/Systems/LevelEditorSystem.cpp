@@ -6,8 +6,8 @@
 #include "Core/Reflection.h"
 
 namespace CMP316engine {
-	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
-		System(sceneRegistry, sceneInputManager), sceneRoot(sceneRootEntity), renderer(sceneRenderer)
+	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, EngineContext* engineContext, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
+		System(sceneRegistry, engineContext), sceneRoot(sceneRootEntity), renderer(sceneRenderer)
 	{
 
 	}

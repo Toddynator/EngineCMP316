@@ -3,7 +3,7 @@
 
 namespace CMP316engine {
 
-	CameraSystem::CameraSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager) : System(sceneRegistry, sceneInputManager)
+	CameraSystem::CameraSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext), windowManager(engineContext->windowManager.get())
 	{
 
 	}
@@ -31,8 +31,16 @@ namespace CMP316engine {
 		float mouseDeltaY = inputManager->GetMouseDeltaY();
 		if (inputManager->IsMouseButtonDown(SDL_BUTTON_RIGHT) && (mouseDeltaX != 0.f || mouseDeltaY != 0.f))
 		{		
+			/// KEEPS READING MOUSE INPUT EVEN AFTER REACHING WINDOW EDGE.
+			//inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), true);
+
+			/// TURN CAMERA
 			transformComponent.rotation.x += mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
 			transformComponent.rotation.y += mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+		}
+		else if (inputManager->IsMouseButtonReleased(SDL_BUTTON_RIGHT))
+		{
+			//inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), false);
 		}
 
 		/// LATERAL CAMERA MOVEMENT

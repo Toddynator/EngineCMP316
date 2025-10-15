@@ -5,9 +5,9 @@ namespace CMP316engine {
 	ECSScene::ECSScene(CMP316engine::EngineContext& context) : Scene(context)
 	{
 		sceneRoot = ECS::CreateEntityWithDefaultComponents(&registry);
-		systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, engineContext.inputManager.get(), engineContext.renderer.get(), engineContext.shader.get()));
-		systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry, engineContext.inputManager.get()));
-		systems.push_back(std::make_unique<CMP316engine::TransformSystem>(&registry, engineContext.inputManager.get()));
+		systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, &engineContext, engineContext.renderer.get(), engineContext.shader.get()));
+		systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry, &engineContext));
+		systems.push_back(std::make_unique<CMP316engine::TransformSystem>(&registry, &engineContext));
 	}
 
 	bool ECSScene::Initialize()

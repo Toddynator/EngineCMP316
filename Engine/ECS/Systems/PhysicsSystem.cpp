@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PhysicsSystem.h"
 
-CMP316engine::PhysicsSystem::PhysicsSystem(entt::registry* sceneRegistry, InputManager* sceneInputManager, CMP316engine::PhysicsManager* scenePhysicsManager) : System(sceneRegistry, sceneInputManager), physicsManager(scenePhysicsManager)
+CMP316engine::PhysicsSystem::PhysicsSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext), physicsManager(engineContext->physicsManager.get())
 {
 
 }

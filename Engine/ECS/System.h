@@ -1,7 +1,7 @@
 #pragma once
 #include "Components.h"
 #include "entt.hpp"
-#include "Managers/InputManager.h"
+#include "Core/EngineContext.h"
 
 /*
 ABSTRACT BASE CLASS
@@ -17,7 +17,7 @@ namespace CMP316engine {
 		InputManager* inputManager;
 
 	public:
-		System(entt::registry* sceneRegistry, InputManager* sceneInputManager) : registry(sceneRegistry), inputManager(sceneInputManager) {}
+		System(entt::registry* sceneRegistry, EngineContext* engineContext) : registry(sceneRegistry), inputManager(engineContext->inputManager.get()) {}
 		System() = delete;
 
 		virtual bool Initialize() = 0;

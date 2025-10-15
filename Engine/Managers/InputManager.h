@@ -88,6 +88,8 @@ namespace CMP316engine {
 		float GetMouseDeltaX();
 		float GetMouseDeltaY();
 
+		void SetWindowRelativeMouseMode(SDL_Window* window, bool enabled) { SDL_SetWindowRelativeMouseMode(window, enabled); }
+
 	private:
 		enum CheckType
 		{
