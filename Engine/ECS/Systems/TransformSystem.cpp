@@ -8,36 +8,26 @@ namespace CMP316engine {
 		for (auto& entity : transformEntities) {
 			auto& t = registry->get<TransformComponent>(entity);
 
-			// Angle Calculation Variables
+			/// ORTHOGONAL DIRECTION VECTORS
+
 			float pitchRadians = DirectX::XMConvertToRadians(t.rotation.x);
 			float yawRadians = DirectX::XMConvertToRadians(t.rotation.y);
 			float rollRadians = DirectX::XMConvertToRadians(t.rotation.z);
+			DirectX::XMMATRIX rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitchRadians, yawRadians, rollRadians);
 
-			float const cosY = cosf(yawRadians);
-			float const cosP = cosf(pitchRadians);
-			float const cosR = cosf(rollRadians);
-			float const sinY = sinf(yawRadians);
-			float const sinP = sinf(pitchRadians);
-			float const sinR = sinf(rollRadians);
+			DirectX::XMVECTOR forward = XMVector3TransformCoord(DirectX::XMVectorSet(0, 0, 1, 0), rotationMatrix);
+			DirectX::XMVECTOR up = XMVector3TransformCoord(DirectX::XMVectorSet(0, 1, 0, 0), rotationMatrix);
+			DirectX::XMVECTOR right = DirectX::XMVector3Cross(up, forward);
+			forward = DirectX::XMVector3Normalize(forward);
+			up = DirectX::XMVector3Normalize(up);
+			right = DirectX::XMVector3Normalize(right);
 
-			// Up Vector
-			t.up.x = -cosY * sinR - sinY * sinP * cosR;
-			t.up.y = cosP * cosR;
-			t.up.z = sinY * sinR - sinP * cosR * cosY;
-			DirectX::XMVECTOR tempUpVec = DirectX::XMLoadFloat3(&t.up);
-			DirectX::XMStoreFloat3(&t.up, DirectX::XMVector3Normalize(tempUpVec));
+			DirectX::XMStoreFloat3(&t.forward, forward);
+			DirectX::XMStoreFloat3(&t.up, up);
+			DirectX::XMStoreFloat3(&t.right, right);
 
-			// Forward Vector
-			t.forward.x = sinY * cosP;
-			t.forward.y = sinP;
-			t.forward.z = cosP * cosY;
-			DirectX::XMVECTOR tempForwardVec = DirectX::XMLoadFloat3(&t.forward);
-			DirectX::XMStoreFloat3(&t.forward, DirectX::XMVector3Normalize(tempForwardVec));
+			/// WORLD MATRIX
 
-			// Right Vector
-			DirectX::XMStoreFloat3(&t.right, DirectX::XMVector3Cross(tempUpVec, tempForwardVec));
-
-			// World Matrix
 			calculateWorldMatrix(t);
 		}
 	}
