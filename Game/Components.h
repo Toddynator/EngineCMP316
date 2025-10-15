@@ -6,7 +6,7 @@ Basically the exact same as how it is defined in the engines components struct, 
 */
 
 void InitializeReflection();
-static class Reflector
+class Reflector
 {
 public:
 	Reflector()

@@ -11,7 +11,9 @@ const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::default
 	{ "Move Up", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_SPACE }},
 	{ "Move Down", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_LCTRL }},
 	{ "Move Left", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_A }},
-	{ "Move Right", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_D }}
+	{ "Move Right", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_D }},
+	{ "Roll Anti-Clockwise", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_Q }},
+	{ "Roll Clockwise", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_E }}
 };
 
 

@@ -60,6 +60,7 @@ bool CMP316engine::EngineLayer::Initialize()
 	style.Colors[ImGuiCol_TabDimmed] = { 20.f / 255.f,20.f / 255.f,50.f / 255.f,1.f };
 	style.Colors[ImGuiCol_TabDimmedSelected] = { 35.f / 255.f,70.f / 255.f,180.f / 255.f,1.f };
 	style.Colors[ImGuiCol_Tab] = { 55.f / 255.f,50.f / 255.f,120.f / 255.f, 220.f / 255.f };
+	style.Colors[ImGuiCol_Button] = {0.f, 110.f/255.f, 1.f, 100.f/255.f};
 
 	///// DEFAULT SHADER
 	// TODO: Prob move to assetManager soon
@@ -165,7 +166,7 @@ void CMP316engine::EngineLayer::update()
 
 void CMP316engine::EngineLayer::render()
 {
-	engineContext.renderer->BeginScene(0.0f, 0.0f, 0.0f, 1.0f); // Black
+	engineContext.renderer->BeginScene(0.05f, 0.08f, 0.1f, 1.0f); // Clear Colour
 	///// APPLICATION
 	application->Render();
 	///// IMGUI

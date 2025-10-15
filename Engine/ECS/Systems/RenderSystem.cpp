@@ -75,10 +75,12 @@ void CMP316engine::RenderSystem::calculateWorldMatrix(TransformComponent& transf
 	auto& t = transformComponent;
 	auto& position = transformComponent.position;
 	auto& rotation = transformComponent.rotation;
+	auto& scale = transformComponent.scale;
 
 	/// CALCULATE MATRICES
 
 	DirectX::XMMATRIX translationMatrix = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+	DirectX::XMMATRIX scaleMatrix = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
 
 	/// CLAMP ROTATION
 
@@ -105,7 +107,7 @@ void CMP316engine::RenderSystem::calculateWorldMatrix(TransformComponent& transf
 
 	/// FINAL MATRIX CALCULATION
 
-	transformComponent.worldMatrix = rotationMatrix * translationMatrix;
+	transformComponent.worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
 }
 
 void CMP316engine::RenderSystem::loadModel(ModelComponent& modelComponent, MeshComponent& meshComponent)

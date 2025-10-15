@@ -27,7 +27,7 @@ namespace CMP316engine
 	by utilizing the constructor.
 	Since it is a global static, it ensures it is called ONCE and called on startup.
 	*/
-	static class Reflector
+	class Reflector
 	{
 	public:
 		Reflector()
@@ -58,7 +58,7 @@ namespace CMP316engine
 		DirectX::XMMATRIX worldMatrix{};
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f,0.f,0.f);
 		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f); // TODO: Probably should replace with Quaternions in the future.
-		DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+		DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.f, 1.f, 1.f);
 		DirectX::XMFLOAT3 origin = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 		DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.f, 1.f, 0.f);
 		DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
@@ -97,11 +97,22 @@ namespace CMP316engine
 		}
 	};
 
+
+	/*
+	POSSIBLY REPLACE WITH 'EDITOR CAMERA' COMPONENT INSTEAD
+	*/
+	enum CameraTypes
+	{
+		FREE_ROAME, // Can be moved by editor
+		TRACKING // Follows parent
+	};
+
 	struct CameraComponent
 	{
 		// Camera needs just position and rotation
 		DirectX::XMMATRIX viewMatrix;
 		bool active = false;
+		CameraTypes cameraType = TRACKING;
 	};
 
 	struct RigidBodyComponent

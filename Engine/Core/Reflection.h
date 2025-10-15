@@ -23,7 +23,7 @@ namespace CMP316engine
 	Where the reflection for the functions will get initialized
 	*/
 	void InitializeReflectionFunctions();
-	static class FunctionReflector
+	class FunctionReflector
 	{
 	public:
 		FunctionReflector()
