@@ -46,6 +46,21 @@ bool CMP316engine::EngineLayer::Initialize()
 	ImGui_ImplSDL3_InitForD3D(static_cast<SDL_Window*>(engineContext.windowManager->GetNativeWindow()));
 	ImGui_ImplDX11_Init(engineContext.renderer->GetDevice(), engineContext.renderer->GetDeviceContext());
 
+	//////////////////////////////////
+	/// ENGINE DEFAULT IMGUI STYLE ///
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	style.FrameRounding = 1.f;
+	style.FrameBorderSize = 1.f;
+	style.Colors[ImGuiCol_FrameBg] = { 70.f / 255.f, 70.f / 255.f, 70.f / 255.f, 150.f / 255.f };
+	style.Colors[ImGuiCol_Border] = {  255.f / 255.f, 110.f / 255.f, 128.f / 255.f, 128.f / 255.f };
+	style.Colors[ImGuiCol_WindowBg] = { 30.f / 255.f,30.f / 255.f,35.f / 255.f,200.f / 255.f };
+	style.Colors[ImGuiCol_TitleBg] = { 20.f / 255.f,20.f / 255.f,30.f / 255.f,255.f / 255.f };
+	style.Colors[ImGuiCol_TabSelected] = { 50.f / 255.f,50.f / 255.f, 1.f,1.f };
+	style.Colors[ImGuiCol_TabDimmed] = { 20.f / 255.f,20.f / 255.f,50.f / 255.f,1.f };
+	style.Colors[ImGuiCol_TabDimmedSelected] = { 35.f / 255.f,70.f / 255.f,180.f / 255.f,1.f };
+	style.Colors[ImGuiCol_Tab] = { 55.f / 255.f,50.f / 255.f,120.f / 255.f, 220.f / 255.f };
+
 	///// DEFAULT SHADER
 	// TODO: Prob move to assetManager soon
 

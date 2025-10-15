@@ -40,6 +40,8 @@ namespace CMP316engine {
 		renderImGuizmoStatusWindow();
 		renderSceneTreeSelectionWindow();
 		renderObjectInspectorWindow();
+
+		ImGui::ShowDemoWindow();
 	}
 
 	void LevelEditorSystem::Update(float deltaTime)
