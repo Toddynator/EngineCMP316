@@ -31,6 +31,9 @@ namespace CMP316engine {
 		float mouseDeltaY = inputManager->GetMouseDeltaY();
 		if (inputManager->IsMouseButtonDown(SDL_BUTTON_RIGHT) && (mouseDeltaX != 0.f || mouseDeltaY != 0.f))
 		{		
+			std::cout << "\nmouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED: " << mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED; // DEBUG
+			std::cout << "\nmouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED: " << mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED; // DEBUG
+
 			transformComponent.rotation.x += mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
 			transformComponent.rotation.y += mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED;
 		}

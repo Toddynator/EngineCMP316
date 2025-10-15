@@ -12,5 +12,8 @@ namespace CMP316engine {
 		void Shutdown() override {}
 
 		void Update(float deltaTime) override;
+
+	private:
+		void calculateWorldMatrix(TransformComponent& transformComponent);
 	};
 }
