@@ -29,10 +29,15 @@ namespace CMP316engine {
 
 		float mouseDeltaX = inputManager->GetMouseDeltaX();
 		float mouseDeltaY = inputManager->GetMouseDeltaY();
+		if (inputManager->IsMouseButtonPressed(SDL_BUTTON_RIGHT))
+		{
+			inputManager->SaveCurrentMouseWindowPosition();
+		}
 		if (inputManager->IsMouseButtonDown(SDL_BUTTON_RIGHT) && (mouseDeltaX != 0.f || mouseDeltaY != 0.f))
 		{		
 			/// KEEPS READING MOUSE INPUT EVEN AFTER REACHING WINDOW EDGE.
-			//inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), true);
+			inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), true);
+			inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
 
 			/// TURN CAMERA
 			transformComponent.rotation.x += mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
@@ -40,7 +45,8 @@ namespace CMP316engine {
 		}
 		else if (inputManager->IsMouseButtonReleased(SDL_BUTTON_RIGHT))
 		{
-			//inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), false);
+			inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), false);
+			//inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
 		}
 
 		/// LATERAL CAMERA MOVEMENT

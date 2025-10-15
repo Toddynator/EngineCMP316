@@ -3,6 +3,9 @@
 Provides a clean interface for handling user input from a keyboard and mouse via SDL.
 It is designed around keybinds so that users can customize their controls, and support multiple keybinds per action.
 
+SDL MOUSE:
+https://wiki.libsdl.org/SDL3/CategoryMouse
+
 SDL Best Practices for Keyboard Input:
 https://wiki.libsdl.org/SDL3/BestKeyboardPractices
 NOTE:
@@ -60,6 +63,7 @@ namespace CMP316engine {
 		bool prevMouseButtons[NUM_MOUSE_BUTTONS];
 
 		DirectX::XMFLOAT2 mousePositionLastFrame;
+		DirectX::XMFLOAT2 mouseSavedPos;
 		float mouseDeltaX;
 		float mouseDeltaY;
 
@@ -88,7 +92,10 @@ namespace CMP316engine {
 		float GetMouseDeltaX();
 		float GetMouseDeltaY();
 
-		void SetWindowRelativeMouseMode(SDL_Window* window, bool enabled) { SDL_SetWindowRelativeMouseMode(window, enabled); }
+		// Hides cursor and constrains the mouse to the window but keeps reading mouse delta even when mouse has hit window edge.
+		void SetWindowRelativeMouseMode(SDL_Window* window, bool enabled);
+		void SaveCurrentMouseWindowPosition();
+		void SetMouseToSavedPosition(SDL_Window* window);
 
 	private:
 		enum CheckType

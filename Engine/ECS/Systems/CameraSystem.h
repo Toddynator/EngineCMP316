@@ -9,7 +9,7 @@ namespace CMP316engine {
 		WindowManager* windowManager = nullptr;
 
 		entt::entity activeCamera = entt::null;
-		inline static constexpr float BASE_CAMERA_ROTATION_SPEED = 40.f;
+		inline static constexpr float BASE_CAMERA_ROTATION_SPEED = 60.f;
 
 	public:
 		CameraSystem(entt::registry* sceneRegistry, EngineContext* engineContext);

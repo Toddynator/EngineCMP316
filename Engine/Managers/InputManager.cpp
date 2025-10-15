@@ -187,3 +187,18 @@ float CMP316engine::InputManager::GetMouseDeltaY()
 	mouseDeltaY = mousePositionLastFrame.y - currentMousePosition.y;
 	return mouseDeltaY;
 }
+
+void CMP316engine::InputManager::SetWindowRelativeMouseMode(SDL_Window* window, bool enabled) 
+{ 
+	SDL_SetWindowRelativeMouseMode(window, enabled); 
+}
+
+void CMP316engine::InputManager::SaveCurrentMouseWindowPosition()
+{
+	SDL_GetMouseState(&mouseSavedPos.x, &mouseSavedPos.y); // Relative to window
+}
+
+void CMP316engine::InputManager::SetMouseToSavedPosition(SDL_Window* window)
+{
+	SDL_WarpMouseInWindow(window, mouseSavedPos.x, mouseSavedPos.y);
+}
