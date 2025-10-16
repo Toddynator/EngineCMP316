@@ -17,6 +17,7 @@ namespace CMP316engine {
 		void Update();
 
 		float getDeltaTime() { return deltaTime; }
+		float GetFPS() { return 1.f / deltaTime; }
 
 	private:
 		float deltaTime; // Time between frames in seconds

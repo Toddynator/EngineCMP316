@@ -120,7 +120,8 @@ namespace CMP316engine {
 			ImGui::PushID(("." + std::to_string(i)).c_str());
 			//ImGui::SeparatorText(std::string(storage.type().name()).c_str());
 			//ImGui::SameLine();
-			if (ImGui::Button("Remove"))
+			// PREVENT REMOVING HIERARCHY COMPONENT IN LEVEL EDITOR
+			if (id != entt::type_hash<HierarchyComponent>() && ImGui::Button("Remove"))
 			{
 				componentDeletePrompt = true;
 				componentToDelete = id;

@@ -40,6 +40,7 @@ void Game::HandleImGui()
 	activeScene->HandleImGui();
 
 	ImGui::Begin("ApplicationControls");
+	ImGui::Text("FPS: %.2f", engineContext.timeManager->GetFPS());
 	if (ImGui::Checkbox("Wireframe", &wireframeEnabled))
 	{
 		engineContext.renderer->ToggleWireframe();
