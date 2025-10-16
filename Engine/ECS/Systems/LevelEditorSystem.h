@@ -55,5 +55,6 @@ namespace CMP316engine {
 		// ImGuizmo
 		void renderImGuizmoManipulateTool();
 		void renderImGuizmoStatusWindow();
+		void renderFileExplorer();
 	};
 }

@@ -48,27 +48,9 @@ namespace CMP316engine {
 		renderImGuizmoStatusWindow();
 		renderSceneTreeSelectionWindow();
 		renderObjectInspectorWindow();
+		renderFileExplorer();
 
 		ImGui::ShowDemoWindow();
-
-		// open Dialog Simple
-		if (ImGui::Begin("File Explorer##OpenDialogCommand")) {
-			if (fileDialog.Display("embedded", ImGuiWindowFlags_NoCollapse, ImVec2(0, 350))) { // => will show a dialog
-				if (fileDialog.IsOk()) { // action if OK
-					std::string filePathName = fileDialog.GetFilePathName();
-					std::string filePath = fileDialog.GetCurrentPath();
-
-					/// ACTION
-
-					/* 
-					TODO:
-					e.g. save or load, maybe grab asset 
-					or select a file / asset for an engine importer
-					*/
-				}
-			}
-			ImGui::End();
-		}
 	}
 
 	void LevelEditorSystem::Update(float deltaTime)
@@ -418,6 +400,27 @@ namespace CMP316engine {
 		bool snappingActive = useImGuizmoSnapping;
 		if (DrawToggleButton("Snap", snappingActive)) {
 			useImGuizmoSnapping = !useImGuizmoSnapping;
+		}
+		ImGui::End();
+	}
+
+	void LevelEditorSystem::renderFileExplorer()
+	{
+		if (ImGui::Begin("File Explorer##OpenDialogCommand")) {
+			if (fileDialog.Display("embedded", ImGuiWindowFlags_NoCollapse, ImVec2(0, 350))) { // => will show a dialog
+				if (fileDialog.IsOk()) { // action if OK
+					std::string filePathName = fileDialog.GetFilePathName();
+					std::string filePath = fileDialog.GetCurrentPath();
+
+					/// ACTION
+
+					/*
+					TODO:
+					e.g. save or load, maybe grab asset
+					or select a file / asset for an engine importer window
+					*/
+				}
+			}
 		}
 		ImGui::End();
 	}
