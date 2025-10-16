@@ -8,6 +8,7 @@ for use by a game.
 #include <entt.hpp>
 #include "../../Graphics/Renderer_DirectX11.h"
 #include "../../ImGui/ImGuizmo/ImGuizmo.h"
+#include "../../ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
 
 namespace CMP316engine {
 	class LevelEditorSystem : public System
@@ -17,6 +18,7 @@ namespace CMP316engine {
 		Renderer_DirectX11* renderer;
 
 		/// EDITOR
+		ImGuiFileDialog fileDialog;
 		entt::registry clipboardRegistry; // Stop entities that are copied from being active in the scene until they are pasted.
 		entt::entity  sceneRoot = entt::null;
 		entt::entity  selectedEntity = entt::null;

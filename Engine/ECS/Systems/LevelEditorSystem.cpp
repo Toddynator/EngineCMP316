@@ -14,6 +14,14 @@ namespace CMP316engine {
 
 	bool LevelEditorSystem::Initialize()
 	{
+		IGFD::FileDialogConfig config;
+		config.path = ".";
+		config.countSelectionMax = -1;
+		config.flags = ImGuiFileDialogFlags_NoDialog |
+			ImGuiFileDialogFlags_DisableCreateDirectoryButton |
+			ImGuiFileDialogFlags_ReadOnlyFileNameField;
+		fileDialog.OpenDialog("embedded", "Select File", ".*", config);
+
 		return true;
 	}
 
@@ -42,6 +50,25 @@ namespace CMP316engine {
 		renderObjectInspectorWindow();
 
 		ImGui::ShowDemoWindow();
+
+		// open Dialog Simple
+		if (ImGui::Begin("File Explorer##OpenDialogCommand")) {
+			if (fileDialog.Display("embedded", ImGuiWindowFlags_NoCollapse, ImVec2(0, 350))) { // => will show a dialog
+				if (fileDialog.IsOk()) { // action if OK
+					std::string filePathName = fileDialog.GetFilePathName();
+					std::string filePath = fileDialog.GetCurrentPath();
+
+					/// ACTION
+
+					/* 
+					TODO:
+					e.g. save or load, maybe grab asset 
+					or select a file / asset for an engine importer
+					*/
+				}
+			}
+			ImGui::End();
+		}
 	}
 
 	void LevelEditorSystem::Update(float deltaTime)
