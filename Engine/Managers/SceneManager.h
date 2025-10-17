@@ -1,4 +1,7 @@
 /*
+SceneManager utilizes factory pattern to dynamically register and create scenes. 
+https://stackoverflow.com/questions/5120768/how-to-implement-the-factory-method-pattern-in-c-correctly
+
 User should define their own ID system (e.g. enums) for scenes.
 On initialization of the application, the scenes should be registered to the SceneManager.
 
@@ -17,6 +20,7 @@ HOW TO USE:
 #include <unordered_map>
 
 namespace CMP316engine {
+	/// FORWARD DECLARATIONS
 	class Scene;
 	struct EngineContext;
 
@@ -24,8 +28,8 @@ namespace CMP316engine {
 		: public Manager
 	{
 	private:
-		std::unordered_map<int, std::unique_ptr<Scene>> scenes;
-		Scene* activeScene = nullptr;
+		std::unordered_map<int, std::function<std::unique_ptr<Scene>(EngineContext&)>> scenes;
+		std::unique_ptr<Scene> activeScene = nullptr;
 		bool changeScene = true;
 		int idOfSceneToChangeTo = -1;
 
@@ -37,9 +41,13 @@ namespace CMP316engine {
 		void Shutdown();
 		void Update(EngineContext& engineContext);
 
-		void RegisterScene(int id, std::unique_ptr<Scene> scene);
+		template <typename SceneType>
+		void RegisterScene(int id)
+		{
+			scenes[id] = [&](EngineContext& engineContext) { return std::make_unique<SceneType>(engineContext); };
+		}
 		void RequestSceneChange(int sceneToChangeTo);
 
-		Scene* GetActiveScene() { return activeScene; }
+		Scene* GetActiveScene() { return activeScene.get(); }
 	};
 }

@@ -14,8 +14,8 @@ bool Game::Initialize()
 	/// REGISTER GAME SCENES
 
 	engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR); // Sets starting scene
-	engineContext.sceneManager->RegisterScene(LEVEL_EDITOR, std::make_unique<CMP316engine::LevelEditorScene>(engineContext));
-	engineContext.sceneManager->RegisterScene(TEST_SCENE, std::make_unique<TestScene>(engineContext));
+	engineContext.sceneManager->RegisterScene<CMP316engine::LevelEditorScene>(LEVEL_EDITOR);
+	engineContext.sceneManager->RegisterScene<TestScene>(TEST_SCENE);
 
 	return true;
 }
