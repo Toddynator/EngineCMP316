@@ -19,6 +19,7 @@ CMP316engine::EngineLayer::EngineLayer()
 	ec.audioManager = std::make_unique<AudioManager_SoLoud>();
 	ec.windowManager = std::make_unique<WindowManager_SDL>();
 	ec.physicsManager = std::make_unique<PhysicsManager>();
+	ec.sceneManager = std::make_unique<SceneManager>();
 }
 
 bool CMP316engine::EngineLayer::Initialize()
@@ -30,6 +31,7 @@ bool CMP316engine::EngineLayer::Initialize()
 	HWND hwnd = ec.windowManager->GetHWND();
 	if (!createRenderer(hwnd)) { return false; }
 	if (!ec.physicsManager->Initialize()) { return false; }
+	if (!ec.sceneManager->Initialize()) { return false; }
 	if (!application->Initialize()) { return false; } // Should probably do this last, incase I do any testing with the managers on initialization.
 
 	/////////////
@@ -100,6 +102,7 @@ void CMP316engine::EngineLayer::Shutdown()
 	if (engineContext.windowManager) { engineContext.windowManager->Shutdown(); }
 	if (engineContext.audioManager) { engineContext.audioManager->Shutdown(); }
 	if (engineContext.inputManager) { engineContext.inputManager->Shutdown(); }
+	if (engineContext.sceneManager) { engineContext.sceneManager->Shutdown(); }
 }
 
 bool CMP316engine::EngineLayer::processEvents()
