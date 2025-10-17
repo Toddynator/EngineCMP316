@@ -27,7 +27,6 @@ namespace CMP316engine {
 
 	protected:
 		EngineContext& engineContext;
-		std::unique_ptr<Scene> activeScene = nullptr; // REPLACE WITH SCENE MANAGER, IT WILL STORE AN ACTIVE SCENE UNIQUE_PTR THAT APPLICATION CAN GET.
 	};
 
 	extern std::unique_ptr<Application> CreateApp(EngineContext& engineContext); // This is how the Game links to the Engine! The great divide between the engine and the game.

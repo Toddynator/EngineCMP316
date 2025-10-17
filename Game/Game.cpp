@@ -9,35 +9,41 @@ std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine:
 
 bool Game::Initialize()
 {
-	/*activeScene = std::make_unique<TestScene>(engineContext);*/
-	activeScene = std::make_unique<CMP316engine::LevelEditorScene>(engineContext);
-	activeScene->Initialize();
+	Application::Initialize();
+	
+	/// REGISTER GAME SCENES
+
+	engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR); // Sets starting scene
+	engineContext.sceneManager->RegisterScene(LEVEL_EDITOR, std::make_unique<CMP316engine::LevelEditorScene>(engineContext));
+	engineContext.sceneManager->RegisterScene(TEST_SCENE, std::make_unique<TestScene>(engineContext));
+
 	return true;
 }
 
 void Game::Shutdown()
 {
-	if (activeScene) { activeScene->Shutdown(); }
+	Application::Shutdown();
 }
 
 void Game::HandleInput(float deltaTime)
 {
 	Application::HandleInput(deltaTime);
-	activeScene->HandleInput(deltaTime);
 
-	/// TEMP
+	/// TEMP // TESTING SCENE MANAGER
 	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_ESCAPE))
 	{
-		activeScene->Shutdown();
-		activeScene = std::make_unique<CMP316engine::LevelEditorScene>(engineContext);
-		activeScene->Initialize();
+		engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR);
+	}
+	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_K))
+	{
+		engineContext.sceneManager->RequestSceneChange(TEST_SCENE);
 	}
 	/// TEMP
 }
 
 void Game::HandleImGui()
 {
-	activeScene->HandleImGui();
+	Application::HandleImGui();
 
 	ImGui::Begin("ApplicationControls");
 	ImGui::Text("FPS: %.2f", engineContext.timeManager->GetFPS());
@@ -50,10 +56,10 @@ void Game::HandleImGui()
 
 void Game::Update(float deltaTime)
 {
-	activeScene->Update(deltaTime);
+	Application::Update(deltaTime);
 }
 
 void Game::Render()
 {
-	activeScene->Render();
+	Application::Render();
 }

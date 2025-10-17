@@ -16,7 +16,6 @@ namespace CMP316engine {
 		{
 			system->Initialize();
 		}
-
 		auto& hierarchyComp = registry.get<HierarchyComponent>(sceneRoot);
 		hierarchyComp.name = "SCENE ROOT";
 

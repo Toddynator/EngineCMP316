@@ -1,6 +1,12 @@
 #pragma once
 #include "Core/Application.h"
 
+enum Levels
+{
+	LEVEL_EDITOR,
+	TEST_SCENE
+};
+
 class Game
 	: public CMP316engine::Application
 {

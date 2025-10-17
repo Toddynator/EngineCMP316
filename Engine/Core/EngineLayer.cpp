@@ -141,11 +141,6 @@ bool CMP316engine::EngineLayer::processEvents()
 
 void CMP316engine::EngineLayer::update()
 {
-	///// TIME
-
-	engineContext.timeManager->Update();
-	float deltaTime = engineContext.timeManager->getDeltaTime();
-
 	///// IMGUI  
 
 	ImGui_ImplDX11_NewFrame();
@@ -153,7 +148,12 @@ void CMP316engine::EngineLayer::update()
 	ImGui::NewFrame();
 	ImGui::DockSpaceOverViewport(0U, (const ImGuiViewport*)0, ImGuiDockNodeFlags_PassthruCentralNode); // DOCKING: Supports docking windows to the viewport, must be rendered before other ImGui Windows
 	ImGuizmo::BeginFrame(); // IMGUIZMO
-	//ImGui::ShowDemoWindow(); // IMGUI EXAMPLE WINDOW
+
+	///// MANAGERS PRE-APPLICATION UPDATE
+
+	engineContext.timeManager->Update();
+	float deltaTime = engineContext.timeManager->getDeltaTime();
+	engineContext.sceneManager->Update(engineContext);
 
 	///// APPLICATION
 
@@ -161,7 +161,7 @@ void CMP316engine::EngineLayer::update()
 	application->HandleImGui();
 	application->Update(deltaTime);
 
-	///// MANAGERS
+	///// MANAGERS POST-APPLICATION UPDATE
 
 	engineContext.physicsManager->Update(deltaTime);
 	engineContext.inputManager->EndFrame();
