@@ -1,6 +1,7 @@
 /*
 SceneManager utilizes factory pattern to dynamically register and create scenes. 
 https://stackoverflow.com/questions/5120768/how-to-implement-the-factory-method-pattern-in-c-correctly
+https://hackernoon.com/desing-patterns-exploring-factory-method-in-modern-c-hi1h3uvw
 
 User should define their own ID system (e.g. enums) for scenes.
 On initialization of the application, the scenes should be registered to the SceneManager.
@@ -10,7 +11,7 @@ If a scene is registered, it is up to the application developer to add the level
 have set the id of the scene they want to start as (it will use the first scene found in the map otherwise).
 
 HOW TO USE:
-- On Initialization of the application, register scenes with an id system of your choice, as long as it maps to an integer.
+- On Initialization of the application, register scenes with an id system of your choice, as long as it maps to an integer (Recommend Enums).
 - Also on Initialization, it is recommended to call RequestSceneChange() so that you explicitly choose your starting scene.
 - If you have overidden the engines base definition of the update loops for the application, ensure you get the active scene from the manager and call the update loops.
 */

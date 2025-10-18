@@ -24,7 +24,7 @@ namespace CMP316engine {
 
 	private:
 		// If there is no active camera in the scene, it will return a default view matrix instead.
-		static DirectX::XMMATRIX CameraSystem::createDefaultViewMatrix();
+		static DirectX::XMMATRIX createDefaultViewMatrix();
 
 		void move_forward(TransformComponent& transforms, float deltaTime);
 		void move_backward(TransformComponent& transforms, float deltaTime);
