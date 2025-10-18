@@ -32,31 +32,87 @@ namespace CMP316engine {
 
 	void LevelEditorSystem::HandleInput(float deltaTime)
 	{
-		/// EDITOR SELECT
+		/// EDITOR SELECT RAYCAST
 
-		if (inputManager->IsMouseButtonPressed(SDL_BUTTON_LEFT))
+		// Will only cast if mouse is not over the UI.
+		ImGuiIO& io = ImGui::GetIO();
+		if (inputManager->IsMouseButtonPressed(SDL_BUTTON_LEFT) && !io.WantCaptureMouse)
 		{
 			// Based of: https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987
 
 			DirectX::XMFLOAT2 mousePosition = inputManager->GetMousePositionOnWindow();
 			//std::cout << "\nMousePos: " << mousePosition.x << ", " << mousePosition.y; ///DEBUG
 
-			/// Convert screen position to world position
+			/// GET WORLD POSITION BASED ON SCREEN POSITION
 
 			auto viewMatrix = CameraSystem::GetActiveCameraViewMatrix(registry);
 			auto viewport = renderer->GetViewport();
-			DirectX::XMFLOAT3 window = { mousePosition.x, viewport.Width - mousePosition.y, 0.f };
+			DirectX::XMFLOAT3 window = { mousePosition.x, mousePosition.y, 0.f };
 			DirectX::XMVECTOR pointVector = DirectX::XMVector3Unproject(DirectX::XMLoadFloat3(&window), viewport.TopLeftX, viewport.TopLeftY, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth, renderer->GetProjectionMatrix(), viewMatrix, XMMatrixIdentity());
 			DirectX::XMFLOAT3 point = {};
 			DirectX::XMStoreFloat3(&point, pointVector);
+
+			/// CREATE RAY
 
 			Ray ray;
 			ray.origin = point;
 			// Get direction of the ray based on camera's position
 			DirectX::XMFLOAT3 cameraPosition = CameraSystem::GetActiveCameraPosition(registry);
 			DirectX::XMStoreFloat3(&ray.direction, DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(pointVector, DirectX::XMLoadFloat3(&cameraPosition))));
-
 			std::cout << "\nRAYSTART\nRayOrigin: " << ray.origin.x << ", " << ray.origin.y << ", " << ray.origin.z << "\nDirection: " << ray.direction.x << ", " << ray.direction.y << ", " << ray.direction.z << "\nRAYEND"; /// DEBUG
+
+			/// CAST RAY AND CHECK ALL BOUNDING BOX ENTITIES FOR COLLISION
+
+			RayHit rayHit;
+			auto collidableEntities = registry->view<LevelEditorColliderComponent, TransformComponent>();
+			for (auto& entity : collidableEntities) {
+				auto [colliderComponent, transformComponent] = registry->get<LevelEditorColliderComponent, TransformComponent>(entity);
+
+				// Skip the camera
+				if (registry->try_get<LevelEditorCameraComponent>(entity)) { continue; }
+				// Skip unitialized colliders
+				if (colliderComponent.initialized == false) { continue; }
+
+				RayHit localRayHit;
+
+				/// CONVERT TO LOCAL SPACE
+				
+				XMMATRIX inverseWorld = XMMatrixInverse(nullptr, transformComponent.worldMatrix);
+				XMVECTOR localOrigin = XMVector3Transform(DirectX::XMLoadFloat3(&ray.origin), inverseWorld);
+				XMVECTOR localDirection = XMVector3TransformNormal(DirectX::XMLoadFloat3(&ray.direction), inverseWorld);
+				Ray localRay;
+				DirectX::XMStoreFloat3(&localRay.origin, localOrigin);
+				DirectX::XMStoreFloat3(&localRay.direction, localDirection);
+
+				/// CAST AND CHECK FOR COLLISION
+
+				XMVECTOR minVector = DirectX::XMVectorDivide(DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&colliderComponent.min), localOrigin), localDirection);
+				XMVECTOR maxVector = DirectX::XMVectorDivide(DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&colliderComponent.max), localOrigin), localDirection);
+
+				// Find the nearest and farthest intersections
+				XMFLOAT3 nearVector; 
+				DirectX::XMStoreFloat3(&nearVector, DirectX::XMVectorMin(minVector, maxVector));
+				XMFLOAT3 farVector; 
+				DirectX::XMStoreFloat3(&farVector, DirectX::XMVectorMax(minVector, maxVector));
+
+				// Find the maximum of the nearest intersections
+				float tNearMax = std::max(std::max(nearVector.x, nearVector.y), nearVector.z);
+				// Find the minimum of the farthest intersections
+				float tFarMin = std::min(std::min(farVector.x, farVector.y), farVector.z);
+
+				// Check if the ray intersects the bounding box
+				if (tNearMax <= tFarMin && localRayHit.distance > tNearMax)
+				{
+					localRayHit.distance = tNearMax;
+					localRayHit.hit = true;
+
+					if (localRayHit.distance < rayHit.distance)
+					{
+						rayHit = localRayHit;
+						selectedEntity = entity;
+					}
+				}
+			}
 		}
 
 		/// CHANGE IMGUIZMO MODE / OPERATION

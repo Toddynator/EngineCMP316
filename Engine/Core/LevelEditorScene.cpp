@@ -19,6 +19,7 @@ namespace CMP316engine
 		camHierarchyComponent->name = "Camera Entity 1";
 		auto* camTransformComponent = &registry.get<TransformComponent>(cameraEntity);
 		camTransformComponent->position = { 0.f,0.f,-5.0f };
+		auto* levelEditorCamComponent = &ECS::AddComponent<LevelEditorCameraComponent>(&registry, cameraEntity);
 
 
 		/// TEMP TEST

@@ -47,8 +47,11 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 						DirectX::XMStoreFloat3(&editorCollider->max, maxVector);
 					}
 				}
+
 				std::cout << "\nCollider Min: " << editorCollider->min.x << ", " << editorCollider->min.y << ", " << editorCollider->min.z << 
 					"\nCollider Max: " << editorCollider->max.x << ", " << editorCollider->max.y << ", " << editorCollider->max.z; // DEBUG
+
+				editorCollider->initialized = true;
 			}
 
 			/// CALCULATE BUFFERS FOR RENDERING
