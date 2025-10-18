@@ -62,7 +62,6 @@ namespace CMP316engine {
 				deletePrompt = true;
 			}
 		}	
-		
 
 		/// CHANGE IMGUIZMO MODE / OPERATION
 
@@ -527,6 +526,10 @@ namespace CMP316engine {
 					selectedEntity = entity;
 				}
 			}
+		}
+
+		if (rayHit.hit == false) {
+			selectedEntity = entt::null;
 		}
 	}
 
