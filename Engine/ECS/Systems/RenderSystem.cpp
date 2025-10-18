@@ -27,7 +27,34 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 	for (auto& entity : meshEntities) {
 		auto& meshComponent = registry->get<MeshComponent>(entity);
 
-		if (meshComponent.meshNeedsCalculated) { calculateBuffers(meshComponent); }
+		if (meshComponent.meshNeedsCalculated) 
+		{ 
+			/// CALCULATE EDITOR COLLIDER MESH
+			// TODO: Maybe this should be encapsulated in the LevelEditorSystem instead, but then unsure how to cleanly handle
+			// updating the collider when the mesh changes.
+
+			if (auto* editorCollider = registry->try_get<LevelEditorColliderComponent>(entity))
+			{
+				for (auto& mesh : meshComponent.meshes)
+				{
+					for (auto& vertex : mesh.vertices)
+					{
+						// Compare each vertex position to the existing min and max positions of the bounding box. Expand bounding box if vertex is outside of it.
+						DirectX::XMVECTOR vertexPositionVector = DirectX::XMVector3Length(DirectX::XMLoadFloat3(&vertex.position));
+						DirectX::XMVECTOR minVector = DirectX::XMVectorMin(DirectX::XMLoadFloat3(&editorCollider->min), vertexPositionVector);
+						DirectX::XMVECTOR maxVector = DirectX::XMVectorMax(DirectX::XMLoadFloat3(&editorCollider->max), vertexPositionVector);
+						DirectX::XMStoreFloat3(&editorCollider->min, minVector);
+						DirectX::XMStoreFloat3(&editorCollider->max, maxVector);
+					}
+				}
+				std::cout << "\nCollider Min: " << editorCollider->min.x << ", " << editorCollider->min.y << ", " << editorCollider->min.z << 
+					"\nCollider Max: " << editorCollider->max.x << ", " << editorCollider->max.y << ", " << editorCollider->max.z; // DEBUG
+			}
+
+			/// CALCULATE BUFFERS FOR RENDERING
+
+			calculateBuffers(meshComponent); 
+		}
 	}
 }
 

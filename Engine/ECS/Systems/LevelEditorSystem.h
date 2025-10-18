@@ -16,6 +16,7 @@ namespace CMP316engine {
 	private:
 		/// REQUIRED SERVICES
 		Renderer_DirectX11* renderer;
+		WindowManager* windowManager;
 
 		/// EDITOR
 		ImGuiFileDialog fileDialog;

@@ -7,7 +7,7 @@
 
 namespace CMP316engine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, EngineContext* engineContext, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
-		System(sceneRegistry, engineContext), sceneRoot(sceneRootEntity), renderer(sceneRenderer)
+		System(sceneRegistry, engineContext), sceneRoot(sceneRootEntity), renderer(sceneRenderer), windowManager(engineContext->windowManager.get())
 	{
 
 	}
@@ -32,6 +32,33 @@ namespace CMP316engine {
 
 	void LevelEditorSystem::HandleInput(float deltaTime)
 	{
+		/// EDITOR SELECT
+
+		if (inputManager->IsMouseButtonPressed(SDL_BUTTON_LEFT))
+		{
+			// Based of: https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987
+
+			DirectX::XMFLOAT2 mousePosition = inputManager->GetMousePositionOnWindow();
+			//std::cout << "\nMousePos: " << mousePosition.x << ", " << mousePosition.y; ///DEBUG
+
+			/// Convert screen position to world position
+
+			auto viewMatrix = CameraSystem::GetActiveCameraViewMatrix(registry);
+			auto viewport = renderer->GetViewport();
+			DirectX::XMFLOAT3 window = { mousePosition.x, viewport.Width - mousePosition.y, 0.f };
+			DirectX::XMVECTOR pointVector = DirectX::XMVector3Unproject(DirectX::XMLoadFloat3(&window), viewport.TopLeftX, viewport.TopLeftY, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth, renderer->GetProjectionMatrix(), viewMatrix, XMMatrixIdentity());
+			DirectX::XMFLOAT3 point = {};
+			DirectX::XMStoreFloat3(&point, pointVector);
+
+			Ray ray;
+			ray.origin = point;
+			// Get direction of the ray based on camera's position
+			DirectX::XMFLOAT3 cameraPosition = CameraSystem::GetActiveCameraPosition(registry);
+			DirectX::XMStoreFloat3(&ray.direction, DirectX::XMVector3Normalize(DirectX::XMVectorSubtract(pointVector, DirectX::XMLoadFloat3(&cameraPosition))));
+
+			std::cout << "\nRAYSTART\nRayOrigin: " << ray.origin.x << ", " << ray.origin.y << ", " << ray.origin.z << "\nDirection: " << ray.direction.x << ", " << ray.direction.y << ", " << ray.direction.z << "\nRAYEND"; /// DEBUG
+		}
+
 		/// CHANGE IMGUIZMO MODE / OPERATION
 
 		if (ImGui::IsKeyPressed(ImGuiKey_1)) { currentImGuizmoOperation = ImGuizmo::TRANSLATE; }

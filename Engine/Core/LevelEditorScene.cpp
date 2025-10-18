@@ -42,9 +42,4 @@ namespace CMP316engine
 
 		return true;
 	}
-
-	void LevelEditorScene::HandleImGui()
-	{
-		ECSScene::HandleImGui();
-	}
 }

@@ -172,6 +172,13 @@ bool CMP316engine::InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mous
 	return false;
 }
 
+DirectX::XMFLOAT2 CMP316engine::InputManager::GetMousePositionOnWindow()
+{ 
+	DirectX::XMFLOAT2 mousePosition;
+	SDL_GetMouseState(&mousePosition.x, &mousePosition.y); 
+	return mousePosition;
+}
+
 float CMP316engine::InputManager::GetMouseDeltaX()
 {
 	DirectX::XMFLOAT2 currentMousePosition;

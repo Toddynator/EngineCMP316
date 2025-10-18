@@ -89,6 +89,7 @@ namespace CMP316engine {
 		bool IsMouseButtonDown(SDL_MouseButtonFlags mouseButton) const;
 		bool IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton) const;
 
+		DirectX::XMFLOAT2 GetMousePositionOnWindow();
 		float GetMouseDeltaX();
 		float GetMouseDeltaY();
 

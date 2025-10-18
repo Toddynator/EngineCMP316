@@ -127,6 +127,18 @@ namespace CMP316engine {
 		return createDefaultViewMatrix(); // Return default matrix
 	}
 
+	DirectX::XMFLOAT3 CameraSystem::GetActiveCameraPosition(entt::registry* sceneRegistry)
+	{
+		auto cameraEntities = sceneRegistry->view<CameraComponent, TransformComponent>();
+		for (auto& entity : cameraEntities) {
+			auto [cameraComponent, transformComponent] = sceneRegistry->get<CameraComponent, TransformComponent>(entity);
+
+			if (cameraComponent.active) { 
+				return transformComponent.position; 
+			}
+		}
+	}
+
 	DirectX::XMMATRIX CameraSystem::createDefaultViewMatrix()
 	{
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f, 0.f, -5.0f);

@@ -147,6 +147,7 @@ namespace CMP316engine::ECS
 		entt::entity newEntity = registry->create();
 		auto& hierarchyComponent = AddComponent<HierarchyComponent>(registry, newEntity);
 		auto& transformComponent = AddComponent<TransformComponent>(registry, newEntity);
+		auto& editorColliderComponent = AddComponent<LevelEditorColliderComponent>(registry, newEntity);
 		return newEntity;
 	}
 

@@ -26,6 +26,5 @@ namespace CMP316engine
 	public:
 		LevelEditorScene(CMP316engine::EngineContext& context);
 		bool Initialize() override;
-		void HandleImGui() override;
 	};
 }

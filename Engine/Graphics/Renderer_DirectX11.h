@@ -33,6 +33,8 @@ public:
     XMMATRIX GetProjectionMatrix() const;
     XMMATRIX GetOrthoMatrix() const;
     void GetVideoCardInfo(char* cardName, int& memory) const;
+    D3D11_VIEWPORT GetViewport() { return viewport; }
+
 
     void SetBackBufferRenderTarget();
     void ResetViewport();
