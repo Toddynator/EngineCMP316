@@ -17,6 +17,7 @@ namespace CMP316engine {
 		/// REQUIRED SERVICES
 		Renderer_DirectX11* renderer;
 		WindowManager* windowManager;
+		AudioManager* audioManager;
 
 		/// EDITOR
 		ImGuiFileDialog fileDialog;

@@ -41,6 +41,8 @@ namespace CMP316engine
 		ECS::AddChild(&registry, ent21);
 		/// TEMP TEST
 
+		engineContext.audioManager->LoadAudio("ButtonPress1", "data/Audio/ButtonPress1.wav");
+
 		return true;
 	}
 }

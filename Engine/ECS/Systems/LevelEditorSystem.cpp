@@ -7,7 +7,7 @@
 
 namespace CMP316engine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, EngineContext* engineContext, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
-		System(sceneRegistry, engineContext), sceneRoot(sceneRootEntity), renderer(sceneRenderer), windowManager(engineContext->windowManager.get())
+		System(sceneRegistry, engineContext), sceneRoot(sceneRootEntity), renderer(sceneRenderer), windowManager(engineContext->windowManager.get()), audioManager(engineContext->audioManager.get())
 	{
 
 	}
@@ -530,6 +530,9 @@ namespace CMP316engine {
 
 		if (rayHit.hit == false) {
 			selectedEntity = entt::null;
+		}
+		else {
+			audioManager->Play("ButtonPress1");
 		}
 	}
 

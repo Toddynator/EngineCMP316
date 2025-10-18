@@ -22,5 +22,5 @@ public:
 	void Render() override;
 
 private:
-	bool wireframeEnabled;
+	bool wireframeEnabled = false;
 };
