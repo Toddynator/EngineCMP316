@@ -57,5 +57,7 @@ namespace CMP316engine {
 		void renderImGuizmoManipulateTool();
 		void renderImGuizmoStatusWindow();
 		void renderFileExplorer();
+
+		void raycastToSelectEntities();
 	};
 }

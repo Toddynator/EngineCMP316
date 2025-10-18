@@ -40,7 +40,7 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 					for (auto& vertex : mesh.vertices)
 					{
 						// Compare each vertex position to the existing min and max positions of the bounding box. Expand bounding box if vertex is outside of it.
-						DirectX::XMVECTOR vertexPositionVector = DirectX::XMVector3Length(DirectX::XMLoadFloat3(&vertex.position));
+						DirectX::XMVECTOR vertexPositionVector = DirectX::XMLoadFloat3(&vertex.position);
 						DirectX::XMVECTOR minVector = DirectX::XMVectorMin(DirectX::XMLoadFloat3(&editorCollider->min), vertexPositionVector);
 						DirectX::XMVECTOR maxVector = DirectX::XMVectorMax(DirectX::XMLoadFloat3(&editorCollider->max), vertexPositionVector);
 						DirectX::XMStoreFloat3(&editorCollider->min, minVector);
@@ -48,10 +48,8 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 					}
 				}
 
-				std::cout << "\nCollider Min: " << editorCollider->min.x << ", " << editorCollider->min.y << ", " << editorCollider->min.z << 
-					"\nCollider Max: " << editorCollider->max.x << ", " << editorCollider->max.y << ", " << editorCollider->max.z; // DEBUG
-
-				editorCollider->initialized = true;
+				//std::cout << "\nCollider Min: " << editorCollider->min.x << ", " << editorCollider->min.y << ", " << editorCollider->min.z << 
+				//	"\nCollider Max: " << editorCollider->max.x << ", " << editorCollider->max.y << ", " << editorCollider->max.z; // DEBUG
 			}
 
 			/// CALCULATE BUFFERS FOR RENDERING
