@@ -14,6 +14,7 @@ const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::default
 	{ "Move Right", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_D) }) },
 	{ "Roll Anti-Clockwise", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_Q) }) },
 	{ "Roll Clockwise", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_E) }) },
+	{ "Delete", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_DELETE) }) },
 
 	{ "Copy", KeyBinding({
 		KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_LCTRL),

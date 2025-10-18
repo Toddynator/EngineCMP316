@@ -53,11 +53,16 @@ namespace CMP316engine {
 			{
 				performCut();
 			}
+			if (inputManager->IsKeyBindingPressed("Paste") && canPaste())
+			{
+				performPaste();
+			}
+			if (inputManager->IsKeyBindingPressed("Delete") && selectedEntity != sceneRoot)
+			{
+				deletePrompt = true;
+			}
 		}	
-		if (inputManager->IsKeyBindingPressed("Paste") && canPaste())
-		{
-			performPaste();
-		}
+		
 
 		/// CHANGE IMGUIZMO MODE / OPERATION
 
@@ -551,13 +556,13 @@ namespace CMP316engine {
 	{
 		if (cutEntity != entt::null)
 		{
-			ECS::AddChild(registry, selectedEntity, cutEntity);
+			selectedEntity = ECS::AddChild(registry, selectedEntity, cutEntity);
 			cutEntity = entt::null;
 		}
 		else if (copiedEntity != entt::null)
 		{
-			//ECS::AddChild(registry, selectedObject, ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, copiedObject));
-			ECS::AddChild(registry, selectedEntity, ECS::CopyEntity(registry, copiedEntity));
+			//selectedEntity = ECS::AddChild(registry, selectedObject, ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, copiedObject));
+			selectedEntity = ECS::AddChild(registry, selectedEntity, ECS::CopyEntity(registry, copiedEntity));
 		}
 	}
 }
