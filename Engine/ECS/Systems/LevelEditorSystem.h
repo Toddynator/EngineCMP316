@@ -59,5 +59,12 @@ namespace CMP316engine {
 		void renderFileExplorer();
 
 		void raycastToSelectEntities();
+
+		/// CLIPBOARD HELPER FUNCTIONS
+		bool canCut() { return !(selectedEntity == sceneRoot); }
+		bool canPaste();
+		void performCopy();
+		void performCut();
+		void performPaste();
 	};
 }

@@ -5,15 +5,30 @@
 
 const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::defaultKeybinds
 {
-	{ "fullscreen", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_F11 }},
-	{ "Move Forward", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_W }},
-	{ "Move Backward", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_S }},
-	{ "Move Up", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_SPACE }},
-	{ "Move Down", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_LCTRL }},
-	{ "Move Left", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_A }},
-	{ "Move Right", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_D }},
-	{ "Roll Anti-Clockwise", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_Q }},
-	{ "Roll Clockwise", { KeyBinding::KEYBOARD, SDL_Scancode::SDL_SCANCODE_E }}
+	{ "fullscreen", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, static_cast<int>(SDL_SCANCODE_F11)) }) },
+	{ "Move Forward", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_W) }) },
+	{ "Move Backward", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_S) }) },
+	{ "Move Up", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_SPACE) }) },
+	{ "Move Down", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_LCTRL) }) },
+	{ "Move Left", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_A) }) },
+	{ "Move Right", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_D) }) },
+	{ "Roll Anti-Clockwise", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_Q) }) },
+	{ "Roll Clockwise", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_E) }) },
+
+	{ "Copy", KeyBinding({
+		KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_LCTRL),
+		KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_C)
+	}) },
+
+	{ "Cut", KeyBinding({
+		KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_LCTRL),
+		KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_X)
+	}) },
+
+	{ "Paste", KeyBinding({
+		KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_LCTRL),
+		KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_V)
+	}) }
 };
 
 
@@ -82,22 +97,22 @@ bool CMP316engine::InputManager::IsKeyBindingPressed(std::string action)
 {
 	KeyBinding keyBind;
 	if (!getKeyBinding(action, keyBind)) { return false; }
-	return checkKeyBinding(keyBind.key1, keyBind.keyType1, PRESSED)
-		|| checkKeyBinding(keyBind.key2, keyBind.keyType2, PRESSED);
+	return checkKeyBinding(keyBind.keyCombo1, PRESSED)
+		|| checkKeyBinding(keyBind.keyCombo2, PRESSED);
 }
 bool CMP316engine::InputManager::IsKeyBindingDown(std::string action)
 {
 	KeyBinding keyBind;
 	if (!getKeyBinding(action, keyBind)) { return false; }
-	return checkKeyBinding(keyBind.key1, keyBind.keyType1, DOWN)
-		|| checkKeyBinding(keyBind.key2, keyBind.keyType2, DOWN);
+	return checkKeyBinding(keyBind.keyCombo1, DOWN)
+		|| checkKeyBinding(keyBind.keyCombo2, DOWN);
 }
 bool CMP316engine::InputManager::IsKeyBindingReleased(std::string action)
 {
 	KeyBinding keyBind;
 	if (!getKeyBinding(action, keyBind)) { return false; }
-	return checkKeyBinding(keyBind.key1, keyBind.keyType1, RELEASED)
-		|| checkKeyBinding(keyBind.key2, keyBind.keyType2, RELEASED);
+	return checkKeyBinding(keyBind.keyCombo1, RELEASED)
+		|| checkKeyBinding(keyBind.keyCombo2, RELEASED);
 }
 bool CMP316engine::InputManager::getKeyBinding(std::string action, KeyBinding& keyBind)
 {
@@ -109,28 +124,45 @@ bool CMP316engine::InputManager::getKeyBinding(std::string action, KeyBinding& k
 	keyBind = it->second;
 	return true;
 }
-bool CMP316engine::InputManager::checkKeyBinding(int key, KeyBinding::KeyType keyType, CheckType checkType) const {
-	if (keyType == KeyBinding::KEYBOARD)
+bool CMP316engine::InputManager::checkKeyBinding(std::vector<KeyBindingKey> keyBindingCombo, CheckType checkType) const {
+	/*
+	In order to handle multi-key-combos, as users will realistically never be able to press both keys at the exact same frame, only the last key in the combo needs
+	to obey the checkType.
+	Every key before the last in the combo is treated as HELD.
+	*/
+
+	if (keyBindingCombo.empty()) { return false; }
+	CheckType currentCheckType;
+	int keyNum = 0;
+	for (auto& keyBindingKey : keyBindingCombo)
 	{
-		auto scancodeKey = static_cast<SDL_Scancode>(key);
-		switch (checkType)
+		if (keyNum < keyBindingCombo.size() - 1) { currentCheckType = CheckType::DOWN; }
+		else { currentCheckType = checkType; }
+
+		if (keyBindingKey.keyType == KeyBindingKey::KEYBOARD)
 		{
-		case PRESSED: return IsKeyPressed(scancodeKey);
-		case DOWN: return IsKeyDown(scancodeKey);
-		case RELEASED: return IsKeyReleased(scancodeKey);
+			auto scancodeKey = static_cast<SDL_Scancode>(keyBindingKey.key);
+			switch (currentCheckType)
+			{
+			case PRESSED: if (!IsKeyPressed(scancodeKey)) { return false; }; break;
+			case DOWN: if (!IsKeyDown(scancodeKey)) { return false; };  break;
+			case RELEASED: if (!IsKeyReleased(scancodeKey)) { return false; };  break;
+			}
 		}
-	}
-	else if (keyType == KeyBinding::MOUSE)
-	{
-		auto mouseKey = static_cast<SDL_MouseButtonFlags>(key);
-		switch (checkType)
+		else if (keyBindingKey.keyType == KeyBindingKey::MOUSE)
 		{
-		case PRESSED: return IsMouseButtonPressed(mouseKey);
-		case DOWN: return IsMouseButtonDown(mouseKey);
-		case RELEASED: return IsMouseButtonReleased(mouseKey);
+			auto mouseKey = static_cast<SDL_MouseButtonFlags>(keyBindingKey.key);
+			switch (currentCheckType)
+			{
+			case PRESSED: if (!IsMouseButtonPressed(mouseKey)) { return false; };  break;
+			case DOWN: if (!IsMouseButtonDown(mouseKey)) { return false; };  break;
+			case RELEASED: if (!IsMouseButtonReleased(mouseKey)) { return false; };  break;
+			}
 		}
+
+		keyNum++;
 	}
-	return false;
+	return true;
 }
 
 

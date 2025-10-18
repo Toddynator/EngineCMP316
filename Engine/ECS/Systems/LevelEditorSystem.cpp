@@ -41,6 +41,24 @@ namespace CMP316engine {
 			raycastToSelectEntities();
 		}
 
+		/// EDITOR CLIPBOARD
+
+		if (selectedEntity != entt::null)
+		{
+			if (inputManager->IsKeyBindingPressed("Copy"))
+			{
+				performCopy();
+			}
+			if (inputManager->IsKeyBindingPressed("Cut") && canCut())
+			{
+				performCut();
+			}
+		}	
+		if (inputManager->IsKeyBindingPressed("Paste") && canPaste())
+		{
+			performPaste();
+		}
+
 		/// CHANGE IMGUIZMO MODE / OPERATION
 
 		if (ImGui::IsKeyPressed(ImGuiKey_1)) { currentImGuizmoOperation = ImGuizmo::TRANSLATE; }
@@ -214,39 +232,23 @@ namespace CMP316engine {
 		if (selectedEntity == entt::null) { noSelectedObject = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Copy"))
 		{
-			cutEntity = entt::null;
-			copiedEntity = selectedEntity; // The actual copy will be created on pasting, unfortunately can't keep the copy if object is deleted.
-
-			//// TEMP
-			//clipboardRegistry.clear();
-			//copiedObject = ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, selectedObject);
-			//// TEMP
+			performCopy();
 		}
 		ImGui::SameLine();
 		bool sceneRootSelected = false;
-		if (selectedEntity == sceneRoot) { sceneRootSelected = true; ImGui::BeginDisabled(); }
+		if (!canCut()) { sceneRootSelected = true; ImGui::BeginDisabled(); }
 		if (ImGui::Button("Cut"))
 		{
-			copiedEntity = entt::null;
-			cutEntity = selectedEntity;
+			performCut();
 		}
 		if (sceneRootSelected) { ImGui::EndDisabled(); }
 		ImGui::SameLine();
 		bool noObjectToPaste = false;
 		// ENSURE that the user doesn't paste the cut object onto itself or its own parent.
-		if ((cutEntity == entt::null && copiedEntity == entt::null) || (selectedEntity == cutEntity) || ECS::IsDescendant(registry, cutEntity, selectedEntity)) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
+		if (!canPaste()) { noObjectToPaste = true;  ImGui::BeginDisabled(); }
 		if (ImGui::Button("Paste"))
 		{
-			if (cutEntity != entt::null)
-			{
-				ECS::AddChild(registry, selectedEntity, cutEntity);
-				cutEntity = entt::null;
-			}
-			else if (copiedEntity != entt::null)
-			{
-				//ECS::AddChild(registry, selectedObject, ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, copiedObject));
-				ECS::AddChild(registry, selectedEntity, ECS::CopyEntity(registry, copiedEntity));
-			}
+			performPaste();
 		}
 		if (noObjectToPaste) { ImGui::EndDisabled(); }
 		ImGui::SameLine();
@@ -436,7 +438,13 @@ namespace CMP316engine {
 	}
 	void LevelEditorSystem::raycastToSelectEntities()
 	{
-		// Based of: https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987
+		/*
+		Based of : https://medium.com/@logandvllrd/how-to-pick-a-3d-object-using-raycasting-in-c-39112aed1987
+
+		TODO:
+		I REALLY need to clean up the math here. I was fumbling around with DirectX math just trying to get it to work. Currently a lot of inefficiencies,
+		like barely even using the Ray struct.
+		*/
 
 		DirectX::XMFLOAT2 mousePosition = inputManager->GetMousePositionOnWindow();
 		//std::cout << "\nMousePos: " << mousePosition.x << ", " << mousePosition.y; ///DEBUG
@@ -514,6 +522,42 @@ namespace CMP316engine {
 					selectedEntity = entity;
 				}
 			}
+		}
+	}
+
+	bool LevelEditorSystem::canPaste() 
+	{ 
+		return !((cutEntity == entt::null && 
+			copiedEntity == entt::null) || 
+			(selectedEntity == cutEntity) || 
+			ECS::IsDescendant(registry, cutEntity, selectedEntity)); 
+	}
+	void LevelEditorSystem::performCopy()
+	{
+		cutEntity = entt::null;
+		copiedEntity = selectedEntity; // The actual copy will be created on pasting, unfortunately can't keep the copy if object is deleted.
+
+		//// TEMP
+		//clipboardRegistry.clear();
+		//copiedObject = ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, selectedObject);
+		//// TEMP
+	}
+	void LevelEditorSystem::performCut()
+	{
+		copiedEntity = entt::null;
+		cutEntity = selectedEntity;
+	}
+	void LevelEditorSystem::performPaste()
+	{
+		if (cutEntity != entt::null)
+		{
+			ECS::AddChild(registry, selectedEntity, cutEntity);
+			cutEntity = entt::null;
+		}
+		else if (copiedEntity != entt::null)
+		{
+			//ECS::AddChild(registry, selectedObject, ECS::CopyEntityBetweenRegistries(registry, &clipboardRegistry, copiedObject));
+			ECS::AddChild(registry, selectedEntity, ECS::CopyEntity(registry, copiedEntity));
 		}
 	}
 }

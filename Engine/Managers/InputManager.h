@@ -27,10 +27,7 @@ This also allows for better support on other platforms, of which I can then have
 #include <DirectXMath.h>
 
 namespace CMP316engine {
-	/*
-	Supports multiple keys for one key bind / action
-	*/
-	struct KeyBinding
+	struct KeyBindingKey
 	{
 		enum KeyType
 		{
@@ -39,12 +36,23 @@ namespace CMP316engine {
 			MOUSE
 		};
 
-		int key1 = 0;
-		int key2 = 0;
-		KeyType keyType1 = NONE;
-		KeyType keyType2 = NONE;
+		int key = 0;
+		KeyType keyType = KeyType::NONE;
 
-		KeyBinding(KeyType newKeyType1, int newKey1, KeyType newKeyType2 = NONE, int newKey2 = 0) : keyType1(newKeyType1), key1(newKey1), keyType2(newKeyType2), key2(newKey2) {}
+		KeyBindingKey(KeyType newType, int newKey) : keyType(newType), key(newKey) {}
+	};
+
+	/*
+	Supports multiple keys for one key bind / action,
+	and each keybindg key can support multiple keys for the binding, e.g. Ctrl + C for copying, with for example a second key being 'k + left mouse + l' (any combination of keys).
+	*/
+	struct KeyBinding
+	{
+		std::vector<KeyBindingKey> keyCombo1;
+		std::vector<KeyBindingKey> keyCombo2;
+
+		// Second keyCombo is optional
+		KeyBinding(std::vector<KeyBindingKey> newKeyCombo1, std::vector<KeyBindingKey> newKeyCombo2 = {}) : keyCombo1(newKeyCombo1), keyCombo2(newKeyCombo2) {}
 		KeyBinding() = default;
 	};
 
@@ -107,7 +115,7 @@ namespace CMP316engine {
 		};
 		bool getKeyBinding(std::string action, KeyBinding& keyBind);
 		// Checks if keyBinding key is pressed. Encapsulates choosing the correct function based on the keys type.
-		bool checkKeyBinding(int key, KeyBinding::KeyType keyType, CheckType checkType) const;
+		bool checkKeyBinding(std::vector<KeyBindingKey> keyBindingCombo, CheckType checkType) const;
 	};
 }
 
