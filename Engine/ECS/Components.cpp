@@ -64,7 +64,6 @@ namespace CMP316engine
 			.data<&TransformComponent::position, entt::as_ref_t>("position"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "position" } })
 			.traits(Traits::EDITOR)
-			.traits(Traits::SERIALIZE)
 			.data<&TransformComponent::rotation, entt::as_ref_t>("rotation"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ 
 				{ "name"_hs, "rotation" }, 
@@ -150,6 +149,15 @@ namespace CMP316engine
 			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<RigidBodyComponent>)>("HasComponent"_hs)
 			.func<static_cast<RigidBodyComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<RigidBodyComponent>),
 			entt::as_ref_t>("AddComponent"_hs)
+			;
+
+		entt::meta<LevelEditorColliderComponent>()
+			.traits(Traits::COMPONENT)
+			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<LevelEditorColliderComponent>)>("HasComponent"_hs)
+			.func<static_cast<LevelEditorColliderComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<LevelEditorColliderComponent>),
+			entt::as_ref_t>("AddComponent"_hs)
+			.data<&LevelEditorColliderComponent::min, entt::as_ref_t>("min"_hs)
+			.data<&LevelEditorColliderComponent::max, entt::as_ref_t>("max"_hs)
 			;
 	}
 }

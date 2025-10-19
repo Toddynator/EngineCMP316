@@ -79,7 +79,7 @@ namespace CMP316engine {
 		for (auto&& [id, storage] : registry.storage()) {
 			++storageCount;
 		}
-		archive(storageCount - 1); //Subtract 1 as entity storage handled outside main loop
+		archive(storageCount); //Subtract 1 as entity storage handled outside main loop
 
 		// Loop through all storages
 		for (auto&& [id, storage] : registry.storage())
@@ -98,6 +98,8 @@ namespace CMP316engine {
 				// Try to resolve the component in order to serialize it.
 				if (auto metaType = entt::resolve(id))
 				{
+					std::cout << "\nSerialized Component Name: " << metaType.info().name(); /// DEBUG
+
 					auto componentInstance = metaType.from_void(storage.value(entity)); // Instance of the reflected object
 					auto componentCustom = metaType.custom(); // The custom data of the reflected object
 
@@ -187,6 +189,8 @@ namespace CMP316engine {
 				// Try to resolve the component in order to deserialize it.
 				if (auto metaType = entt::resolve(storageID))
 				{
+					std::cout << "\nDeserialized Component Name: " << metaType.info().name(); /// DEBUG
+
 					auto addFunc = metaType.func("AddComponent"_hs);
 					if (!addFunc)
 					{
@@ -197,9 +201,8 @@ namespace CMP316engine {
 					{
 						std::cout << "\nAddComponent Invoke call did not match reflected function signature";
 					}
-
-					// Create a new instance of the reflected object
-					//auto componentInstance = metaType.construct();
+		
+					//auto componentInstance = metaType.construct(); // Create a new instance of the reflected object
 					auto componentCustom = metaType.custom(); // The custom data of the reflected object
 
 					// Check if I have serialize handling for this specific component type first
@@ -237,4 +240,21 @@ namespace CMP316engine {
 
 		registry = std::move(newRegistry);
 	}
+
+	void ECSScene::Load()
+	{
+		Scene::Load();
+
+		/// prep mesh components so that they get reinitialized.
+		// NOTE TO SELF:
+		// This can be replaced if I mark initialize bools as not to be serialized, so that the evaluate to their default state!
+		auto meshEntities = registry.view<MeshComponent>();
+		for (auto& entity : meshEntities) 
+		{
+			auto& meshComponent = registry.get<MeshComponent>(entity);
+
+			meshComponent.meshNeedsCalculated = true;
+		}
+	}
 }
+

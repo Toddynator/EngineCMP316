@@ -25,8 +25,9 @@ namespace CMP316engine {
 		void Update(float deltaTime) override;
 		void Render() override;
 
-		void Serialize(std::ofstream& file, BinarySerializeArchive& serializeArchive);
-		void Deserialize(std::ifstream& file, BinaryDeserializeArchive& deserializeArchive);
+		void Serialize(std::ofstream& file, BinarySerializeArchive& serializeArchive) override;
+		void Deserialize(std::ifstream& file, BinaryDeserializeArchive& deserializeArchive) override;
+		void Load() override;
 
 	protected:
 		entt::registry registry;

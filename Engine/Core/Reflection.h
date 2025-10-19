@@ -16,7 +16,7 @@ namespace CMP316engine
 	enum Traits : uint16_t
 	{
 		EDITOR = 1 << 0, // Reflected member variables that should have an editor control
-		SERIALIZE = 1 << 1, // Reflected member variables that should be serialized
+		NOT_SERIALIZED = 1 << 1, // Reflected member variables that should not be serialized, and should evaluate to default values on loading (initialize bools for example).
 		COMPONENT = 1 << 2 // Add to components so that components can be identified from other reflected data, can be useful for Component specific UI's
 	};
 	using PropertiesMap = std::unordered_map<entt::id_type, entt::meta_any>;
