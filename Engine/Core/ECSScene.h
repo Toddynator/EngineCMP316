@@ -25,6 +25,9 @@ namespace CMP316engine {
 		void Update(float deltaTime) override;
 		void Render() override;
 
+		void Serialize(std::ofstream& file, BinarySerializeArchive& serializeArchive);
+		void Deserialize(std::ifstream& file, BinaryDeserializeArchive& deserializeArchive);
+
 	protected:
 		entt::registry registry;
 		entt::entity sceneRoot; // All scenes have a single root object, it has children which as a result forms the hierarchy / scene graph.

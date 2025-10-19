@@ -6,6 +6,8 @@
 #include "entt.hpp"
 #include <unordered_map>
 #include <DirectXMath.h>
+#include "../Utility/BinarySerializeArchive.h"
+#include "../Utility/BinaryDeserializeArchive.h"
 
 using namespace entt::literals;
 
@@ -33,11 +35,44 @@ namespace CMP316engine
 	};
 	inline static FunctionReflector reflectorFunctions;
 
-	void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max);
+	/// EDITOR UI
 
+	void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max);
 	bool DrawEditorFloat(float& f, const PropertiesMap& properties);
 	bool DrawEditorFloat3(DirectX::XMFLOAT3& f, const PropertiesMap& properties);
 	bool DrawEditorString(std::string& f, const PropertiesMap& properties);
 	bool DrawEditorInt(int& f, const PropertiesMap& properties);
 	bool DrawEditorBool(bool& f, const PropertiesMap& properties);
+
+	/// SERIALIZATION
+
+	template<typename Type>
+	void SerializeAny(Type& data, const PropertiesMap& properties, BinarySerializeArchive& archive)
+	{
+		/// TODO: File Version, could pass file version that is being save into function param.
+		/// Will be used for backward compatability.
+		/*int version = -1;
+		if (auto it = properties.find("version"_hs); it != properties.end())
+		{
+			version = *it->second.try_cast<const char*>();
+		}*/
+
+		archive(data);
+	}
+	template<typename Type>
+	void DeserializeAny(Type& data, const PropertiesMap& properties, BinaryDeserializeArchive& archive)
+	{
+		archive(data);
+	}
+
+	//void SerializeFloat((float& data, const PropertiesMap& properties);
+	//void SerializeInt();
+	//void SerializeFloat3();
+	//void SerializeString();
+	//void SerializeBool();
+	//template<typename Type>
+	//void SerializeVector(std::vector<Type>& data, const PropertiesMap& properties);
+	//void SerializeMap();
+	//void SerializeUnorderedMap();
+	/// NOTE: I have to create a meta function for each type of vector I want to serialize... unfortunately.
 }

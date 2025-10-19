@@ -5,13 +5,27 @@ namespace CMP316engine
 {
 	void InitializeReflectionFunctions()
 	{
-		/// THE FUNCTIONS
+		/// EDITOR UI
 
 		entt::meta<float>().func<&DrawEditorFloat>("DrawEditor"_hs);
 		entt::meta<DirectX::XMFLOAT3>().func<&DrawEditorFloat3>("DrawEditor"_hs);
 		entt::meta<std::string>().func<&DrawEditorString>("DrawEditor"_hs);
 		entt::meta<int>().func<&DrawEditorInt>("DrawEditor"_hs);
 		entt::meta<bool>().func<&DrawEditorBool>("DrawEditor"_hs);
+
+		/// SERIALIZE & DESERIALIZE
+
+		entt::meta<float>().func<&SerializeAny<float>>("Serialize"_hs);
+		entt::meta<DirectX::XMFLOAT3>().func<&SerializeAny<DirectX::XMFLOAT3>>("Serialize"_hs);
+		entt::meta<std::string>().func<&SerializeAny<std::string>>("Serialize"_hs);
+		entt::meta<int>().func<&SerializeAny<int>>("Serialize"_hs);
+		entt::meta<bool>().func<&SerializeAny<bool>>("Serialize"_hs);
+
+		entt::meta<float>().func<&DeserializeAny<float>>("Deserialize"_hs);
+		entt::meta<DirectX::XMFLOAT3>().func<&DeserializeAny<DirectX::XMFLOAT3>>("Deserialize"_hs);
+		entt::meta<std::string>().func<&DeserializeAny<std::string>>("Deserialize"_hs);
+		entt::meta<int>().func<&DeserializeAny<int>>("Deserialize"_hs);
+		entt::meta<bool>().func<&DeserializeAny<bool>>("Deserialize"_hs);
 	}
 
 	void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max)

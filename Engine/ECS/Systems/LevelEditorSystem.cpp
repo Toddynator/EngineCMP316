@@ -140,7 +140,10 @@ namespace CMP316engine {
 			return;
 		}
 
+		/// COMPONENT CONTROLS
+
 		// Iterate over all components in the registry.
+		// https://gist.github.com/JuanDiegoMontoya/f6002350a9f5e64c962ee52d7e879922
 		int i = 0;
 		for (auto&& [id, storage] : registry->storage())
 		{
@@ -170,6 +173,8 @@ namespace CMP316engine {
 			i++;
 		}
 		
+		/// ADD COMPONENT BUTTON
+
 		ImGui::SeparatorText("");
 		if (ImGui::BeginCombo("##AddComponentCombo", "Add Component"))
 		{
@@ -215,7 +220,6 @@ namespace CMP316engine {
 
 			ImGui::EndCombo();
 		}
-
 
 		/// PROMPTS
 

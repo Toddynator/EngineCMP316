@@ -45,4 +45,20 @@ namespace CMP316engine
 
 		return true;
 	}
+
+	void  LevelEditorScene::HandleImGui()
+	{
+		ECSScene::HandleImGui();
+
+		ImGui::Begin("Save & Load");
+		if (ImGui::Button("Save"))
+		{
+			Save();
+		}
+		if (ImGui::Button("Load"))
+		{
+			Load();
+		}
+		ImGui::End();
+	}
 }

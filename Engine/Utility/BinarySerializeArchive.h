@@ -36,8 +36,8 @@ public:
 			stream.write(reinterpret_cast<const char*>(&data), sizeof(data));
 		}
 		else {
-			//std::cout << "\nNo Suitable Operator Found for Serialization"; //// DEBUG
-			assert(false && "No Suitable Operator Found for Deserialization");
+			std::cout << "\nNo Suitable Operator Found for Serialization"; // DEBUG
+			//assert(false && "No Suitable Operator Found for Deserialization");
 		}
 	}
 
