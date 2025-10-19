@@ -66,13 +66,6 @@ namespace CMP316engine {
 	{
 		Scene::Serialize(file, archive);
 
-		// Serialize the total number of storages FIRST so that deserialize knows how many to loop through
-		std::size_t storageCount = 0;
-		for (auto&& [id, storage] : registry.storage()) {
-			++storageCount;
-		}
-		archive(storageCount-1); //Subtract 1 as entity storage handled outside main loop
-
 		// Serialize entity storage
 		auto& entityStorage = registry.storage<entt::entity>();
 		archive(entityStorage.size());
@@ -80,6 +73,13 @@ namespace CMP316engine {
 		for (auto first = entityStorage.data(), last = first + entityStorage.size(); first != last; ++first) {
 			archive(*first);
 		}
+
+		// Serialize the total number of storages so that deserialize knows how many to loop through
+		std::size_t storageCount = 0;
+		for (auto&& [id, storage] : registry.storage()) {
+			++storageCount;
+		}
+		archive(storageCount - 1); //Subtract 1 as entity storage handled outside main loop
 
 		// Loop through all storages
 		for (auto&& [id, storage] : registry.storage())
@@ -136,13 +136,105 @@ namespace CMP316engine {
 	}
 	void ECSScene::Deserialize(std::ifstream& file, BinaryDeserializeArchive& archive)
 	{
+		/*
+		TODO:
+		Notably, registry.emplace seems to only create a new entity if one doesn't already exist, I believe that is was entt::snapshot_loader does.
+		*/
+
 		Scene::Deserialize(file, archive);
 
 		entt::registry newRegistry;
 
-		/// TODO
-		// Notably, registry.emplace seems to only create a new entity if one doesn't already exist, I believe that is was entt::snapshot_loader does.
+		/// DESERIALIZE ENTITY STORAGE FIRST
 
-		//registry = std::move(newRegistry);
+		{
+			size_t sizeEntityStorage;
+			archive(sizeEntityStorage);
+			size_t sizeEntityFreeList;
+			archive(sizeEntityFreeList);
+
+			// Create storage to store entities in
+			auto& entityStorage = newRegistry.storage<entt::entity>();
+			entityStorage.reserve(sizeEntityStorage);
+
+			for (int i = 0; i < sizeEntityStorage; i++)
+			{
+				entt::entity entity;
+				archive(entity);
+				entityStorage.emplace(entity);
+			}
+			entityStorage.free_list(sizeEntityFreeList);
+		}
+		
+		/// DESERIALIZE COMPONENTS
+		
+		size_t totalNumStorages;
+		archive(totalNumStorages);
+
+		// Deserialize Components
+		for (int i = 0; i < totalNumStorages; i++)
+		{
+			entt::id_type storageID;
+			archive(storageID);
+			size_t sizeOfStorage;
+			archive(sizeOfStorage);
+
+			for (int entityNum = 0; entityNum < sizeOfStorage; entityNum++)
+			{
+				entt::entity entity;
+				archive(entity);
+
+				// Try to resolve the component in order to deserialize it.
+				if (auto metaType = entt::resolve(storageID))
+				{
+					auto addFunc = metaType.func("AddComponent"_hs);
+					if (!addFunc)
+					{
+						std::cout << "\nComponent hasn't got an 'AddComponent' function defined in the reflection system!";
+					}
+					auto componentInstance = addFunc.invoke({}, entt::forward_as_meta(newRegistry), entity);
+					if (!componentInstance)
+					{
+						std::cout << "\nAddComponent Invoke call did not match reflected function signature";
+					}
+
+					// Create a new instance of the reflected object
+					//auto componentInstance = metaType.construct();
+					auto componentCustom = metaType.custom(); // The custom data of the reflected object
+
+					// Check if I have serialize handling for this specific component type first
+					if (auto func = metaType.func("Deserialize"_hs))
+					{
+						PropertiesMap map = {};
+						if (auto* mp = static_cast<const PropertiesMap*>(componentCustom))
+						{
+							map = *mp;
+						}
+						func.invoke(componentInstance, map, archive);
+					}
+					else
+					{
+						// Loop through member variable types (TODO: Make this recursive, currently only one level deep!)
+						for (auto [id2, data] : metaType.data())
+						{
+							auto memberVariableInstance = data.get(componentInstance);
+							auto memberVariableCustom = data.custom();
+							auto memberVariableType = memberVariableInstance.type(); // Get the reflected type
+							if (auto func = memberVariableType.func("Deserialize"_hs))
+							{
+								PropertiesMap map = {};
+								if (auto* mp = static_cast<const PropertiesMap*>(memberVariableCustom))
+								{
+									map = *mp;
+								}
+								func.invoke(memberVariableInstance, map, archive);
+							}
+						}
+					}		
+				}
+			}
+		}
+
+		registry = std::move(newRegistry);
 	}
 }
