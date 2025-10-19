@@ -14,6 +14,8 @@ However I could use a setter and have a sceneManager handle this in the future.
 
 #pragma once
 #include "EngineContext.h"
+#include "../Utility/BinarySerializeArchive.h"
+#include "../Utility/BinaryDeserializeArchive.h"
 
 namespace CMP316engine {
 	class Scene
@@ -31,8 +33,22 @@ namespace CMP316engine {
 		virtual void Update(float deltaTime) = 0;
 		virtual void Render() = 0;
 
+		/*
+		@brief base implementation opens the file for saving and loading.
+		OVERRIDE and call the base implementation in overridden save and load functions in order to add any pre or post processing.
+		*/
+		virtual void Save();
+		virtual void Load();
+		virtual void Serialize(std::ofstream& file, BinarySerializeArchive& serializeArchive);
+		virtual void Deserialize(std::ifstream& file, BinaryDeserializeArchive& deserializeArchive);
+
 	protected:
 		EngineContext& engineContext;
+
+		inline static const int FILE_VERSION = 1;
+		std::string saveFileName = "Save";
+		std::filesystem::path saveFolderPath = "data/Saves/";
+		std::string saveFileType = ".scene";
 	};
 }
 

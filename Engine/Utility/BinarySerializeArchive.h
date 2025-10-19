@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include <optional>
+#include <map>
+#include <unordered_map>
 
 /*
 ORDER OF SERIALIZATION MUST MATCH THE DESERIALIZATION ARCHIVE
