@@ -62,23 +62,45 @@ namespace CMP316engine {
 		CMP316engine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.shader.get(), viewMatrix);
 	}
 
-	void ECSScene::Serialize(std::ofstream& file, BinarySerializeArchive& serializeArchive)
+	void ECSScene::Serialize(std::ofstream& file, BinarySerializeArchive& archive)
 	{
-		Scene::Serialize(file, serializeArchive);
+		Scene::Serialize(file, archive);
 
-		/// Loop through all entities
-		for (auto entity : registry.view<entt::entity>()) {
-			/// Loop through all storages and serialize any components the entity has in them
-			for (auto&& [id, storage] : registry.storage())
+		// Serialize the total number of storages FIRST so that deserialize knows how many to loop through
+		std::size_t storageCount = 0;
+		for (auto&& [id, storage] : registry.storage()) {
+			++storageCount;
+		}
+		archive(storageCount-1); //Subtract 1 as entity storage handled outside main loop
+
+		// Serialize entity storage
+		auto& entityStorage = registry.storage<entt::entity>();
+		archive(entityStorage.size());
+		archive(entityStorage.free_list());
+		for (auto first = entityStorage.data(), last = first + entityStorage.size(); first != last; ++first) {
+			archive(*first);
+		}
+
+		// Loop through all storages
+		for (auto&& [id, storage] : registry.storage())
+		{
+			// Skip the entity storage
+			if (id == entt::type_hash<entt::entity>::value()) continue;
+
+			// Save the size of the storage
+			archive(id);
+			archive(storage.size());
+
+			for (auto entity : storage)
 			{
-				// Entity does not have the component
-				if (!storage.contains(entity)) { continue; }
-				// Entity has component, reflect the component
+				archive(entity);
+
+				// Try to resolve the component in order to serialize it.
 				if (auto metaType = entt::resolve(id))
 				{
 					auto componentInstance = metaType.from_void(storage.value(entity)); // Instance of the reflected object
 					auto componentCustom = metaType.custom(); // The custom data of the reflected object
-	
+
 					// Check if I have serialize handling for this specific component type first
 					if (auto func = metaType.func("Serialize"_hs))
 					{
@@ -87,7 +109,7 @@ namespace CMP316engine {
 						{
 							map = *mp;
 						}
-						func.invoke(componentInstance, map, serializeArchive);
+						func.invoke(componentInstance, map, archive);
 					}
 					else
 					{
@@ -104,7 +126,7 @@ namespace CMP316engine {
 								{
 									map = *mp;
 								}
-								func.invoke(memberVariableInstance, map, serializeArchive);
+								func.invoke(memberVariableInstance, map, archive);
 							}
 						}
 					}
@@ -112,14 +134,15 @@ namespace CMP316engine {
 			}
 		}
 	}
-	void ECSScene::Deserialize(std::ifstream& file, BinaryDeserializeArchive& deserializeArchive)
+	void ECSScene::Deserialize(std::ifstream& file, BinaryDeserializeArchive& archive)
 	{
-		Scene::Deserialize(file, deserializeArchive);
+		Scene::Deserialize(file, archive);
 
 		entt::registry newRegistry;
 
 		/// TODO
+		// Notably, registry.emplace seems to only create a new entity if one doesn't already exist, I believe that is was entt::snapshot_loader does.
 
-		registry = std::move(newRegistry);
+		//registry = std::move(newRegistry);
 	}
 }
