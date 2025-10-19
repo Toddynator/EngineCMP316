@@ -136,6 +136,7 @@ namespace CMP316engine
 			.data<&MeshComponent::meshNeedsCalculated, entt::as_ref_t>("meshNeedsCalculated"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "meshNeedsCalculated" }, })
 			.traits(Traits::EDITOR)
+			.traits(Traits::NOT_SERIALIZED) // Should evaluate to default so that it gets reinitialized after loading
 			;
 
 		entt::meta<CameraComponent>()

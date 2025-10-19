@@ -206,14 +206,15 @@ namespace CMP316engine {
 					auto componentCustom = metaType.custom(); // The custom data of the reflected object
 
 					// Check if I have serialize handling for this specific component type first
-					if (auto func = metaType.func("Deserialize"_hs))
+					auto funcComponent = metaType.func("Deserialize"_hs);
+					if (!(metaType.traits<Traits>() & Traits::NOT_SERIALIZED) && funcComponent)
 					{
 						PropertiesMap map = {};
 						if (auto* mp = static_cast<const PropertiesMap*>(componentCustom))
 						{
 							map = *mp;
 						}
-						func.invoke(componentInstance, map, archive);
+						funcComponent.invoke(componentInstance, map, archive);
 					}
 					else
 					{
@@ -224,14 +225,15 @@ namespace CMP316engine {
 							auto memberVariableCustom = data.custom();
 							auto memberVariableType = memberVariableInstance.type(); // Get the reflected type
 
-							if (auto func = memberVariableType.func("Deserialize"_hs))
+							auto funcMemberVariable = memberVariableType.func("Deserialize"_hs);
+							if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED) && funcMemberVariable)
 							{
 								PropertiesMap map = {};
 								if (auto* mp = static_cast<const PropertiesMap*>(memberVariableCustom))
 								{
 									map = *mp;
 								}
-								func.invoke(memberVariableInstance, map, archive);
+								funcMemberVariable.invoke(memberVariableInstance, map, archive);
 							}
 
 							// Special Handling for entt::entity ~ Remap to new handles
@@ -250,6 +252,8 @@ namespace CMP316engine {
 		}
 
 		///// TEMP
+		///// NOTE: KEEP INCASE ENTITIES ON DESERIALIZE END UP BEING DIFFERENT TO THEIR OLD HANDLES, THIS MIGHT SAVE ME A LOT OF PAIN
+		///// I ALSO HAVE THE ALTERNATIVE (CLEANER) METHOD IN THE REFLECTION LOOP WHICH MIGHT WORK.
 		/*auto hierarchyEntities = newRegistry.view<HierarchyComponent>();
 		for (auto& entity : hierarchyEntities)
 		{
@@ -272,17 +276,6 @@ namespace CMP316engine {
 	void ECSScene::Load()
 	{
 		Scene::Load();
-
-		/// prep mesh components so that they get reinitialized.
-		// NOTE TO SELF:
-		// This can be replaced if I mark initialize bools as not to be serialized, so that they evaluate to their default state!
-		auto meshEntities = registry.view<MeshComponent>();
-		for (auto& entity : meshEntities) 
-		{
-			auto& meshComponent = registry.get<MeshComponent>(entity);
-
-			meshComponent.meshNeedsCalculated = true;
-		}
 	}
 }
 

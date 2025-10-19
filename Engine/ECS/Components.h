@@ -133,7 +133,7 @@ namespace CMP316engine
 	/// TODO
 	struct LevelEditorCameraComponent
 	{
-		bool notActuallyAnything = false; // I'm just using this component for testing / distinguishing the camera from other entities currently
+		bool notActuallyAnything = true; // I'm just using this component for testing / distinguishing the camera from other entities currently
 	};
 
 	struct CameraComponent
