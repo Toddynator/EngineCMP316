@@ -138,17 +138,14 @@ namespace CMP316engine {
 	}
 	void ECSScene::Deserialize(std::ifstream& file, BinaryDeserializeArchive& archive)
 	{
-		/*
-		TODO:
-		Notably, registry.emplace seems to only create a new entity if one doesn't already exist, I believe that is was entt::snapshot_loader does.
-		*/
-
 		Scene::Deserialize(file, archive);
 
 		entt::registry newRegistry;
 
 		/// DESERIALIZE ENTITY STORAGE FIRST
 
+		//std::unordered_map<entt::entity, entt::entity> entityRemap; // OLD to NEW entity
+		//entityRemap[entt::null] = entt::null;
 		{
 			size_t sizeEntityStorage;
 			archive(sizeEntityStorage);
@@ -164,6 +161,9 @@ namespace CMP316engine {
 				entt::entity entity;
 				archive(entity);
 				entityStorage.emplace(entity);
+
+				//entt::entity newEntity = newRegistry.create();
+				//entityRemap[entity] = newEntity;
 			}
 			entityStorage.free_list(sizeEntityFreeList);
 		}
@@ -223,6 +223,7 @@ namespace CMP316engine {
 							auto memberVariableInstance = data.get(componentInstance);
 							auto memberVariableCustom = data.custom();
 							auto memberVariableType = memberVariableInstance.type(); // Get the reflected type
+
 							if (auto func = memberVariableType.func("Deserialize"_hs))
 							{
 								PropertiesMap map = {};
@@ -232,11 +233,38 @@ namespace CMP316engine {
 								}
 								func.invoke(memberVariableInstance, map, archive);
 							}
+
+							// Special Handling for entt::entity ~ Remap to new handles
+							/*if (memberVariableType.info() == entt::type_id<entt::entity>())
+							{
+								entt::entity oldEntityHandle = memberVariableInstance.cast<entt::entity>();	
+								if (oldEntityHandle != entt::null) {
+									entt::entity newEntity = entityRemap[oldEntityHandle];
+									data.set(memberVariableInstance, newEntity);
+								}
+							}*/
 						}
 					}		
 				}
 			}
 		}
+
+		///// TEMP
+		/*auto hierarchyEntities = newRegistry.view<HierarchyComponent>();
+		for (auto& entity : hierarchyEntities)
+		{
+			auto& hierarchyComponent = newRegistry.get<HierarchyComponent>(entity);
+
+			hierarchyComponent.parent = entityRemap[hierarchyComponent.parent];
+			hierarchyComponent.firstChild = entityRemap[hierarchyComponent.firstChild];
+			hierarchyComponent.prevNeighbour = entityRemap[hierarchyComponent.prevNeighbour];
+			hierarchyComponent.nextNeighbour = entityRemap[hierarchyComponent.nextNeighbour];
+
+			if (hierarchyComponent.parent == entt::null) {
+				sceneRoot = entity;		
+			}
+		}*/
+		///// TEMP
 
 		registry = std::move(newRegistry);
 	}
@@ -247,7 +275,7 @@ namespace CMP316engine {
 
 		/// prep mesh components so that they get reinitialized.
 		// NOTE TO SELF:
-		// This can be replaced if I mark initialize bools as not to be serialized, so that the evaluate to their default state!
+		// This can be replaced if I mark initialize bools as not to be serialized, so that they evaluate to their default state!
 		auto meshEntities = registry.view<MeshComponent>();
 		for (auto& entity : meshEntities) 
 		{

@@ -20,12 +20,14 @@ namespace CMP316engine
 		entt::meta<std::string>().func<&SerializeAny<std::string>>("Serialize"_hs);
 		entt::meta<int>().func<&SerializeAny<int>>("Serialize"_hs);
 		entt::meta<bool>().func<&SerializeAny<bool>>("Serialize"_hs);
+		entt::meta<entt::entity>().func<&SerializeAny<entt::entity>>("Serialize"_hs);
 
 		entt::meta<float>().func<&DeserializeAny<float>>("Deserialize"_hs);
 		entt::meta<DirectX::XMFLOAT3>().func<&DeserializeAny<DirectX::XMFLOAT3>>("Deserialize"_hs);
 		entt::meta<std::string>().func<&DeserializeAny<std::string>>("Deserialize"_hs);
 		entt::meta<int>().func<&DeserializeAny<int>>("Deserialize"_hs);
 		entt::meta<bool>().func<&DeserializeAny<bool>>("Deserialize"_hs);
+		entt::meta<entt::entity>().func<&DeserializeAny<entt::entity>>("Deserialize"_hs);
 	}
 
 	void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max)

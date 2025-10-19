@@ -99,6 +99,10 @@ namespace CMP316engine
 				{ "textBuffer"_hs, std::array<char, 256>{"Enter Name"}}
 				})
 			.traits(Traits::EDITOR)
+			.data<&HierarchyComponent::parent, entt::as_ref_t>("parent"_hs)
+			.data<&HierarchyComponent::firstChild, entt::as_ref_t>("firstChild"_hs)
+			.data<&HierarchyComponent::prevNeighbour, entt::as_ref_t>("prevNeighbour"_hs)
+			.data<&HierarchyComponent::nextNeighbour, entt::as_ref_t>("nextNeighbour"_hs)
 			;
 
 		entt::meta<ModelComponent>()
