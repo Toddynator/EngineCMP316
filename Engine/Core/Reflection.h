@@ -8,6 +8,7 @@
 #include <DirectXMath.h>
 #include "../Utility/BinarySerializeArchive.h"
 #include "../Utility/BinaryDeserializeArchive.h"
+#include "../Utility/ImGuiHelper.h"
 
 using namespace entt::literals;
 
@@ -37,11 +38,24 @@ namespace CMP316engine
 
 	/// EDITOR UI
 
+
 	void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max);
-	bool DrawEditorFloat(float& f, const PropertiesMap& properties);
-	bool DrawEditorFloat3(DirectX::XMFLOAT3& f, const PropertiesMap& properties);
+	template<typename Type>
+	bool DrawEditor(Type& data, const PropertiesMap& properties)
+	{
+		const char* label = "float"; // Use the type as the name incase a name wasn't registered in custom data.
+		float min = 0;
+		float max = 0;
+		GetEditorCustomData(properties, label, min, max);
+
+		return ImGuiHelper::InputAny(label, data);
+		if (min != 0 || max != 0) {
+			return ImGuiHelper::InputAny(label, data, min, max);
+		}
+		return ImGuiHelper::InputAny(label, data);
+	}
+
 	bool DrawEditorString(std::string& f, const PropertiesMap& properties);
-	bool DrawEditorInt(int& f, const PropertiesMap& properties);
 	bool DrawEditorBool(bool& f, const PropertiesMap& properties);
 
 	/// SERIALIZATION

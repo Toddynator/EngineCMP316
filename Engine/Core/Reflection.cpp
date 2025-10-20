@@ -1,5 +1,4 @@
 #include "Reflection.h"
-#include "../Utility/ImGuiHelper.h"
 
 namespace CMP316engine
 {
@@ -7,10 +6,10 @@ namespace CMP316engine
 	{
 		/// EDITOR UI
 
-		entt::meta<float>().func<&DrawEditorFloat>("DrawEditor"_hs);
-		entt::meta<DirectX::XMFLOAT3>().func<&DrawEditorFloat3>("DrawEditor"_hs);
+		entt::meta<float>().func<&DrawEditor<float>>("DrawEditor"_hs);
+		entt::meta<DirectX::XMFLOAT3>().func<&DrawEditor<DirectX::XMFLOAT3>>("DrawEditor"_hs);
 		entt::meta<std::string>().func<&DrawEditorString>("DrawEditor"_hs);
-		entt::meta<int>().func<&DrawEditorInt>("DrawEditor"_hs);
+		entt::meta<int>().func<&DrawEditor<int>>("DrawEditor"_hs);
 		entt::meta<bool>().func<&DrawEditorBool>("DrawEditor"_hs);
 
 		/// SERIALIZE & DESERIALIZE
@@ -45,32 +44,6 @@ namespace CMP316engine
 		{
 			max = *it->second.try_cast<float>();
 		}
-	}
-
-	bool DrawEditorFloat(float& f, const PropertiesMap& properties)
-	{
-		const char* label = "float"; // Use the type as the name incase a name wasn't registered in custom data.
-		float min = 0;
-		float max = 0;
-		GetEditorCustomData(properties, label, min, max);
-
-		return ImGuiHelper::InputAny(label, f);
-		if (min != 0 || max != 0) {
-			return ImGuiHelper::InputAny(label, f, min, max);
-		}
-		return ImGuiHelper::InputAny(label, f);
-	}
-	bool DrawEditorFloat3(DirectX::XMFLOAT3& f, const PropertiesMap& properties)
-	{
-		const char* label = "float3";
-		float min = 0;
-		float max = 0;
-		GetEditorCustomData(properties, label, min, max);
-
-		if (min != 0 || max != 0) {
-			return ImGuiHelper::InputAny(label, f, min, max);
-		}
-		return ImGuiHelper::InputAny(label, f);
 	}
 	bool DrawEditorString(std::string& f, const PropertiesMap& properties)
 	{
@@ -108,18 +81,6 @@ namespace CMP316engine
 		bool result = ImGuiHelper::InputAny(label, f, textBuffer, sizeof(textBuffer));
 		ImGui::Separator();
 		return result;
-	}
-	bool DrawEditorInt(int& f, const PropertiesMap& properties)
-	{
-		const char* label = "int";
-		float min = 0;
-		float max = 0;
-		GetEditorCustomData(properties, label, min, max);
-
-		if (min != 0 || max != 0) {
-			return ImGuiHelper::InputAny(label, f, min, max);
-		}
-		return ImGuiHelper::InputAny(label, f);
 	}
 	bool DrawEditorBool(bool& f, const PropertiesMap& properties)
 	{
