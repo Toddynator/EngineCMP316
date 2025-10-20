@@ -103,8 +103,9 @@ namespace CMP316engine {
 					auto componentInstance = metaType.from_void(storage.value(entity)); // Instance of the reflected object
 					auto componentCustom = metaType.custom(); // The custom data of the reflected object
 
+					auto func = metaType.func("Serialize"_hs);
 					// Check if I have serialize handling for this specific component type first
-					if (auto func = metaType.func("Serialize"_hs))
+					if (!(metaType.traits<Traits>() & Traits::NOT_SERIALIZED) && func)
 					{
 						PropertiesMap map = {};
 						if (auto* mp = static_cast<const PropertiesMap*>(componentCustom))
@@ -121,14 +122,15 @@ namespace CMP316engine {
 							auto memberVariableInstance = data.get(componentInstance);
 							auto memberVariableCustom = data.custom();
 							auto memberVariableType = memberVariableInstance.type(); // Get the reflected type
-							if (auto func = memberVariableType.func("Serialize"_hs))
+							auto memberVariableFunc = memberVariableType.func("Serialize"_hs);
+							if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED) && memberVariableFunc)
 							{
 								PropertiesMap map = {};
 								if (auto* mp = static_cast<const PropertiesMap*>(memberVariableCustom))
 								{
 									map = *mp;
 								}
-								func.invoke(memberVariableInstance, map, archive);
+								memberVariableFunc.invoke(memberVariableInstance, map, archive);
 							}
 						}
 					}

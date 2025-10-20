@@ -64,15 +64,4 @@ namespace CMP316engine
 	{
 		archive(data);
 	}
-
-	//void SerializeFloat((float& data, const PropertiesMap& properties);
-	//void SerializeInt();
-	//void SerializeFloat3();
-	//void SerializeString();
-	//void SerializeBool();
-	//template<typename Type>
-	//void SerializeVector(std::vector<Type>& data, const PropertiesMap& properties);
-	//void SerializeMap();
-	//void SerializeUnorderedMap();
-	/// NOTE: I have to create a meta function for each type of vector I want to serialize... unfortunately.
 }
