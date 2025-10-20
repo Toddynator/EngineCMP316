@@ -291,32 +291,40 @@ namespace CMP316engine {
 	{
 		auto& rootHierarchyComponent = registry->get<HierarchyComponent>(currentObject);
 
-		/// OBJECT SELECT BUTTON
-
-		bool buttonWasHighlighted = false;
-		if (currentObject == selectedObject) { buttonWasHighlighted = true;  ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.6f, 1.0f, 1.0f)); }
-		if (ImGui::Button(rootHierarchyComponent.name.c_str())) {
-			// Select Object if pressed
-			selectedObject = currentObject;
-		}
-		if (buttonWasHighlighted) { ImGui::PopStyleColor(); }
-
 		/// OBJECTS CHILDREN
 
+		ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+		if (currentObject == selectedObject) { treeNodeFlags |= ImGuiTreeNodeFlags_Selected; }
 		if (rootHierarchyComponent.firstChild != entt::null) 
 		{
-			ImGui::SameLine();
-			if (ImGui::TreeNodeEx("##ChildrenDropdown", ImGuiTreeNodeFlags_DefaultOpen))
+			if (ImGui::TreeNodeEx((rootHierarchyComponent.name + "##ChildrenDropdown").c_str(), treeNodeFlags))
 			{
+				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+				{
+					selectedObject = currentObject;
+				}
+
 				int childNum = 0; // For ImGui ID
 				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject](entt::registry* registry, entt::entity childEntity) {
 					ImGui::PushID(("." + std::to_string(childNum)).c_str());
-					ImGui::Indent();
+					//ImGui::Indent();
 					renderObjectSelectionWindowObjectTree(registry, childEntity, selectedObject);
-					ImGui::Unindent();
+					//ImGui::Unindent();
 					ImGui::PopID();
 					childNum++;
 					});
+				ImGui::TreePop();
+			}
+		}
+		else {
+			treeNodeFlags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_Bullet;
+			if (ImGui::TreeNodeEx((rootHierarchyComponent.name + "##ChildrenDropdown").c_str(), treeNodeFlags))
+			{
+				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
+				{
+					selectedObject = currentObject;
+				}
+
 				ImGui::TreePop();
 			}
 		}

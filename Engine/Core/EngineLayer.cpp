@@ -54,6 +54,8 @@ bool CMP316engine::EngineLayer::Initialize()
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.FrameRounding = 1.f;
 	style.FrameBorderSize = 1.f;
+	style.TreeLinesFlags = ImGuiTreeNodeFlags_DrawLinesToNodes;
+	
 	style.Colors[ImGuiCol_FrameBg] = { 70.f / 255.f, 70.f / 255.f, 70.f / 255.f, 150.f / 255.f };
 	style.Colors[ImGuiCol_Border] = {  255.f / 255.f, 110.f / 255.f, 128.f / 255.f, 128.f / 255.f };
 	style.Colors[ImGuiCol_WindowBg] = { 30.f / 255.f,30.f / 255.f,35.f / 255.f,200.f / 255.f };
@@ -63,6 +65,7 @@ bool CMP316engine::EngineLayer::Initialize()
 	style.Colors[ImGuiCol_TabDimmedSelected] = { 35.f / 255.f,70.f / 255.f,180.f / 255.f,1.f };
 	style.Colors[ImGuiCol_Tab] = { 55.f / 255.f,50.f / 255.f,120.f / 255.f, 220.f / 255.f };
 	style.Colors[ImGuiCol_Button] = {0.f, 110.f/255.f, 1.f, 100.f/255.f};
+	style.Colors[ImGuiCol_TreeLines] = ImVec4(0.00f, 1.00f, 1.00f, 1.00f);
 
 	///// DEFAULT SHADER
 	// TODO: Prob move to assetManager soon
