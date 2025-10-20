@@ -96,44 +96,11 @@ namespace CMP316engine {
 				archive(entity);
 
 				// Try to resolve the component in order to serialize it.
-				if (auto metaType = entt::resolve(id))
+				if (auto type = entt::resolve(id))
 				{
-					std::cout << "\nSerialized Component Name: " << metaType.info().name(); /// DEBUG
-
-					auto componentInstance = metaType.from_void(storage.value(entity)); // Instance of the reflected object
-					auto componentCustom = metaType.custom(); // The custom data of the reflected object
-
-					auto func = metaType.func("Serialize"_hs);
-					// Check if I have serialize handling for this specific component type first
-					if (!(metaType.traits<Traits>() & Traits::NOT_SERIALIZED) && func)
-					{
-						PropertiesMap map = {};
-						if (auto* mp = static_cast<const PropertiesMap*>(componentCustom))
-						{
-							map = *mp;
-						}
-						func.invoke(componentInstance, map, archive);
-					}
-					else
-					{
-						// Loop through member variable types (TODO: Make this recursive, currently only one level deep!)
-						for (auto [id2, data] : metaType.data())
-						{
-							auto memberVariableInstance = data.get(componentInstance);
-							auto memberVariableCustom = data.custom();
-							auto memberVariableType = memberVariableInstance.type(); // Get the reflected type
-							auto memberVariableFunc = memberVariableType.func("Serialize"_hs);
-							if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED) && memberVariableFunc)
-							{
-								PropertiesMap map = {};
-								if (auto* mp = static_cast<const PropertiesMap*>(memberVariableCustom))
-								{
-									map = *mp;
-								}
-								memberVariableFunc.invoke(memberVariableInstance, map, archive);
-							}
-						}
-					}
+					std::cout << "\nSerialized Component Name: " << type.info().name(); /// DEBUG
+					auto componentInstance = type.from_void(storage.value(entity)); // Instance of the reflected object
+					recursiveReflectionSerialize(componentInstance, type.custom(), archive);
 				}
 			}
 		}
@@ -189,66 +156,21 @@ namespace CMP316engine {
 				archive(entity);
 
 				// Try to resolve the component in order to deserialize it.
-				if (auto metaType = entt::resolve(storageID))
+				if (auto type = entt::resolve(storageID))
 				{
-					std::cout << "\nDeserialized Component Name: " << metaType.info().name(); /// DEBUG
+					std::cout << "\nDeserialized Component Name: " << type.info().name(); /// DEBUG
 
-					auto addFunc = metaType.func("AddComponent"_hs);
+					auto addFunc = type.func("AddComponent"_hs);
 					if (!addFunc)
 					{
 						std::cout << "\nComponent hasn't got an 'AddComponent' function defined in the reflection system!";
 					}
-					auto componentInstance = addFunc.invoke({}, entt::forward_as_meta(newRegistry), entity);
+					entt::meta_any componentInstance = addFunc.invoke({}, entt::forward_as_meta(newRegistry), entity);
 					if (!componentInstance)
 					{
 						std::cout << "\nAddComponent Invoke call did not match reflected function signature";
-					}
-		
-					//auto componentInstance = metaType.construct(); // Create a new instance of the reflected object
-					auto componentCustom = metaType.custom(); // The custom data of the reflected object
-
-					// Check if I have serialize handling for this specific component type first
-					auto funcComponent = metaType.func("Deserialize"_hs);
-					if (!(metaType.traits<Traits>() & Traits::NOT_SERIALIZED) && funcComponent)
-					{
-						PropertiesMap map = {};
-						if (auto* mp = static_cast<const PropertiesMap*>(componentCustom))
-						{
-							map = *mp;
-						}
-						funcComponent.invoke(componentInstance, map, archive);
-					}
-					else
-					{
-						// Loop through member variable types (TODO: Make this recursive, currently only one level deep!)
-						for (auto [id2, data] : metaType.data())
-						{
-							auto memberVariableInstance = data.get(componentInstance);
-							auto memberVariableCustom = data.custom();
-							auto memberVariableType = memberVariableInstance.type(); // Get the reflected type
-
-							auto funcMemberVariable = memberVariableType.func("Deserialize"_hs);
-							if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED) && funcMemberVariable)
-							{
-								PropertiesMap map = {};
-								if (auto* mp = static_cast<const PropertiesMap*>(memberVariableCustom))
-								{
-									map = *mp;
-								}
-								funcMemberVariable.invoke(memberVariableInstance, map, archive);
-							}
-
-							// Special Handling for entt::entity ~ Remap to new handles
-							/*if (memberVariableType.info() == entt::type_id<entt::entity>())
-							{
-								entt::entity oldEntityHandle = memberVariableInstance.cast<entt::entity>();	
-								if (oldEntityHandle != entt::null) {
-									entt::entity newEntity = entityRemap[oldEntityHandle];
-									data.set(memberVariableInstance, newEntity);
-								}
-							}*/
-						}
-					}		
+					}	
+					recursiveReflectionDeserialize(componentInstance, type.custom(), archive);
 				}
 			}
 		}
@@ -278,6 +200,83 @@ namespace CMP316engine {
 	void ECSScene::Load()
 	{
 		Scene::Load();
+	}
+
+	void ECSScene::recursiveReflectionSerialize(entt::meta_any& instance, entt::meta_custom customData, BinarySerializeArchive& archive)
+	{
+		/*
+		Type / meta_type represents what object holds the data. If a meta_factory object was created for the data, then on recursion it will be
+		resolved into its mmember variables as well.
+		Instance / meta_any represents one instance of that data in the reflection system.
+		The engine will provide reflected serialize functions for specific types of data, e.g. int, floats, etc. If there is a serialize function reflected for the
+		data's type, then it will be serialized unless explicitly set to not be serialized by the NOT_SERIALIZED trait. You won't need to set that trait if the
+		member variables have not been reflected at all, in which case the component will likely use default values on deserialization.
+		*/
+		
+		entt::meta_type type = instance.type();
+
+		auto func = type.func("Serialize"_hs);
+		// Check if I have serialize handling for this specific component type first
+		if (!(type.traits<Traits>() & Traits::NOT_SERIALIZED) && func)
+		{
+			PropertiesMap propertiesMap = {};
+			if (auto* map = static_cast<const PropertiesMap*>(customData))
+			{
+				propertiesMap = *map;
+			}
+			func.invoke(instance, propertiesMap, archive);
+		}
+		else
+		{
+			// Loop through member variable types (TODO: Make this recursive, currently only one level deep!)
+			for (auto [id, data] : type.data())
+			{
+				if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED))
+				{
+					auto dataInstance = data.get(instance);
+					recursiveReflectionSerialize(dataInstance, data.custom(), archive);
+				}
+			}
+		}
+	}
+
+	void ECSScene::recursiveReflectionDeserialize(entt::meta_any& instance, entt::meta_custom customData, BinaryDeserializeArchive& archive)
+	{
+		entt::meta_type type = instance.type();
+
+		// Check if I have serialize handling for this specific component type first
+		auto func = type.func("Deserialize"_hs);
+		if (!(type.traits<Traits>() & Traits::NOT_SERIALIZED) && func)
+		{
+			PropertiesMap propertiesMap = {};
+			if (auto* map = static_cast<const PropertiesMap*>(customData))
+			{
+				propertiesMap = *map;
+			}
+			func.invoke(instance, propertiesMap, archive);
+		}
+		else
+		{
+			// Loop through member variable types (TODO: Make this recursive, currently only one level deep!)
+			for (auto [id, data] : type.data())
+			{
+				if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED))
+				{
+					auto dataInstance = data.get(instance);
+					recursiveReflectionDeserialize(dataInstance, data.custom(), archive);
+				}
+			}
+		}
+
+		// Special Handling for entt::entity ~ Remap to new handles
+		/*if (type.info() == entt::type_id<entt::entity>())
+		{
+			entt::entity oldEntityHandle = instance.cast<entt::entity>();
+			if (oldEntityHandle != entt::null) {
+				entt::entity newEntity = entityRemap[oldEntityHandle];
+				instance.set(type.id(), newEntity);
+			}
+		}*/
 	}
 }
 

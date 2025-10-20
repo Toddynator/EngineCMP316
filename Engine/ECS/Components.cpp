@@ -20,6 +20,11 @@ namespace CMP316engine
 	This will create a new meta object (the component itself) that can be obtained whenever you call entt::resolve().
 	entt::resolve can be looped through, or alternatively, the id of one of the meta objects (components) can be passed in to get the specific meta object.
 	Each functions returns the meta factory object, so that you can chain the calls together for each member variable you add.
+
+	IMPORTANT DISTINCTION:
+	meta_type represents one of the initialized meta_factory objects, and meta_data represents the member variables reflected under that object using '.data'.
+	IF the member variable happens to have a meta_factory object created as well, then whene you get its type by doing data.type() it will return its meta_factory type definition instead of the parent
+	that it is underneath.
 	
 	////////////////
 	FUNCTIONS:

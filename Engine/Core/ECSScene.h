@@ -29,6 +29,10 @@ namespace CMP316engine {
 		void Deserialize(std::ifstream& file, BinaryDeserializeArchive& deserializeArchive) override;
 		void Load() override;
 
+	private:
+		void recursiveReflectionSerialize(entt::meta_any& instance, entt::meta_custom custom, BinarySerializeArchive& archive);
+		void recursiveReflectionDeserialize(entt::meta_any& instance, entt::meta_custom custom, BinaryDeserializeArchive& archive);
+
 	protected:
 		entt::registry registry;
 		entt::entity sceneRoot; // All scenes have a single root object, it has children which as a result forms the hierarchy / scene graph.

@@ -63,7 +63,7 @@ namespace CMP316engine
 	template<typename Type>
 	void SerializeAny(Type& data, const PropertiesMap& properties, BinarySerializeArchive& archive)
 	{
-		/// TODO: File Version, could pass file version that is being save into function param.
+		/// TODO: File Version, could pass file version that is being save into function param when invoking.
 		/// Will be used for backward compatability.
 		/*int version = -1;
 		if (auto it = properties.find("version"_hs); it != properties.end())
