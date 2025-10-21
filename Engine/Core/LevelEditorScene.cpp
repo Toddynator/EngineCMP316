@@ -57,16 +57,81 @@ namespace CMP316engine
 	{
 		ECSScene::HandleImGui();
 
+
+		auto& io = ImGui::GetIO();
+		ImVec2 windowMinSize = ImVec2(io.DisplaySize.x * 0.7f, io.DisplaySize.y * 0.7f);
 		ImGui::Begin("Save & Load");
 		if (ImGui::Button("Save"))
 		{
-			Save();
+			IGFD::FileDialogConfig config;
+			config.path = "data/Levels/";
+			config.fileName = "undefined.level";
+			config.countSelectionMax = 1;
+			config.flags = ImGuiFileDialogFlags_Modal;
+			fileDialog.OpenDialog(
+				"SaveFileDlgKey",
+				"Save Level As...",
+				".level",
+				config
+			);
+
+			ImVec2 center = ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f);
+			ImGui::SetNextWindowPos(center, 0, ImVec2(0.5f, 0.5f));
+			ImGui::SetNextWindowSize(windowMinSize);
 		}
 		if (ImGui::Button("Load"))
 		{
-			Load();
+			IGFD::FileDialogConfig config;
+			config.path = "data/Levels/";
+			config.fileName = "undefined.level";
+			config.countSelectionMax = 1;
+			config.flags = ImGuiFileDialogFlags_Modal |
+				ImGuiFileDialogFlags_DisableCreateDirectoryButton |
+				ImGuiFileDialogFlags_ReadOnlyFileNameField;
+			fileDialog.OpenDialog(
+				"LoadFileDlgKey",
+				"Load Level As...",
+				".level,.save",
+				config
+			);
+
+			ImVec2 center = ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f);
+			ImVec2 windowStartSize = ImVec2(io.DisplaySize.x * 0.7f, io.DisplaySize.y * 0.7f);
+			ImGui::SetNextWindowPos(center, 0, ImVec2(0.5f, 0.5f));
+			ImGui::SetNextWindowSize(windowStartSize);
 		}
 		ImGui::End();
+
+		if (fileDialog.Display("SaveFileDlgKey", ImGuiWindowFlags_NoCollapse, windowMinSize)) {
+			if (fileDialog.IsOk()) {
+				std::string fileNameWithExtension = fileDialog.GetFilePathName();
+				saveFolderPath = fileDialog.GetCurrentPath();
+
+				std::filesystem::path path(fileNameWithExtension);
+				saveFileName = path.filename().string();
+				saveFileType = path.extension().string();
+
+				/// ACTION
+
+				Save();
+			}
+			fileDialog.Close();
+		}
+		if (fileDialog.Display("LoadFileDlgKey", ImGuiWindowFlags_NoCollapse, windowMinSize)) {
+			if (fileDialog.IsOk()) {
+				std::string fileNameWithExtension = fileDialog.GetFilePathName();
+				saveFolderPath = fileDialog.GetCurrentPath();
+
+				std::filesystem::path path(fileNameWithExtension);
+				saveFileName = path.filename().string();
+				saveFileType = path.extension().string();
+
+				/// ACTION
+
+				Load();
+			}
+			fileDialog.Close();
+		}
 	}
 
 	void LevelEditorScene::Load()

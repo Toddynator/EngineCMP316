@@ -17,12 +17,16 @@ TODO:
 
 #pragma once
 #include "ECSScene.h"
+#include "../ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
 
 namespace CMP316engine
 {
 	class LevelEditorScene
 		: public ECSScene
 	{
+	private:
+		ImGuiFileDialog fileDialog;
+
 	public:
 		LevelEditorScene(CMP316engine::EngineContext& context);
 		bool Initialize() override;
