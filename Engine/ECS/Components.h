@@ -120,20 +120,9 @@ namespace CMP316engine
 		}
 	};
 
-
-	/*
-	POSSIBLY REPLACE WITH 'EDITOR CAMERA' COMPONENT INSTEAD
-	*/
-	enum CameraTypes
-	{
-		FREE_ROAME, // Can be moved by editor
-		TRACKING // Follows parent
-	};
-
-	/// TODO
 	struct LevelEditorCameraComponent
 	{
-		bool notActuallyAnything = true; // I'm just using this component for testing / distinguishing the camera from other entities currently
+		bool canMove = true;
 	};
 
 	struct CameraComponent
@@ -141,7 +130,6 @@ namespace CMP316engine
 		// Camera needs just position and rotation
 		DirectX::XMMATRIX viewMatrix;
 		bool active = false;
-		CameraTypes cameraType = TRACKING;
 	};
 
 	struct RigidBodyComponent

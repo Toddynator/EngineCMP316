@@ -15,16 +15,21 @@ namespace CMP316engine
 	{
 		ECSScene::Initialize();
 
-		auto cameraEntity = ECS::AddChild(&registry, sceneRoot);
+		/// LEVEL EDITOR CAMERA
+		// Notably, this is NOT added to the scene tree!
+
+		createLevelEditorCameraEntity();
+
+		/// TEMP TEST
+		/*auto cameraEntity = ECS::AddChild(&registry, sceneRoot);
 		auto* camComponent = &ECS::AddComponent<CameraComponent>(&registry, cameraEntity);
 		camComponent->active = true;
 		auto* camHierarchyComponent = &registry.get<HierarchyComponent>(cameraEntity);
 		camHierarchyComponent->name = "Camera Entity 1";
 		auto* camTransformComponent = &registry.get<TransformComponent>(cameraEntity);
 		camTransformComponent->position = { 0.f,0.f,-5.0f };
-		auto* levelEditorCamComponent = &ECS::AddComponent<LevelEditorCameraComponent>(&registry, cameraEntity);
-
-		/// TEMP TEST
+		auto* levelEditorCamComponent = &ECS::AddComponent<LevelEditorCameraComponent>(&registry, cameraEntity);*/
+		
 		auto firstChild = ECS::AddChild(&registry, sceneRoot);
 		auto* hierarchyComponent = &registry.get<HierarchyComponent>(firstChild);
 		hierarchyComponent->name = "Test Model Entity";
@@ -62,5 +67,22 @@ namespace CMP316engine
 			Load();
 		}
 		ImGui::End();
+	}
+
+	void LevelEditorScene::Load()
+	{
+		ECSScene::Load();
+
+		createLevelEditorCameraEntity();
+	}
+
+	void LevelEditorScene::createLevelEditorCameraEntity()
+	{
+		auto levelEditorCameraEntity = ECS::CreateEntityWithDefaultComponents(&registry);
+		auto* camComponent = &ECS::AddComponent<CameraComponent>(&registry, levelEditorCameraEntity);
+		camComponent->active = true;
+		auto* editorCamComponent = &ECS::AddComponent<LevelEditorCameraComponent>(&registry, levelEditorCameraEntity);
+		auto* camTransformComponent = &registry.get<TransformComponent>(levelEditorCameraEntity);
+		camTransformComponent->position = { 0.f, 0.f, -5.0f };
 	}
 }

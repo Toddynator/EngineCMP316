@@ -196,12 +196,10 @@ namespace CMP316engine {
 
 		registry = std::move(newRegistry);
 	}
-
 	void ECSScene::Load()
 	{
 		Scene::Load();
 	}
-
 	void ECSScene::recursiveReflectionSerialize(entt::meta_any& instance, entt::meta_custom customData, BinarySerializeArchive& archive)
 	{
 		/*
@@ -239,7 +237,6 @@ namespace CMP316engine {
 			}
 		}
 	}
-
 	void ECSScene::recursiveReflectionDeserialize(entt::meta_any& instance, entt::meta_custom customData, BinaryDeserializeArchive& archive)
 	{
 		entt::meta_type type = instance.type();

@@ -28,5 +28,10 @@ namespace CMP316engine
 		bool Initialize() override;
 
 		void HandleImGui() override;
+
+		void Load() override;
+
+	private:
+		void createLevelEditorCameraEntity();
 	};
 }

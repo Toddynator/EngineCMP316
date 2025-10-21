@@ -20,77 +20,83 @@ namespace CMP316engine {
 
 	void CameraSystem::HandleInput(float deltaTime)
 	{
-		if (activeCamera == entt::null || !registry->any_of<TransformComponent>(activeCamera)) { return; }
-		if (!registry->valid(activeCamera)) { activeCamera = entt::null; }
+		//if (activeCamera == entt::null || !registry->any_of<TransformComponent>(activeCamera)) { return; }
+		//if (!registry->valid(activeCamera)) { activeCamera = entt::null; }
 
-		auto& transformComponent = registry->get<TransformComponent>(activeCamera);
+		auto editorCameraEntities = registry->view<LevelEditorCameraComponent>();
+		for (auto& entity : editorCameraEntities) {
+			auto& levelEditorCameraComponent = registry->get<LevelEditorCameraComponent>(entity);
+			auto& transformComponent = registry->get<TransformComponent>(entity);
 
-		/// CAMERA TURNING
+			if (!levelEditorCameraComponent.canMove) { continue; }
 
-		float mouseDeltaX = inputManager->GetMouseDeltaX();
-		float mouseDeltaY = inputManager->GetMouseDeltaY();
-		if (inputManager->IsMouseButtonPressed(SDL_BUTTON_RIGHT))
-		{
-			inputManager->SaveCurrentMouseWindowPosition();
-		}
-		if (inputManager->IsMouseButtonDown(SDL_BUTTON_RIGHT) && (mouseDeltaX != 0.f || mouseDeltaY != 0.f))
-		{		
-			/// KEEPS READING MOUSE INPUT EVEN AFTER REACHING WINDOW EDGE.
-			inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), true);
-			inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
+			/// CAMERA TURNING
 
-			/// TURN CAMERA
-			transformComponent.rotation.x += -mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
-			transformComponent.rotation.y += -mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED;
-		}
-		else if (inputManager->IsMouseButtonReleased(SDL_BUTTON_RIGHT))
-		{
-			inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), false);
-			//inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
-		}
+			float mouseDeltaX = inputManager->GetMouseDeltaX();
+			float mouseDeltaY = inputManager->GetMouseDeltaY();
+			if (inputManager->IsMouseButtonPressed(SDL_BUTTON_RIGHT))
+			{
+				inputManager->SaveCurrentMouseWindowPosition();
+			}
+			if (inputManager->IsMouseButtonDown(SDL_BUTTON_RIGHT) && (mouseDeltaX != 0.f || mouseDeltaY != 0.f))
+			{		
+				/// KEEPS READING MOUSE INPUT EVEN AFTER REACHING WINDOW EDGE.
+				inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), true);
+				inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
 
-		/// LATERAL CAMERA MOVEMENT
+				/// TURN CAMERA
+				transformComponent.rotation.x += -mouseDeltaY * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+				transformComponent.rotation.y += -mouseDeltaX * deltaTime * BASE_CAMERA_ROTATION_SPEED;
+			}
+			else if (inputManager->IsMouseButtonReleased(SDL_BUTTON_RIGHT))
+			{
+				inputManager->SetWindowRelativeMouseMode(static_cast<SDL_Window*>(windowManager->GetNativeWindow()), false);
+				//inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
+			}
 
-		if (inputManager->IsKeyBindingDown("Move Forward"))
-		{
-			move_forward(transformComponent, deltaTime);
+			/// LATERAL CAMERA MOVEMENT
+
+			if (inputManager->IsKeyBindingDown("Move Forward"))
+			{
+				move_forward(transformComponent, deltaTime);
+			}
+			if (inputManager->IsKeyBindingDown("Move Backward"))
+			{
+				move_backward(transformComponent, deltaTime);
+			}
+			if (inputManager->IsKeyBindingDown("Move Left"))
+			{
+				move_left(transformComponent, deltaTime);
+			}
+			if (inputManager->IsKeyBindingDown("Move Right"))
+			{
+				move_right(transformComponent, deltaTime);
+			}
+			if (inputManager->IsKeyBindingDown("Move Up"))
+			{
+				move_up(transformComponent, deltaTime);
+			}
+			if (inputManager->IsKeyBindingDown("Move Down"))
+			{
+				move_down(transformComponent, deltaTime);
+			}
+			if (inputManager->IsKeyBindingDown("Roll Anti-Clockwise"))
+			{
+				roll_anti_clockwise(transformComponent, deltaTime);
+			}
+			if (inputManager->IsKeyBindingDown("Roll Clockwise"))
+			{
+				roll_clockwise(transformComponent, deltaTime);
+			}
+			/*if ()
+			{
+				zoom_in(transformComponent);
+			}
+			if ()
+			{
+				zoom_out(transformComponent);
+			}*/
 		}
-		if (inputManager->IsKeyBindingDown("Move Backward"))
-		{
-			move_backward(transformComponent, deltaTime);
-		}
-		if (inputManager->IsKeyBindingDown("Move Left"))
-		{
-			move_left(transformComponent, deltaTime);
-		}
-		if (inputManager->IsKeyBindingDown("Move Right"))
-		{
-			move_right(transformComponent, deltaTime);
-		}
-		if (inputManager->IsKeyBindingDown("Move Up"))
-		{
-			move_up(transformComponent, deltaTime);
-		}
-		if (inputManager->IsKeyBindingDown("Move Down"))
-		{
-			move_down(transformComponent, deltaTime);
-		}
-		if (inputManager->IsKeyBindingDown("Roll Anti-Clockwise"))
-		{
-			roll_anti_clockwise(transformComponent, deltaTime);
-		}
-		if (inputManager->IsKeyBindingDown("Roll Clockwise"))
-		{
-			roll_clockwise(transformComponent, deltaTime);
-		}
-		/*if ()
-		{
-			zoom_in(transformComponent);
-		}
-		if ()
-		{
-			zoom_out(transformComponent);
-		}*/
 	}
 
 	void CameraSystem::Update(float deltaTime)
