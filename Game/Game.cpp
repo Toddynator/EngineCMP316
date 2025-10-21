@@ -1,5 +1,5 @@
 #include "Game.h"
-#include "TestScene.h"
+#include "GameScene.h"
 #include "Core/LevelEditorScene.h"
 
 std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
@@ -15,8 +15,7 @@ bool Game::Initialize()
 
 	engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR); // Sets starting scene
 	engineContext.sceneManager->RegisterScene<CMP316engine::LevelEditorScene>(LEVEL_EDITOR);
-	engineContext.sceneManager->RegisterScene<TestScene>(TEST_SCENE);
-	engineContext.sceneManager->RegisterScene<CMP316engine::ECSScene>(TEST_LEVELFILE_SCENE, "Placeholder");
+	engineContext.sceneManager->RegisterScene<GameScene>(TEST_LEVELFILE_SCENE, "Placeholder");
 
 	return true;
 }
@@ -34,10 +33,6 @@ void Game::HandleInput(float deltaTime)
 	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_ESCAPE))
 	{
 		engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR);
-	}
-	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_K))
-	{
-		engineContext.sceneManager->RequestSceneChange(TEST_SCENE);
 	}
 	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_L))
 	{

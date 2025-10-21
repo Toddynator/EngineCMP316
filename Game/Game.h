@@ -4,7 +4,6 @@
 enum Levels
 {
 	LEVEL_EDITOR,
-	TEST_SCENE,
 	TEST_LEVELFILE_SCENE
 };
 

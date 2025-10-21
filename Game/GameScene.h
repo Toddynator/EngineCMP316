@@ -1,13 +1,12 @@
 #pragma once
 #include "Core/ECSScene.h"
 
-class TestScene
+class GameScene
 	: public CMP316engine::ECSScene
 {
 public:
-	TestScene(CMP316engine::EngineContext& context);
+	GameScene(CMP316engine::EngineContext& context);
 
 	bool Initialize() override;
-	void HandleImGui() override;
 };
 
