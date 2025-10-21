@@ -5,6 +5,9 @@ namespace CMP316engine
 {
 	LevelEditorScene::LevelEditorScene(CMP316engine::EngineContext& context) : ECSScene(context)
 	{		
+		saveFileType = ".level";
+		saveFolderPath = "data/Levels/";
+
 		systems.emplace_back(std::make_unique<LevelEditorSystem>(&registry, &engineContext, sceneRoot, context.renderer.get()));
 	}
 
@@ -20,7 +23,6 @@ namespace CMP316engine
 		auto* camTransformComponent = &registry.get<TransformComponent>(cameraEntity);
 		camTransformComponent->position = { 0.f,0.f,-5.0f };
 		auto* levelEditorCamComponent = &ECS::AddComponent<LevelEditorCameraComponent>(&registry, cameraEntity);
-
 
 		/// TEMP TEST
 		auto firstChild = ECS::AddChild(&registry, sceneRoot);

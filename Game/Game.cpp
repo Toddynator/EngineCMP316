@@ -16,6 +16,7 @@ bool Game::Initialize()
 	engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR); // Sets starting scene
 	engineContext.sceneManager->RegisterScene<CMP316engine::LevelEditorScene>(LEVEL_EDITOR);
 	engineContext.sceneManager->RegisterScene<TestScene>(TEST_SCENE);
+	engineContext.sceneManager->RegisterScene<CMP316engine::ECSScene>(TEST_LEVELFILE_SCENE, "Placeholder");
 
 	return true;
 }
@@ -37,6 +38,10 @@ void Game::HandleInput(float deltaTime)
 	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_K))
 	{
 		engineContext.sceneManager->RequestSceneChange(TEST_SCENE);
+	}
+	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_L))
+	{
+		engineContext.sceneManager->RequestSceneChange(TEST_LEVELFILE_SCENE);
 	}
 	/// TEMP
 }

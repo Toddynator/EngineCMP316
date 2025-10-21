@@ -39,6 +39,7 @@ namespace CMP316engine {
 		*/
 		virtual void Save();
 		virtual void Load();
+		void LoadLevelFromFile(std::string levelFileName);
 		virtual void Serialize(std::ofstream& file, BinarySerializeArchive& serializeArchive);
 		virtual void Deserialize(std::ifstream& file, BinaryDeserializeArchive& deserializeArchive);
 

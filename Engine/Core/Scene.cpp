@@ -56,6 +56,20 @@ namespace CMP316engine {
 		Deserialize(file, deserializeArchive);
 		file.close();
 	}
+	void Scene::LoadLevelFromFile(std::string levelFileName)
+	{
+		std::string temp1 = saveFileType;
+		std::filesystem::path temp2 = saveFolderPath;
+		saveFileType = ".level";
+		saveFolderPath = "data/Levels/";
+		saveFileName = levelFileName;
+
+		Load();
+
+		saveFileType = temp1;
+		saveFolderPath = temp2;
+
+	}
 	void Scene::Serialize(std::ofstream& file, BinarySerializeArchive& serializeArchive)
 	{
 			

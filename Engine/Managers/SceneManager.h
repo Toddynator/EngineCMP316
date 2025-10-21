@@ -25,11 +25,17 @@ namespace CMP316engine {
 	class Scene;
 	struct EngineContext;
 
+	struct SceneRegistrationInfo
+	{
+		std::function<std::unique_ptr<Scene>(EngineContext&)> sceneFactoryFunction;
+		std::string levelFileName = "";
+	};
+
 	class SceneManager
 		: public Manager
 	{
 	private:
-		std::unordered_map<int, std::function<std::unique_ptr<Scene>(EngineContext&)>> scenes;
+		std::unordered_map<int, SceneRegistrationInfo> scenes;
 		std::unique_ptr<Scene> activeScene = nullptr;
 		bool changeScene = true;
 		int idOfSceneToChangeTo = -1;
@@ -45,7 +51,13 @@ namespace CMP316engine {
 		template <typename SceneType>
 		void RegisterScene(int id)
 		{
-			scenes[id] = [&](EngineContext& engineContext) { return std::make_unique<SceneType>(engineContext); };
+			scenes[id].sceneFactoryFunction = [&](EngineContext& engineContext) { return std::make_unique<SceneType>(engineContext); };
+		}
+		template <typename SceneType>
+		void RegisterScene(int id, std::string levelFileNameToLoad)
+		{
+			scenes[id].sceneFactoryFunction = [&](EngineContext& engineContext) { return std::make_unique<SceneType>(engineContext); };
+			scenes[id].levelFileName = levelFileNameToLoad;
 		}
 		void RequestSceneChange(int sceneToChangeTo);
 

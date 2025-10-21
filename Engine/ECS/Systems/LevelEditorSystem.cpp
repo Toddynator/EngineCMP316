@@ -9,7 +9,7 @@ namespace CMP316engine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, EngineContext* engineContext, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
 		System(sceneRegistry, engineContext), sceneRoot(sceneRootEntity), renderer(sceneRenderer), windowManager(engineContext->windowManager.get()), audioManager(engineContext->audioManager.get())
 	{
-
+		
 	}
 
 	bool LevelEditorSystem::Initialize()
