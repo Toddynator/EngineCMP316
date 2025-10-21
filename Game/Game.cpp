@@ -30,11 +30,11 @@ void Game::HandleInput(float deltaTime)
 	Application::HandleInput(deltaTime);
 
 	/// TEMP // TESTING SCENE MANAGER
-	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_ESCAPE))
+	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_ESCAPE) && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR);
 	}
-	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_L))
+	if (engineContext.inputManager->IsKeyPressed(SDL_SCANCODE_L) && !ImGui::GetIO().WantCaptureKeyboard)
 	{
 		engineContext.sceneManager->RequestSceneChange(TEST_LEVELFILE_SCENE);
 	}

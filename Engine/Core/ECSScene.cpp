@@ -94,6 +94,16 @@ namespace CMP316engine {
 			for (auto entity : storage)
 			{
 				archive(entity);
+				
+				// Don't serialize the level editors camera
+				bool skipEntity = false;
+				if (registry.any_of<LevelEditorCameraComponent>(entity))
+				{
+					skipEntity = true;
+					archive(skipEntity);
+					continue;
+				}
+				archive(skipEntity);
 
 				// Try to resolve the component in order to serialize it.
 				if (auto type = entt::resolve(id))
@@ -154,6 +164,10 @@ namespace CMP316engine {
 			{
 				entt::entity entity;
 				archive(entity);
+
+				bool skipEntity = false;
+				archive(skipEntity);
+				if (skipEntity) { continue; }
 
 				// Try to resolve the component in order to deserialize it.
 				if (auto type = entt::resolve(storageID))
