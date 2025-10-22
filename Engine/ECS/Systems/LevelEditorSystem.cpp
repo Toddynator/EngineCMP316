@@ -370,11 +370,28 @@ namespace CMP316engine {
 			}
 			if (ImGuizmo::IsUsing())
 			{
+				/// ONLY USE LOCAL TRANSFORMS, NEED TO REMOVE PARENT TRANSFORMS
+
+				DirectX::XMMATRIX updatedWorldMatrix = DirectX::XMLoadFloat4x4(&worldArray);
+				XMMATRIX localMatrix = updatedWorldMatrix;
+				auto hierarchyComponent = registry->try_get<HierarchyComponent>(selectedEntity);
+				auto* parentTransforms = hierarchyComponent->parent != entt::null ? registry->try_get<TransformComponent>(hierarchyComponent->parent) : nullptr;
+				if (parentTransforms) {
+					DirectX::XMMATRIX parentInverse = DirectX::XMMatrixInverse(nullptr, parentTransforms->worldMatrix);
+					localMatrix = DirectX::XMMatrixMultiply(updatedWorldMatrix, parentInverse);
+
+					DirectX::XMStoreFloat4x4(&worldArray, worldMatrix);
+				}
+				XMFLOAT4X4 localMatrixArray;
+				XMStoreFloat4x4(&localMatrixArray, localMatrix);
+
 				/// UPDATE TRANSFORMS
+
 				float position[3];
 				float rotation[3];
 				float scale[3];
-				ImGuizmo::DecomposeMatrixToComponents(*worldArray.m, position, rotation, scale);
+				//ImGuizmo::DecomposeMatrixToComponents(*worldArray.m, position, rotation, scale);
+				ImGuizmo::DecomposeMatrixToComponents(*localMatrixArray.m, position, rotation, scale);
 				auto* t = transformComponent;
 				if (currentImGuizmoOperation == ImGuizmo::OPERATION::TRANSLATE) { t->position = { position[0], position[1], position[2] }; }
 				if (currentImGuizmoOperation == ImGuizmo::OPERATION::ROTATE) { t->rotation = { rotation[0], rotation[1], rotation[2] }; } // NOTE: ImGuizmo uses degrees, 0-360

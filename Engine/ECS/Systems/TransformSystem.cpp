@@ -27,11 +27,13 @@ namespace CMP316engine {
 
 			/// WORLD MATRIX
 
-			calculateWorldMatrix(transformComponent);
+			entt::entity* parentEntity = &registry->try_get<HierarchyComponent>(entity)->parent;
+			auto* parentTransformComponent = parentEntity ? registry->try_get<TransformComponent>(*parentEntity) : nullptr;
+			calculateWorldMatrix(transformComponent, parentTransformComponent);
 		}
 	}
 
-	void TransformSystem::calculateWorldMatrix(TransformComponent& transformComponent)
+	void TransformSystem::calculateWorldMatrix(TransformComponent& transformComponent, TransformComponent* parentTransformComponent)
 	{
 		auto& t = transformComponent;
 		auto& position = transformComponent.position;
@@ -46,7 +48,14 @@ namespace CMP316engine {
 
 		/// FINAL MATRIX CALCULATION
 
-		transformComponent.worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+		if (parentTransformComponent)
+		{
+			transformComponent.worldMatrix =  scaleMatrix * rotationMatrix * translationMatrix * parentTransformComponent->worldMatrix;
+		}
+		else
+		{
+			transformComponent.worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+		}
 	}
 	// Doing it myself instead of using directX's method allows me to enforce the order. Which helps with compatability with other libraries as a bonus.
 	DirectX::XMMATRIX CMP316engine::TransformSystem::calculateRotationMatrix(TransformComponent& transformComponent)

@@ -14,7 +14,7 @@ namespace CMP316engine {
 		void Update(float deltaTime) override;
 
 	private:
-		void calculateWorldMatrix(TransformComponent& transformComponent);
+		void calculateWorldMatrix(TransformComponent& transformComponent, TransformComponent* parentTransformComponent);
 		DirectX::XMMATRIX calculateRotationMatrix(TransformComponent& transformComponent);
 	};
 }
