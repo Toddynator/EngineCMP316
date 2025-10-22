@@ -87,7 +87,6 @@ namespace CMP316engine
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f,0.f,0.f);
 		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f); // TODO: Probably should replace with Quaternions in the future.
 		DirectX::XMFLOAT3 scale = DirectX::XMFLOAT3(1.f, 1.f, 1.f);
-		DirectX::XMFLOAT3 origin = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 		DirectX::XMFLOAT3 up = DirectX::XMFLOAT3(0.f, 1.f, 0.f);
 		DirectX::XMFLOAT3 forward = DirectX::XMFLOAT3(0.f, 0.f, 1.f);
 		DirectX::XMFLOAT3 right = DirectX::XMFLOAT3(1.f, 0.f, 0.f);
