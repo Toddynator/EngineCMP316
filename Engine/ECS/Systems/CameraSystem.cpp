@@ -138,6 +138,12 @@ namespace CMP316engine {
 
 	DirectX::XMFLOAT3 CameraSystem::GetActiveCameraPosition(entt::registry* sceneRegistry)
 	{
+		auto editorCameraEntities = sceneRegistry->view<LevelEditorCameraComponent>();
+		for (auto& entity : editorCameraEntities) {
+			auto& transformComponent = sceneRegistry->get<TransformComponent>(entity);
+			return transformComponent.position;
+		}
+
 		auto cameraEntities = sceneRegistry->view<CameraComponent, TransformComponent>();
 		for (auto& entity : cameraEntities) {
 			auto [cameraComponent, transformComponent] = sceneRegistry->get<CameraComponent, TransformComponent>(entity);
