@@ -107,21 +107,24 @@ namespace CMP316engine {
 
 			if (cameraComponent.active) { activeCamera = entity; }
 
-			// Load into XMVECTOR structures.
-			DirectX::XMVECTOR upVector = XMLoadFloat3(&transformComponent.up);
-			DirectX::XMVECTOR positionVector = XMLoadFloat3(&transformComponent.position);
-			DirectX::XMVECTOR lookAtVector = XMLoadFloat3(&transformComponent.forward);
-
-			// Translate the rotated camera position to the location of the viewer.
-			lookAtVector = DirectX::XMVectorAdd(positionVector, lookAtVector);
-
-			// Finally create the view matrix from the three updated vectors.
-			cameraComponent.viewMatrix = DirectX::XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
+			calculateCameraViewMatrix(transformComponent, cameraComponent);
 		}
 	}
 
 	DirectX::XMMATRIX CameraSystem::GetActiveCameraViewMatrix(entt::registry* sceneRegistry)
 	{
+		/*
+		Prioritize always using levelEditorCamera if it exists, otherwise whatever camera is active (ideally should only be one, but
+		otherwise it always picks the first active camera it finds. If no camera is active then it returns a default view matrix.
+		*/
+
+		auto editorCameraEntities = sceneRegistry->view<LevelEditorCameraComponent>();
+		for (auto& entity : editorCameraEntities) {
+			// Just assume levelEditorCamera always has a camera component (since this is created ONCE by the engine).
+			auto& cameraComponent = sceneRegistry->get<CameraComponent>(entity);
+			return cameraComponent.viewMatrix;
+		}
+
 		auto cameraEntities = sceneRegistry->view<CameraComponent>();
 		for (auto& entity : cameraEntities) {
 			auto& cameraComponent = sceneRegistry->get<CameraComponent>(entity);
@@ -165,6 +168,20 @@ namespace CMP316engine {
 		upVector = XMVector3TransformCoord(upVector, rotationMatrix);
 		lookAtVector = DirectX::XMVectorAdd(positionVector, lookAtVector);
 		return DirectX::XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
+	}
+
+	void CameraSystem::calculateCameraViewMatrix(TransformComponent& transformComponent, CameraComponent& cameraComponent)
+	{
+		// Load into XMVECTOR structures.
+		DirectX::XMVECTOR upVector = XMLoadFloat3(&transformComponent.up);
+		DirectX::XMVECTOR positionVector = XMLoadFloat3(&transformComponent.position);
+		DirectX::XMVECTOR lookAtVector = XMLoadFloat3(&transformComponent.forward);
+
+		// Translate the rotated camera position to the location of the viewer.
+		lookAtVector = DirectX::XMVectorAdd(positionVector, lookAtVector);
+
+		// Finally create the view matrix from the three updated vectors.
+		cameraComponent.viewMatrix = DirectX::XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 	}
 
 	//////////// Controls //////
