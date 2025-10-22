@@ -104,11 +104,10 @@ namespace CMP316engine
 
 		if (fileDialog.Display("SaveFileDlgKey", ImGuiWindowFlags_NoCollapse, windowMinSize)) {
 			if (fileDialog.IsOk()) {
-				std::string fileNameWithExtension = fileDialog.GetFilePathName();
-				saveFolderPath = fileDialog.GetCurrentPath();
-
-				std::filesystem::path path(fileNameWithExtension);
-				saveFileName = path.filename().string();
+				std::string saveFilePath = fileDialog.GetFilePathName();
+				std::filesystem::path path(saveFilePath);
+				saveFolderPath = path.parent_path().string() + "/";
+				saveFileName = path.stem().string();
 				saveFileType = path.extension().string();
 
 				/// ACTION
@@ -119,11 +118,10 @@ namespace CMP316engine
 		}
 		if (fileDialog.Display("LoadFileDlgKey", ImGuiWindowFlags_NoCollapse, windowMinSize)) {
 			if (fileDialog.IsOk()) {
-				std::string fileNameWithExtension = fileDialog.GetFilePathName();
-				saveFolderPath = fileDialog.GetCurrentPath();
-
-				std::filesystem::path path(fileNameWithExtension);
-				saveFileName = path.filename().string();
+				std::string saveFilePath = fileDialog.GetFilePathName();
+				std::filesystem::path path(saveFilePath);
+				saveFolderPath = path.parent_path().string() + "/";
+				saveFileName = path.stem().string();
 				saveFileType = path.extension().string();
 
 				/// ACTION
