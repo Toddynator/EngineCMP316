@@ -9,9 +9,17 @@ namespace CMP316engine {
 		for (auto& entity : transformEntities) {
 			auto& transformComponent = registry->get<TransformComponent>(entity);
 
+			/// GET GLOBAL TRANSFORMS
+
+			XMVECTOR scale;
+			XMVECTOR rotationQuat;
+			XMVECTOR translation;
+			XMMatrixDecompose(&scale, &rotationQuat, &translation, transformComponent.worldMatrix);
+
 			/// ORTHOGONAL DIRECTION VECTORS
 
-			DirectX::XMMATRIX rotationMatrix = calculateRotationMatrix(transformComponent);
+			XMMATRIX rotationMatrix = XMMatrixRotationQuaternion(rotationQuat);
+			//DirectX::XMMATRIX rotationMatrix = calculateRotationMatrix(transformComponent);
 
 			DirectX::XMVECTOR forward = XMVector3TransformCoord(DirectX::XMVectorSet(0, 0, 1, 0), rotationMatrix);
 			DirectX::XMVECTOR up = XMVector3TransformCoord(DirectX::XMVectorSet(0, 1, 0, 0), rotationMatrix);

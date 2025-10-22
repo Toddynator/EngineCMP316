@@ -172,9 +172,14 @@ namespace CMP316engine {
 
 	void CameraSystem::calculateCameraViewMatrix(TransformComponent& transformComponent, CameraComponent& cameraComponent)
 	{
+		XMVECTOR scale;
+		XMVECTOR rotationQuat;
+		XMVECTOR translation;
+		XMMatrixDecompose(&scale, &rotationQuat, &translation, transformComponent.worldMatrix);
+
 		// Load into XMVECTOR structures.
 		DirectX::XMVECTOR upVector = XMLoadFloat3(&transformComponent.up);
-		DirectX::XMVECTOR positionVector = XMLoadFloat3(&transformComponent.position);
+		DirectX::XMVECTOR positionVector = translation;
 		DirectX::XMVECTOR lookAtVector = XMLoadFloat3(&transformComponent.forward);
 
 		// Translate the rotated camera position to the location of the viewer.

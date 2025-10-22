@@ -29,6 +29,14 @@ void CMP316engine::PhysicsSystem::Update(float deltaTime)
 			auto& t = transformComponent;
 			auto& r = rigidBodyComponent;
 
+			/// GET GLOBAL TRANSFORMS
+
+			XMVECTOR scale;
+			XMVECTOR rotationQuat;
+			XMVECTOR translation;
+			XMMatrixDecompose(&scale, &rotationQuat, &translation, transformComponent.worldMatrix);
+			XMFLOAT3 position; DirectX::XMStoreFloat3(&position, translation);
+
 			/// CREATE BODY 
 
 			JPH::BodyCreationSettings sphere_settings(new JPH::SphereShape(0.5f), JPH::RVec3(0.0f, 0.0f, 0.0f), JPH::Quat::sIdentity(), JPH::EMotionType::Dynamic, 1);
@@ -40,7 +48,7 @@ void CMP316engine::PhysicsSystem::Update(float deltaTime)
 			// in the game, it should ensure the physics bodies are placed at those positions.
 			// After that, the internal physics transforms should take over and be setting the transformComponent.
 
-			JPH::Vec3 bodyPosition = { t.position.x, t.position.y, t.position.z };
+			JPH::Vec3 bodyPosition = { position.x, position.y, position.z };
 			physicsManager->GetBodyInterface().SetPosition(r.physicsBodyHandle, bodyPosition, JPH::EActivation::Activate);
 
 			rigidBodyComponent.bodyCreated = true;

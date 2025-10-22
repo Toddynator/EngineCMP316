@@ -76,6 +76,11 @@ namespace CMP316engine
 		DirectX::XMFLOAT3 max = DirectX::XMFLOAT3(0.f, 0.f, 0.f);; // The largest position
 	};
 
+	/*
+	Represents local transforms, worldMatrix represents combination of local transforms with parent transforms.
+	Any local space calculations should use the transforms, whereas globalSpace transforms, like calculating camera view matrix
+	should get the transforms directly from the worldMatrix itself.
+	*/
 	struct TransformComponent
 	{
 		DirectX::XMMATRIX worldMatrix{};
