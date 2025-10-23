@@ -20,11 +20,13 @@ CMP316engine::EngineLayer::EngineLayer()
 	ec.windowManager = std::make_unique<WindowManager_SDL>();
 	ec.physicsManager = std::make_unique<PhysicsManager>();
 	ec.sceneManager = std::make_unique<SceneManager>();
+	ec.assetManager = std::make_unique<AssetManager>();
 }
 
 bool CMP316engine::EngineLayer::Initialize()
 {
 	auto& ec = engineContext;
+	if (!ec.assetManager->Initialize()) { return false; }
 	if (!ec.inputManager->Initialize()) { return false; }
 	if (!ec.audioManager->Initialize()) { return false; }
 	if (!ec.windowManager->Initialize()) { return false; }
@@ -106,6 +108,7 @@ void CMP316engine::EngineLayer::Shutdown()
 	if (engineContext.audioManager) { engineContext.audioManager->Shutdown(); }
 	if (engineContext.inputManager) { engineContext.inputManager->Shutdown(); }
 	if (engineContext.sceneManager) { engineContext.sceneManager->Shutdown(); }
+	if (engineContext.assetManager) { engineContext.assetManager->Shutdown(); }
 }
 
 bool CMP316engine::EngineLayer::processEvents()

@@ -94,7 +94,7 @@ namespace CMP316engine {
 		ImGui::Begin("Scene GameObject Tree");
 		renderSelectionWindowManipulationTools();
 		ImGui::Separator();
-		renderObjectSelectionWindowObjectTree(registry, sceneRoot, selectedEntity);
+		renderObjectSelectionWindowObjectTree(registry, sceneRoot, selectedEntity, audioManager);
 		ImGui::End();
 	}
 
@@ -287,7 +287,7 @@ namespace CMP316engine {
 			"Deletion Confirmation", "Are you sure you want to delete the entity?");
 	}
 
-	void LevelEditorSystem::renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject)
+	void LevelEditorSystem::renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject, AudioManager* audioManager)
 	{
 		auto& rootHierarchyComponent = registry->get<HierarchyComponent>(currentObject);
 
@@ -302,13 +302,14 @@ namespace CMP316engine {
 				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 				{
 					selectedObject = currentObject;
+					audioManager->Play("ButtonPress1");
 				}
 
 				int childNum = 0; // For ImGui ID
-				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject](entt::registry* registry, entt::entity childEntity) {
+				ECS::CallForAllChildren(registry, currentObject, [&childNum, &selectedObject, &audioManager](entt::registry* registry, entt::entity childEntity) {
 					ImGui::PushID(("." + std::to_string(childNum)).c_str());
 					//ImGui::Indent();
-					renderObjectSelectionWindowObjectTree(registry, childEntity, selectedObject);
+					renderObjectSelectionWindowObjectTree(registry, childEntity, selectedObject, audioManager);
 					//ImGui::Unindent();
 					ImGui::PopID();
 					childNum++;
@@ -323,6 +324,7 @@ namespace CMP316engine {
 				if (ImGui::IsItemClicked() && !ImGui::IsItemToggledOpen())
 				{
 					selectedObject = currentObject;
+					audioManager->Play("ButtonPress1");
 				}
 
 				ImGui::TreePop();

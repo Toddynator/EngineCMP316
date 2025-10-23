@@ -53,7 +53,7 @@ namespace CMP316engine {
 		void renderObjectInspectorWindow();
 		// Cut, Copy, Paste, Delete
 		void renderSelectionWindowManipulationTools();
-		static void renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject);
+		static void renderObjectSelectionWindowObjectTree(entt::registry* registry, entt::entity currentObject, entt::entity& selectedObject, AudioManager* audioManager);
 		// ImGuizmo
 		void renderImGuizmoManipulateTool();
 		void renderImGuizmoStatusWindow();
