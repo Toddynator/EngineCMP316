@@ -12,11 +12,12 @@ IMPORTANT:
 They can choose to let assets load during runtime as they are requested, load them all at once at the very start OR 
 load some at a time, and unload at checkpoints of their choosing.
 
-CURRENT ASSET TYPES:
+ASSET TYPES:
 - Models
 - Textures
 - Audio
 - Shaders
+- Voxels
 
 TODO:
 - Currently looking at Entt for resource caching, as I like the idea that I could have
@@ -34,9 +35,10 @@ Could be a good idea to have a map of factories based on string fileExtension.
 #include <d3d11.h>
 #include <unordered_map>
 #include <string.h>
+#include "../Graphics/Mesh.h"
+#include "../Graphics/Texture.h"
 
 namespace CMP316engine {
-
 	class AssetManager
 		: public Manager
 	{
@@ -45,25 +47,28 @@ namespace CMP316engine {
 		~AssetManager() = default;
 
 		bool Initialize() { return true; }
-		void Shutdown() {}
+		void Shutdown() {};
 
-		void GetResource() {}
+		void GetResource();
 		// Automatically loads type of asset based on file extensions passed in.
-		bool LoadAsset(std::string filePath) {} // std::filesystem::path = filePath; if filePath.extension == fileType then do something, else invalid filetype, no asset loaded.
-		void UnloadAsset() {}
+		bool LoadAsset(std::string filePath); // std::filesystem::path = filePath; if filePath.extension == fileType then do something, else invalid filetype, no asset loaded.
+		void UnloadAsset();
 		// Allows targetting of a specific type of asset.
-		void UnloadAssets() {}
-		void UnloadAllAssets() {}
+		void UnloadAssets();
+			void UnloadAllAssets();
 
-
-		//const Texture LoadTexture();
-		//const Texture GetTexture();
-
-		//const Model LoadModel();
-		//const Model GetModel();
+		void LoadModel(std::string filepath);
 
 	private:
-		//std::unordered_map<std::string, Texture*> textures;
-		//std::unordered_map<std::string, Model*> models;
+		enum AssetType
+		{
+			NONE,
+			IMAGE,
+			MESH,
+			AUDIO
+		};
+
+		std::unordered_map<std::string, Texture> textures;
+		std::unordered_map<std::string, std::vector<Mesh>> models;
 	};
 }

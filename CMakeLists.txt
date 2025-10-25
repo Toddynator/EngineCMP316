@@ -138,7 +138,7 @@ file(GLOB_RECURSE GAME_SRC CONFIGURE_DEPENDS
 add_library(Game STATIC ${GAME_SRC})
 # Include the Game source Code
 target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/Game)
-# Inlcude the Engine source Code
+# Include the Engine source Code
 target_include_directories(Game PUBLIC ${CMAKE_SOURCE_DIR}/Engine)
 # Create Folder Structure for Game Project
 source_group(TREE "${CMAKE_SOURCE_DIR}/Game" PREFIX "src" FILES ${GAME_SRC})
