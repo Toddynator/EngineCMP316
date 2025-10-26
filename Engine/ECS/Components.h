@@ -103,7 +103,6 @@ namespace CMP316engine
 		std::vector<Mesh> meshes;
 		ID3D11Buffer* vertexBuffer = nullptr;
 		ID3D11Buffer* indexBuffer = nullptr;
-		std::unordered_map<std::string, Texture*> textures; // TODO: Remove once AssetManager is created, mesh struct holds texture name, it looks up texture in unordered map (which will be in assetManager at some point). Shutdown then handled by assetManager, clean!
 		bool meshNeedsCalculated = true; // Can be used for the initial mesh calculation at the start or for run-time recalculation of the mesh, e.g. a voxel mesh has lost some voxels!.
 
 		int GetIndexCount()

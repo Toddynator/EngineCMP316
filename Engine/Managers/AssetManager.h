@@ -87,6 +87,10 @@ namespace CMP316engine {
 		void UnloadAllAssets();
 
 		bool LoadModel(std::string filepath);
+
+	private:
+		template<typename ResourceMap, typename Resource>
+		Resource* findOrLoadResource(ResourceMap& map, std::string filepath);
 	};
 
 	///////////////////////////////////
@@ -95,35 +99,20 @@ namespace CMP316engine {
 	template<>
 	inline Texture* AssetManager::GetResource<Texture>(std::string filepath)
 	{
-		// Check if resource already exists
-		auto iterator = textures.find(filepath);
-		if (iterator != textures.end())
-		{
-			return iterator->second;
-		}
-		else {
-			// Asset wasn't loaded yet, load it now.
-			if (!LoadAsset(filepath))
-			{
-				return nullptr;
-			}
-			else
-			{
-				// Try again now that asset is loaded as a resource
-				auto iterator = textures.find(filepath);
-				if (iterator != textures.end())
-				{
-					return iterator->second;
-				}
-			}
-		}
+		return *findOrLoadResource<std::unordered_map<std::string, Texture*>, Texture*>(textures, filepath);
 	}
 	template<>
 	inline std::vector<Mesh>* AssetManager::GetResource<std::vector<Mesh>>(std::string filepath)
 	{
+		return findOrLoadResource<std::unordered_map<std::string, std::vector<Mesh>>, std::vector<Mesh>>(models, filepath);
+	}
+
+	template<typename ResourceMap, typename Resource>
+	inline Resource* AssetManager::findOrLoadResource(ResourceMap& map, std::string filepath)
+	{
 		// Check if resource already exists
-		auto iterator = models.find(filepath);
-		if (iterator != models.end())
+		auto iterator = map.find(filepath);
+		if (iterator != map.end())
 		{
 			return &iterator->second;
 		}
@@ -136,8 +125,8 @@ namespace CMP316engine {
 			else
 			{
 				// Try again now that asset is loaded as a resource
-				auto iterator = models.find(filepath);
-				if (iterator != models.end())
+				auto iterator = map.find(filepath);
+				if (iterator != map.end())
 				{
 					return &iterator->second;
 				}
