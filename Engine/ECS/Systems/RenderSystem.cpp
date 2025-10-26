@@ -59,7 +59,7 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 	}
 }
 
-void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, Shader* shader, DirectX::XMMATRIX viewMatrix)
+void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, Shader* shader, DirectX::XMMATRIX viewMatrix)
 {
 	auto meshEntities = sceneRegistry->view<MeshComponent, TransformComponent>();
 	for (auto& entity : meshEntities) 
@@ -81,7 +81,8 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 		int meshVertexOffset = 0;
 		for (auto& mesh : meshComponent.meshes)
 		{
-			if (!shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), transformComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), meshComponent.textures[mesh.textureName]->GetTextureView(), meshVertexOffset))
+			auto texture = assetManager->GetResource<Texture>(mesh.textureName);
+			if (!shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), transformComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), texture->GetTextureView(), meshVertexOffset))
 			{
 				std::cout << "\nShader failed to render the mesh";
 				break;
@@ -96,63 +97,66 @@ void CMP316engine::RenderSystem::loadModel(ModelComponent& modelComponent, MeshC
 	meshComponent.meshes.clear();
 	meshComponent.textures.clear();
 
-	objl::Loader objLoader;
-	bool success = objLoader.LoadFile(modelComponent.filepath);
-	if (!success) { std::cout << "\nUnable to load or find model"; return; }
+	//objl::Loader objLoader;
+	//bool success = objLoader.LoadFile(modelComponent.filepath);
+	//if (!success) { std::cout << "\nUnable to load or find model"; return; }
 
-	for (auto& loadedMesh : objLoader.LoadedMeshes)
+	//for (auto& loadedMesh : objLoader.LoadedMeshes)
+	//{
+	//	meshComponent.meshes.push_back(CMP316engine::Mesh());
+	//	auto& mesh = meshComponent.meshes.back();
+	//	mesh.name = loadedMesh.MeshName;
+
+	//	//// VERTICES
+	//	for (auto& loadedVertex : loadedMesh.Vertices) {
+	//		CMP316engine::Vertex vertex;
+	//		vertex.position = DirectX::XMFLOAT3(loadedVertex.Position.X, loadedVertex.Position.Y, loadedVertex.Position.Z);
+	//		vertex.normal = DirectX::XMFLOAT3(loadedVertex.Normal.X, loadedVertex.Normal.Y, loadedVertex.Normal.Z);
+	//		vertex.uv = DirectX::XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);
+
+	//		mesh.vertices.push_back(vertex);
+	//		mesh.vertices.back().uv.y = 1 - mesh.vertices.back().uv.y;
+	//		//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal); // Is it obvious now that I stole this from an old project :P
+	//		//mesh.vertices.back().Normal *= -1;
+	//	}
+	//	//// INDICES
+	//	for (auto& index : loadedMesh.Indices) {
+	//		mesh.indices.push_back(index);
+	//	}
+	//	std::reverse(mesh.indices.begin(), mesh.indices.end());
+
+	//	//// MATERIALS
+	//	//std::cout << "\nMaterial Name: " << loadedMesh.MeshMaterial.name;
+	//	//std::cout << "\nMaterial mapb: " << loadedMesh.MeshMaterial.map_bump;
+	//	//std::cout << "\nMaterial mapd: " << loadedMesh.MeshMaterial.map_d;
+	//	//std::cout << "\nMaterial mapKa: " << loadedMesh.MeshMaterial.map_Ka;
+	//	//std::cout << "\nMaterial mapKd: " << loadedMesh.MeshMaterial.map_Kd;
+	//	//std::cout << "\nMaterial mapKs: " << loadedMesh.MeshMaterial.map_Ks;
+	//	//std::cout << "\nMaterial mapNs: " << loadedMesh.MeshMaterial.map_Ns;
+
+	//	//// TEXTURES
+
+	//	const std::string textureName = loadedMesh.MeshMaterial.map_Kd;
+
+	//	/// Get Model filepath, then replace obj name with texture name
+	//	std::filesystem::path projectFilepath = std::filesystem::current_path();
+	//	std::filesystem::path modelFilepath = modelComponent.filepath;
+	//	std::filesystem::path modelDirectory = modelFilepath.parent_path();
+	//	std::filesystem::path textureFilepath = modelDirectory / textureName;
+	//	//std::wcout << L"\nTexture Filepath: " << textureFilepath; // DEBUG
+
+	//	char textureFilepathChar[128];
+	//	strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
+	//	Texture* texture = TextureLoader::LoadTexture(textureFilepathChar, renderer->GetDevice(), renderer->GetDeviceContext());
+	//	meshComponent.textures.insert({ textureName, texture });
+	//	mesh.textureName = textureName;
+	//}
+
+	if (std::vector<Mesh>* model = assetManager->GetResource<std::vector<Mesh>>(modelComponent.filepath))
 	{
-		meshComponent.meshes.push_back(CMP316engine::Mesh());
-		auto& mesh = meshComponent.meshes.back();
-		mesh.name = loadedMesh.MeshName;
-
-		//// VERTICES
-		for (auto& loadedVertex : loadedMesh.Vertices) {
-			CMP316engine::Vertex vertex;
-			vertex.position = DirectX::XMFLOAT3(loadedVertex.Position.X, loadedVertex.Position.Y, loadedVertex.Position.Z);
-			vertex.normal = DirectX::XMFLOAT3(loadedVertex.Normal.X, loadedVertex.Normal.Y, loadedVertex.Normal.Z);
-			vertex.uv = DirectX::XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);
-
-			mesh.vertices.push_back(vertex);
-			mesh.vertices.back().uv.y = 1 - mesh.vertices.back().uv.y;
-			//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal); // Is it obvious now that I stole this from an old project :P
-			//mesh.vertices.back().Normal *= -1;
-		}
-		//// INDICES
-		for (auto& index : loadedMesh.Indices) {
-			mesh.indices.push_back(index);
-		}
-		std::reverse(mesh.indices.begin(), mesh.indices.end());
-
-		//// MATERIALS
-		//std::cout << "\nMaterial Name: " << loadedMesh.MeshMaterial.name;
-		//std::cout << "\nMaterial mapb: " << loadedMesh.MeshMaterial.map_bump;
-		//std::cout << "\nMaterial mapd: " << loadedMesh.MeshMaterial.map_d;
-		//std::cout << "\nMaterial mapKa: " << loadedMesh.MeshMaterial.map_Ka;
-		//std::cout << "\nMaterial mapKd: " << loadedMesh.MeshMaterial.map_Kd;
-		//std::cout << "\nMaterial mapKs: " << loadedMesh.MeshMaterial.map_Ks;
-		//std::cout << "\nMaterial mapNs: " << loadedMesh.MeshMaterial.map_Ns;
-
-		//// TEXTURES
-
-		const std::string textureName = loadedMesh.MeshMaterial.map_Kd;
-
-		/// Get Model filepath, then replace obj name with texture name
-		std::filesystem::path projectFilepath = std::filesystem::current_path();
-		std::filesystem::path modelFilepath = modelComponent.filepath;
-		std::filesystem::path modelDirectory = modelFilepath.parent_path();
-		std::filesystem::path textureFilepath = modelDirectory / textureName;
-		//std::wcout << L"\nTexture Filepath: " << textureFilepath; // DEBUG
-
-		char textureFilepathChar[128];
-		strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
-		Texture* texture = TextureLoader::LoadTexture(textureFilepathChar, renderer->GetDevice(), renderer->GetDeviceContext());
-		meshComponent.textures.insert({ textureName, texture });
-		mesh.textureName = textureName;
+		meshComponent.meshes = *model;
 	}
-
-	modelComponent.modelLoaded = true;
-
+	modelComponent.modelLoaded = true; // Set regardless of whether it was successful, it is more about checking ONCE.
 	std::cout << "\nModel Successfully Loaded"; // TEST
 }
 

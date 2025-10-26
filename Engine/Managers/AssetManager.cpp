@@ -5,10 +5,6 @@
 #include "../ResourceLoading/OBJ_Loader.h"
 
 namespace CMP316engine {
-	void AssetManager::GetResource()
-	{
-
-	}
 	bool AssetManager::LoadAsset(std::string filePath)
 	{
 		std::filesystem::path path = filePath; 
@@ -45,85 +41,141 @@ namespace CMP316engine {
 		switch (assetType)
 		{
 		case AssetType::IMAGE:
-			//textures[filePath] = TextureLoader::LoadTexture(filePath.c_str(), renderer->GetDevice(), renderer->GetDeviceContext());
+			textures[filePath] = TextureLoader::LoadTexture(filePath.c_str(), device, deviceContext);
 			break;
 		case AssetType::MESH:
-			LoadModel(filePath);
+			return LoadModel(filePath);
 			break;
 		case AssetType::AUDIO:
-
+			/// TODO
+			break;
+		case AssetType::SHADER:
+			/// TODO
 			break;
 		}
 		return true;
 	}
-	void AssetManager::UnloadAsset()
+	void AssetManager::UnloadAsset(std::string filepath, AssetType assetType)
 	{
-
+		switch (assetType)
+		{
+		case AssetType::IMAGE:
+		{
+			auto iterator = textures.find(filepath);
+			if (iterator != textures.end())
+			{
+				textures.erase(iterator);
+			}
+			break;
+		}
+		case AssetType::MESH:
+		{
+			auto iterator = models.find(filepath);
+			if (iterator != models.end())
+			{
+				models.erase(iterator);
+			}
+			break;
+		}
+		case AssetType::AUDIO:
+		{
+			/// TODO
+			break;
+		}
+		case AssetType::SHADER:
+		{
+			/// TODO
+			break;
+		}
+		}
 	}
-	void AssetManager::UnloadAssets()
+	void AssetManager::UnloadAssets(AssetType assetType)
 	{
-
+		switch (assetType)
+		{
+		case AssetType::IMAGE:
+			textures.clear();
+			break;
+		case AssetType::MESH:
+			models.clear();
+			break;
+		case AssetType::AUDIO:
+			/// TODO
+			break;
+		case AssetType::SHADER:
+			/// TODO
+			break;
+		}
 	}
 	void AssetManager::UnloadAllAssets()
 	{
-
+		textures.clear();
+		models.clear();
+		/// AUDIO TODO
+		/// SHADERS TODO
 	}
 
-	void AssetManager::LoadModel(std::string filepath)
+	bool AssetManager::LoadModel(std::string filepath)
 	{
-	//	objl::Loader objLoader;
-	//	bool success = objLoader.LoadFile(filepath);
-	//	if (!success) { std::cout << "\nUnable to load or find .obj model"; return; }
+		objl::Loader objLoader;
+		bool success = objLoader.LoadFile(filepath);
+		if (!success) { std::cout << "\nUnable to load or find .obj model"; return false; }
 
-	//	for (auto& loadedMesh : objLoader.LoadedMeshes)
-	//	{
-	//		meshComponent.meshes.push_back(CMP316engine::Mesh());
-	//		auto& mesh = meshComponent.meshes.back();
-	//		mesh.name = loadedMesh.MeshName;
+		std::vector<Mesh> model;
+		for (auto& loadedMesh : objLoader.LoadedMeshes)
+		{
+			model.push_back(CMP316engine::Mesh());
+			auto& mesh = model.back();
+			mesh.name = loadedMesh.MeshName;
 
-	//		//// VERTICES
-	//		for (auto& loadedVertex : loadedMesh.Vertices) {
-	//			CMP316engine::Vertex vertex;
-	//			vertex.position = DirectX::XMFLOAT3(loadedVertex.Position.X, loadedVertex.Position.Y, loadedVertex.Position.Z);
-	//			vertex.normal = DirectX::XMFLOAT3(loadedVertex.Normal.X, loadedVertex.Normal.Y, loadedVertex.Normal.Z);
-	//			vertex.uv = DirectX::XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);
+			//// VERTICES
+			for (auto& loadedVertex : loadedMesh.Vertices) {
+				CMP316engine::Vertex vertex;
+				vertex.position = DirectX::XMFLOAT3(loadedVertex.Position.X, loadedVertex.Position.Y, loadedVertex.Position.Z);
+				vertex.normal = DirectX::XMFLOAT3(loadedVertex.Normal.X, loadedVertex.Normal.Y, loadedVertex.Normal.Z);
+				vertex.uv = DirectX::XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);
 
-	//			mesh.vertices.push_back(vertex);
-	//			mesh.vertices.back().uv.y = 1 - mesh.vertices.back().uv.y;
-	//			//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal); // Is it obvious now that I stole this from an old project :P
-	//			//mesh.vertices.back().Normal *= -1;
-	//		}
-	//		//// INDICES
-	//		for (auto& index : loadedMesh.Indices) {
-	//			mesh.indices.push_back(index);
-	//		}
-	//		std::reverse(mesh.indices.begin(), mesh.indices.end());
+				mesh.vertices.push_back(vertex);
+				mesh.vertices.back().uv.y = 1 - mesh.vertices.back().uv.y;
+				//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal); // Is it obvious now that I stole this from an old project :P
+				//mesh.vertices.back().Normal *= -1;
+			}
+			//// INDICES
+			for (auto& index : loadedMesh.Indices) {
+				mesh.indices.push_back(index);
+			}
+			std::reverse(mesh.indices.begin(), mesh.indices.end());
 
-	//		//// MATERIALS
-	//		//std::cout << "\nMaterial Name: " << loadedMesh.MeshMaterial.name;
-	//		//std::cout << "\nMaterial mapb: " << loadedMesh.MeshMaterial.map_bump;
-	//		//std::cout << "\nMaterial mapd: " << loadedMesh.MeshMaterial.map_d;
-	//		//std::cout << "\nMaterial mapKa: " << loadedMesh.MeshMaterial.map_Ka;
-	//		//std::cout << "\nMaterial mapKd: " << loadedMesh.MeshMaterial.map_Kd;
-	//		//std::cout << "\nMaterial mapKs: " << loadedMesh.MeshMaterial.map_Ks;
-	//		//std::cout << "\nMaterial mapNs: " << loadedMesh.MeshMaterial.map_Ns;
+			//// MATERIALS
+			//std::cout << "\nMaterial Name: " << loadedMesh.MeshMaterial.name;
+			//std::cout << "\nMaterial mapb: " << loadedMesh.MeshMaterial.map_bump;
+			//std::cout << "\nMaterial mapd: " << loadedMesh.MeshMaterial.map_d;
+			//std::cout << "\nMaterial mapKa: " << loadedMesh.MeshMaterial.map_Ka;
+			//std::cout << "\nMaterial mapKd: " << loadedMesh.MeshMaterial.map_Kd;
+			//std::cout << "\nMaterial mapKs: " << loadedMesh.MeshMaterial.map_Ks;
+			//std::cout << "\nMaterial mapNs: " << loadedMesh.MeshMaterial.map_Ns;
 
-	//		//// TEXTURES
+			//// TEXTURES
 
-	//		const std::string textureName = loadedMesh.MeshMaterial.map_Kd;
+			const std::string textureName = loadedMesh.MeshMaterial.map_Kd;
 
-	//		/// Get Model filepath, then replace obj name with texture name
-	//		std::filesystem::path projectFilepath = std::filesystem::current_path();
-	//		std::filesystem::path modelFilepath = modelComponent.filepath;
-	//		std::filesystem::path modelDirectory = modelFilepath.parent_path();
-	//		std::filesystem::path textureFilepath = modelDirectory / textureName;
-	//		//std::wcout << L"\nTexture Filepath: " << textureFilepath; // DEBUG
+			/// Get Model filepath, then replace obj name with texture name
+			std::filesystem::path projectFilepath = std::filesystem::current_path();
+			std::filesystem::path modelFilepath = filepath;
+			std::filesystem::path modelDirectory = modelFilepath.parent_path();
+			std::filesystem::path textureFilepath = modelDirectory / textureName;
+			std::wcout << L"\nTexture Filepath: " << textureFilepath; // DEBUG
 
-	//		char textureFilepathChar[128];
-	//		strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
-	//		Texture* texture = TextureLoader::LoadTexture(textureFilepathChar, renderer->GetDevice(), renderer->GetDeviceContext());
-	//		meshComponent.textures.insert({ textureName, texture });
-	//		mesh.textureName = textureName;
-	//	}
+			char textureFilepathChar[128];
+			strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
+			Texture* texture = GetResource<Texture>(textureFilepathChar);
+			//meshComponent.textures.insert({ textureName, texture });
+			//mesh.textureName = textureName;
+			mesh.textureName = textureFilepath.string();
+		}
+
+		models[filepath] = model;
+
+		return true;
 	}
 }

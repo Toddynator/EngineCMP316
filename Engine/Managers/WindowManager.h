@@ -17,6 +17,8 @@ namespace CMP316engine {
 		public Manager
 	{
 	public:
+		virtual bool Initialize() { return true; }
+	
 		// Can pass in custom properties for creating window, otherwise it use default values
 		virtual bool createWindow(const WindowProperties windowProperties = WindowProperties()) = 0;
 

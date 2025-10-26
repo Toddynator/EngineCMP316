@@ -8,7 +8,7 @@ namespace CMP316engine {
 	class Manager
 	{
 	public:
-		virtual bool Initialize() = 0;
+		//virtual bool Initialize() = 0;
 		virtual void Shutdown() = 0;
 	};
 }

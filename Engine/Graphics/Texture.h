@@ -1,11 +1,8 @@
 /*
-Handles loading, unloading and accessing of a single texture resource. Each texture needed requires a new instance of this class.
-Uses Targa Files (.tga) as the texture format.
-
-Add more functions here if I want to support other texture formats.
-
-NOTE:
-- Targa Loading functions are due a refactoring, currently some unnecessary code duplication.
+Definition of a DX11 Texture
+TODO:
+- Possibly make this just store the pixels and rename to 'RawTexture'.
+I could then have Render specific textures handled by the renderer itself or implementations of the AssetManager (e.g. AssetManager_DirectX11)
 */
 
 #pragma once

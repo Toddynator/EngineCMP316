@@ -134,7 +134,7 @@ namespace CMP316engine {
 		PhysicsManager() {};
 		~PhysicsManager() = default;
 
-		bool Initialize() override;
+		bool Initialize();
 		void Shutdown() override;
 
 		void Update(float deltaTime);

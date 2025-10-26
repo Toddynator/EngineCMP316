@@ -12,6 +12,8 @@ namespace CMP316engine {
 		public Manager
 	{
 	public:
+		virtual bool Initialize() { return true; }
+
 		virtual bool LoadAudio(std::string audioName, std::string filepath) = 0;
 		// Should check if audio handle is still valid before using it.
 		virtual bool CheckAudioHandleIsValid(int audioHandle) = 0;

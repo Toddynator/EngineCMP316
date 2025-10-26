@@ -79,7 +79,7 @@ namespace CMP316engine {
 		InputManager();
 		~InputManager() = default;
 
-		bool Initialize() override;
+		bool Initialize();
 		void Shutdown() override {}
 
 		void EndFrame();

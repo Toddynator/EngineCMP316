@@ -22,12 +22,16 @@ ASSET TYPES:
 TODO:
 - Currently looking at Entt for resource caching, as I like the idea that I could have
 storages specific to the type of data automatically created via entt's hashing system (however it works).
-I then just use a quick lookup to retrieve the data.
+I then just use a quick lookup to retrieve the data. Will probably still need templating to handle return types.
 https://github.com/skypjack/entt/wiki/Resource-management
 - Also this link: https://gamedev.stackexchange.com/questions/97747/c-exensible-resource-manager-class-with-dynamic-registration-of-factories
 provides some cool ideas such as dynamically registering factories for the resource manager.
 Could be a good idea to have a map of factories based on string fileExtension.
 - Should have default assets and factory functions created on initialization. E.g. white pixel png, defaultShader, Engine-UI-Audio, engineDebugModel. Etc.
+
+NOTE:
+- I probably want to separate the loading for specific asset types into their own classes, e.g. TextureLoader, ModelLoader, etc.
+For specific types of those asseets, if a library doesn't handle all of them, I can then make functions for the different types, e.g. LoadObj, LoadVox)
 */
 
 #include "Manager.h"
@@ -37,38 +41,108 @@ Could be a good idea to have a map of factories based on string fileExtension.
 #include <string.h>
 #include "../Graphics/Mesh.h"
 #include "../Graphics/Texture.h"
+#include <d3d11.h>
 
 namespace CMP316engine {
+	enum AssetType
+	{
+		NONE,
+		IMAGE,
+		MESH,
+		AUDIO,
+		SHADER
+	};
+
 	class AssetManager
 		: public Manager
 	{
+	private:
+		ID3D11Device* device = nullptr; 
+		ID3D11DeviceContext* deviceContext = nullptr;
+
+		std::unordered_map<std::string, Texture*> textures;
+		std::unordered_map<std::string, std::vector<Mesh>> models;
+
 	public:
 		AssetManager() {};
 		~AssetManager() = default;
 
-		bool Initialize() { return true; }
+		bool Initialize(ID3D11Device* rendererDevice, ID3D11DeviceContext* rendererDeviceContext) { device = rendererDevice; deviceContext = rendererDeviceContext; return true; }
 		void Shutdown() {};
 
-		void GetResource();
+		//@brief If typename (resource to retrieve) exists, it will check if it is stored in a relevant map, if not it attempts to load the resource.
+		//@return nullptr on failure.
+		//@note Did this with template instead of a switchcase so that I could handle the different return types a bit cleaner. Alternative was void* return.
+		template<typename Resource>
+		Resource* GetResource(std::string filepath)
+		{
+			std::cout << "\nAssetManager::GetResource() attempted to load an unrecognized type, check if there is a template definition for the type being requested!";
+			return nullptr;
+		}
 		// Automatically loads type of asset based on file extensions passed in.
 		bool LoadAsset(std::string filePath); // std::filesystem::path = filePath; if filePath.extension == fileType then do something, else invalid filetype, no asset loaded.
-		void UnloadAsset();
+		void UnloadAsset(std::string filepath, AssetType assetType);
 		// Allows targetting of a specific type of asset.
-		void UnloadAssets();
-			void UnloadAllAssets();
+		void UnloadAssets(AssetType assetType);
+		void UnloadAllAssets();
 
-		void LoadModel(std::string filepath);
-
-	private:
-		enum AssetType
-		{
-			NONE,
-			IMAGE,
-			MESH,
-			AUDIO
-		};
-
-		std::unordered_map<std::string, Texture> textures;
-		std::unordered_map<std::string, std::vector<Mesh>> models;
+		bool LoadModel(std::string filepath);
 	};
+
+	///////////////////////////////////
+	///// RESOURCE TEMPLATE DEFINITIONS
+
+	template<>
+	inline Texture* AssetManager::GetResource<Texture>(std::string filepath)
+	{
+		// Check if resource already exists
+		auto iterator = textures.find(filepath);
+		if (iterator != textures.end())
+		{
+			return iterator->second;
+		}
+		else {
+			// Asset wasn't loaded yet, load it now.
+			if (!LoadAsset(filepath))
+			{
+				return nullptr;
+			}
+			else
+			{
+				// Try again now that asset is loaded as a resource
+				auto iterator = textures.find(filepath);
+				if (iterator != textures.end())
+				{
+					return iterator->second;
+				}
+			}
+		}
+	}
+	template<>
+	inline std::vector<Mesh>* AssetManager::GetResource<std::vector<Mesh>>(std::string filepath)
+	{
+		// Check if resource already exists
+		auto iterator = models.find(filepath);
+		if (iterator != models.end())
+		{
+			return &iterator->second;
+		}
+		else {
+			// Asset wasn't loaded yet, load it now.
+			if (!LoadAsset(filepath))
+			{
+				return nullptr;
+			}
+			else
+			{
+				// Try again now that asset is loaded as a resource
+				auto iterator = models.find(filepath);
+				if (iterator != models.end())
+				{
+					return &iterator->second;
+				}
+				return nullptr;
+			}
+		}
+	}
 }

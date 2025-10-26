@@ -59,7 +59,7 @@ namespace CMP316engine {
 	void ECSScene::Render()
 	{
 		XMMATRIX viewMatrix = CMP316engine::CameraSystem::GetActiveCameraViewMatrix(&registry);
-		CMP316engine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.shader.get(), viewMatrix);
+		CMP316engine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.assetManager.get(), engineContext.shader.get(), viewMatrix);
 	}
 
 	void ECSScene::Serialize(std::ofstream& file, BinarySerializeArchive& archive)

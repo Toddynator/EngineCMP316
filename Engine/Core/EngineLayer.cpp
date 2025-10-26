@@ -26,7 +26,6 @@ CMP316engine::EngineLayer::EngineLayer()
 bool CMP316engine::EngineLayer::Initialize()
 {
 	auto& ec = engineContext;
-	if (!ec.assetManager->Initialize()) { return false; }
 	if (!ec.inputManager->Initialize()) { return false; }
 	if (!ec.audioManager->Initialize()) { return false; }
 	if (!ec.windowManager->Initialize()) { return false; }
@@ -35,6 +34,7 @@ bool CMP316engine::EngineLayer::Initialize()
 	if (!ec.physicsManager->Initialize()) { return false; }
 	if (!ec.sceneManager->Initialize()) { return false; }
 	if (!application->Initialize()) { return false; } // Should probably do this last, incase I do any testing with the managers on initialization.
+	if (!ec.assetManager->Initialize(ec.renderer->GetDevice(), ec.renderer->GetDeviceContext())) { return false; }
 
 	/////////////
 	/// IMGUI ///
