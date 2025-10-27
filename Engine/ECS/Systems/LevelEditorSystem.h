@@ -20,7 +20,7 @@ namespace CMP316engine {
 		AudioManager* audioManager;
 
 		/// EDITOR
-		ImGuiFileDialog fileDialog;
+		ImGuiFileDialog fileDialogFileExplorer;
 		entt::registry clipboardRegistry; // Stop entities that are copied from being active in the scene until they are pasted.
 		entt::entity  sceneRoot = entt::null;
 		entt::entity  selectedEntity = entt::null;

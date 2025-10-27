@@ -1,4 +1,5 @@
 #include "Reflection.h"
+#include "../ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
 
 namespace CMP316engine
 {
@@ -47,14 +48,25 @@ namespace CMP316engine
 	}
 	bool DrawEditorString(std::string& f, const PropertiesMap& properties)
 	{
+		/*
+		TODO:
+		- Could add support for a fileFilter customData property, which allows the dialog to be further customized.
+		*/
+
 		const char* label = "string";
 		char textBuffer[256];
+		const char* filepath = "Undefined";
 
 		if (auto it = properties.find("name"_hs); it != properties.end())
 		{
 			label = *it->second.try_cast<const char*>();
 		}
-		if (auto it = properties.find("textBuffer"_hs); it != properties.end())
+		// If there is a filepath, open a filedialog, otherwise
+		if (auto it = properties.find("filepath"_hs); it != properties.end())
+		{
+			filepath = *it->second.try_cast<const char*>();
+		}
+		else if (auto it = properties.find("textBuffer"_hs); it != properties.end())
 		{
 			if (auto array = it->second.try_cast<std::array<char, 256>>()) {
 				std::memcpy(textBuffer, array->data(), sizeof(textBuffer));
@@ -71,16 +83,66 @@ namespace CMP316engine
 			return false;
 		}
 
-		/*
-		TODO:
-		- Filepath Custom Data property ~ Should open a file dialog (Add an ImGui File Dialog Library)
-		*/
+		/// DRAW IMGUI WIDGET
 
-		ImGui::Separator();
-		ImGui::Text(f.c_str());
-		bool result = ImGuiHelper::InputAny(label, f, textBuffer, sizeof(textBuffer));
-		ImGui::Separator();
-		return result;
+		if (filepath != "Undefined")
+		{
+			/// IMGUI FILE DIALOG
+
+			auto& io = ImGui::GetIO();
+			ImVec2 windowMinSize = ImVec2(io.DisplaySize.x * 0.7f, io.DisplaySize.y * 0.7f);
+		
+			// Copy string into buffer so that InputText displays the current string.
+			std::memcpy(textBuffer, f.data(), sizeof(textBuffer));
+			if (ImGui::InputText(label, textBuffer, sizeof(textBuffer), ImGuiInputTextFlags_ReadOnly))
+			{
+			}
+			// InputText is only readonly, detect if it was pressed then open file dialog.
+			if (ImGui::IsItemClicked())
+			{
+				IGFD::FileDialogConfig config;
+				config.path = filepath;
+				config.fileName = "";
+				config.countSelectionMax = 1;
+				config.flags = ImGuiFileDialogFlags_Modal |
+					ImGuiFileDialogFlags_DisableCreateDirectoryButton |
+					ImGuiFileDialogFlags_ReadOnlyFileNameField;
+				ImGuiFileDialog::Instance()->OpenDialog(
+					"ChooseFileDlgKey",
+					"Select File",
+					".*",
+					config
+				);
+
+				ImVec2 center = ImVec2(io.DisplaySize.x * 0.5f, io.DisplaySize.y * 0.5f);
+				ImVec2 windowStartSize = ImVec2(io.DisplaySize.x * 0.7f, io.DisplaySize.y * 0.7f);
+				ImGui::SetNextWindowPos(center, 0, ImVec2(0.5f, 0.5f));
+				ImGui::SetNextWindowSize(windowStartSize);
+			}
+
+			if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey", ImGuiWindowFlags_NoCollapse, windowMinSize)) {
+				if (ImGuiFileDialog::Instance()->IsOk()) {
+					std::filesystem::path absolutePath{ ImGuiFileDialog::Instance()->GetFilePathName() };
+					std::filesystem::path basePath{ filepath };
+					// Because the FileDialog returns an absolute path from the Drive, I need to get the relative path from the executable directory
+					// This unfortunately meant the hacky parent_path() calls.
+					std::filesystem::path relativePath = std::filesystem::relative(absolutePath, std::filesystem::absolute(basePath).parent_path().parent_path().parent_path());
+					f = relativePath.generic_string(); //.string() seems to use backward slashes which causes issues
+				}
+				ImGuiFileDialog::Instance()->Close();
+			}
+		}
+		else
+		{
+			/// SIMPLE TEXT INPUT
+
+			ImGui::Separator();
+			ImGui::Text(f.c_str());
+			bool result = ImGuiHelper::InputAny(label, f, textBuffer, sizeof(textBuffer));
+			ImGui::Separator();
+			return result;
+		}
+		return false;
 	}
 	bool DrawEditorBool(bool& f, const PropertiesMap& properties)
 	{

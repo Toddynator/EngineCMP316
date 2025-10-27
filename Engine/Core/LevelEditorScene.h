@@ -25,7 +25,7 @@ namespace CMP316engine
 		: public ECSScene
 	{
 	private:
-		ImGuiFileDialog fileDialog;
+		ImGuiFileDialog fileDialog; // This might not be necessary, since I only ever plan to have one modal file dialog at a time (Could use the singleton dialog)
 
 	public:
 		LevelEditorScene(CMP316engine::EngineContext& context);

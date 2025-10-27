@@ -115,9 +115,14 @@ namespace CMP316engine
 			.data<&ModelComponent::filepath, entt::as_ref_t>("filepath"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ 
 				{ "name"_hs, "filepath" }, 
-				{ "textBuffer"_hs, std::array<char, 256>{"Enter Text"}} 
+				{ "textBuffer"_hs, std::array<char, 256>{"Enter Text"}},
+				{ "filepath"_hs, "data/Models/"}
 			})
 			.traits(Traits::EDITOR)
+			.data<&ModelComponent::modelLoaded, entt::as_ref_t>("modelLoaded"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "modelLoaded" }, })
+			.traits(Traits::EDITOR)
+			.traits(Traits::NOT_SERIALIZED)
 			;
 
 		entt::meta<MovementComponent>()

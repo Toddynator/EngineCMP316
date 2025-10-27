@@ -20,7 +20,7 @@ namespace CMP316engine {
 		config.flags = ImGuiFileDialogFlags_NoDialog |
 			ImGuiFileDialogFlags_DisableCreateDirectoryButton |
 			ImGuiFileDialogFlags_ReadOnlyFileNameField;
-		fileDialog.OpenDialog("embedded", "Select File", ".*", config);
+		fileDialogFileExplorer.OpenDialog("embedded", "Select File", ".*", config);
 
 		return true;
 	}
@@ -454,10 +454,10 @@ namespace CMP316engine {
 	void LevelEditorSystem::renderFileExplorer()
 	{
 		if (ImGui::Begin("File Explorer##OpenDialogCommand")) {
-			if (fileDialog.Display("embedded", ImGuiWindowFlags_NoCollapse, ImVec2(0, 350))) { // => will show a dialog
-				if (fileDialog.IsOk()) { // action if OK
-					std::string filePathName = fileDialog.GetFilePathName();
-					std::string filePath = fileDialog.GetCurrentPath();
+			if (fileDialogFileExplorer.Display("embedded", ImGuiWindowFlags_NoCollapse, ImVec2(0, 350))) { // => will show a dialog
+				if (fileDialogFileExplorer.IsOk()) { // action if OK
+					std::string filePathName = fileDialogFileExplorer.GetFilePathName();
+					std::string filePath = fileDialogFileExplorer.GetCurrentPath();
 
 					/// ACTION
 
