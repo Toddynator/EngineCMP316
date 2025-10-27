@@ -67,7 +67,7 @@ namespace CMP316engine {
 		AssetManager() {};
 		~AssetManager() = default;
 
-		bool Initialize(ID3D11Device* rendererDevice, ID3D11DeviceContext* rendererDeviceContext) { device = rendererDevice; deviceContext = rendererDeviceContext; return true; }
+		bool Initialize(ID3D11Device* rendererDevice, ID3D11DeviceContext* rendererDeviceContext);
 		void Shutdown() {};
 
 		//@brief If typename (resource to retrieve) exists, it will check if it is stored in a relevant map, if not it attempts to load the resource.
@@ -99,7 +99,14 @@ namespace CMP316engine {
 	template<>
 	inline Texture* AssetManager::GetResource<Texture>(std::string filepath)
 	{
-		return *findOrLoadResource<std::unordered_map<std::string, Texture*>, Texture*>(textures, filepath);
+		Texture** texturePtrPtr = findOrLoadResource<std::unordered_map<std::string, Texture*>, Texture*>(textures, filepath);
+		if (texturePtrPtr == nullptr)
+		{
+			// Use Default texture incase
+			return GetResource<Texture>("data/Textures/default.png");
+		}
+		Texture* texture = *texturePtrPtr;
+		return texture;
 	}
 	template<>
 	inline std::vector<Mesh>* AssetManager::GetResource<std::vector<Mesh>>(std::string filepath)

@@ -5,6 +5,13 @@
 #include "../ResourceLoading/OBJ_Loader.h"
 
 namespace CMP316engine {
+	bool AssetManager::Initialize(ID3D11Device* rendererDevice, ID3D11DeviceContext* rendererDeviceContext) 
+	{ 
+		device = rendererDevice; 
+		deviceContext = rendererDeviceContext; 
+		return true; 
+	}
+
 	bool AssetManager::LoadAsset(std::string filePath)
 	{
 		std::filesystem::path path = filePath; 
@@ -32,7 +39,7 @@ namespace CMP316engine {
 		else
 		{
 			/// NO ASSET LOADED
-			std::cout << "\nNo Loader set for passed in filetype or invalid filepath passed in" << " FILEPATH: " << filePath;
+			//std::cout << "\nNo Loader set for passed in filetype or invalid filepath passed in" << " FILEPATH: " << filePath;
 			return false;
 		}
 
@@ -158,20 +165,20 @@ namespace CMP316engine {
 			//// TEXTURES
 
 			const std::string textureName = loadedMesh.MeshMaterial.map_Kd;
+			if (textureName != "")
+			{
+				/// Get Model filepath, then replace obj name with texture name
+				std::filesystem::path projectFilepath = std::filesystem::current_path();
+				std::filesystem::path modelFilepath = filepath;
+				std::filesystem::path modelDirectory = modelFilepath.parent_path();
+				std::filesystem::path textureFilepath = modelDirectory / textureName;
+				std::wcout << L"\nTexture Filepath: " << textureFilepath; // DEBUG
 
-			/// Get Model filepath, then replace obj name with texture name
-			std::filesystem::path projectFilepath = std::filesystem::current_path();
-			std::filesystem::path modelFilepath = filepath;
-			std::filesystem::path modelDirectory = modelFilepath.parent_path();
-			std::filesystem::path textureFilepath = modelDirectory / textureName;
-			std::wcout << L"\nTexture Filepath: " << textureFilepath; // DEBUG
-
-			char textureFilepathChar[128];
-			strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
-			Texture* texture = GetResource<Texture>(textureFilepathChar);
-			//meshComponent.textures.insert({ textureName, texture });
-			//mesh.textureName = textureName;
-			mesh.textureName = textureFilepath.string();
+				char textureFilepathChar[128];
+				strcpy_s(textureFilepathChar, textureFilepath.string().c_str());
+				Texture* texture = GetResource<Texture>(textureFilepathChar);
+				mesh.textureName = textureFilepath.string();
+			}
 		}
 
 		models[filepath] = model;

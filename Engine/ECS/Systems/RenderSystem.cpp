@@ -100,6 +100,7 @@ void CMP316engine::RenderSystem::loadModel(ModelComponent& modelComponent, MeshC
 		meshComponent.meshes = *model;
 	}
 	modelComponent.modelLoaded = true; // Set regardless of whether it was successful, it is more about checking ONCE.
+	meshComponent.meshNeedsCalculated = true;
 }
 
 void CMP316engine::RenderSystem::calculateBuffers(MeshComponent& meshComponent)
