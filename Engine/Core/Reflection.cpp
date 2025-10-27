@@ -3,6 +3,20 @@
 
 namespace CMP316engine
 {
+	/*
+	By creating meta objects for the dataTypes, 
+	when I recursively resolve reflected objects, I can then access functionality defined for a type of data.
+
+	NOTE:
+	You could technically have one meta object for the data type and append .func() to the one metaObject call,
+	but I've chosen to spread them out based on the function.
+
+	NOTE TO SELF:
+	I could add custom data to the data type meta objects such as names.
+	Means if for example a variable of a reflected object doesn't have a name defined for the editor,
+	it will then be called by the type of data instead of being completely undefined and being called something unrecognizable
+	like "variable" or "unknown variable name".
+	*/
 	void InitializeReflectionFunctions()
 	{
 		/// EDITOR UI

@@ -43,7 +43,7 @@ namespace CMP316engine
 	template<typename Type>
 	bool DrawEditor(Type& data, const PropertiesMap& properties)
 	{
-		const char* label = "float"; // Use the type as the name incase a name wasn't registered in custom data.
+		const char* label = "variable";
 		float min = 0;
 		float max = 0;
 		GetEditorCustomData(properties, label, min, max);

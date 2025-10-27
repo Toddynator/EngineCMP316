@@ -9,12 +9,13 @@ namespace CMP316engine {
 	{ 
 		device = rendererDevice; 
 		deviceContext = rendererDeviceContext; 
+		LoadAsset("data/Textures/default.png");
 		return true; 
 	}
 
-	bool AssetManager::LoadAsset(std::string filePath)
+	bool AssetManager::LoadAsset(std::string filepath)
 	{
-		std::filesystem::path path = filePath; 
+		std::filesystem::path path = filepath;
 		std::string extension = path.extension().string();
 
 		static const std::unordered_map<std::string, AssetType> supportedExtensions = {
@@ -48,17 +49,25 @@ namespace CMP316engine {
 		switch (assetType)
 		{
 		case AssetType::IMAGE:
-			textures[filePath] = TextureLoader::LoadTexture(filePath.c_str(), device, deviceContext);
+		{
+			textures[filepath] = TextureLoader::LoadTexture(filepath.c_str(), device, deviceContext);
 			break;
+		}
 		case AssetType::MESH:
-			return LoadModel(filePath);
+		{
+			return LoadModel(filepath);
 			break;
+		}
 		case AssetType::AUDIO:
+		{
 			/// TODO
 			break;
+		}
 		case AssetType::SHADER:
+		{
 			/// TODO
 			break;
+		}
 		}
 		return true;
 	}
