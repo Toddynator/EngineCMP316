@@ -77,6 +77,12 @@ add_custom_command(
         "${CMAKE_SOURCE_DIR}/data"
         "$<TARGET_FILE_DIR:Engine>/data"
 )
+add_custom_command(
+    TARGET Engine POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        "${CMAKE_SOURCE_DIR}/data/imgui.ini"
+        "$<TARGET_FILE_DIR:Engine>"
+)
 
 
 
