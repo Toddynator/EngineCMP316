@@ -12,15 +12,20 @@ https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.
 
 namespace CMP316engine
 {
+    /*
+    Store attributes in descending order of size for optimal packing
+    Minimum space wasted by padding.
+    If Colour Index is default, then voxel is not valid.
+    */
     struct Voxel
     {
-        /// CORE
-        char colourIndex;
         /// ATTRIBUTES
         float health;
         //public float weight; // kg
         //public float resistance;
         //public bool explosive;
+        /// CORE
+        char colourIndex = -1;
     };
 
     class VoxImporter

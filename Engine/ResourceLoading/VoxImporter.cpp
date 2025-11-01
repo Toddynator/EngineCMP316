@@ -1,5 +1,6 @@
 #include "VoxImporter.h"
 #include "Utility/BinaryDeserializeArchive.h"
+#include "Utility/VoxelHelper.h"
 
 namespace CMP316engine
 {
@@ -20,8 +21,10 @@ namespace CMP316engine
 
         /// PREP VARIABLES
 
-        DirectX::XMFLOAT3 modelSize;
         int colourPallete[256];
+        int modelSizeX = 0;
+        int modelSizeY = 0;
+        int modelSizeZ = 0;
 
 		/// GET FILE SIZE
 
@@ -62,13 +65,9 @@ namespace CMP316engine
             {
                 // X, Y, Z
                 // Note MagicaVoxel's vertical axis is z instead of y.
-                int x, y, z;
-                deserializeArchive(x);
-                deserializeArchive(y);
-                deserializeArchive(z);
-                modelSize.x = x;
-                modelSize.z = y;
-                modelSize.y = z;
+                deserializeArchive(modelSizeX);
+                deserializeArchive(modelSizeZ);
+                deserializeArchive(modelSizeY);
             }
             else if (chunkIDString == "XYZI")
             {
@@ -76,7 +75,7 @@ namespace CMP316engine
                 deserializeArchive(numVoxels);
                 std::cout << "\nNum of Voxels: " << numVoxels; // DEBUG
 
-                voxels.resize(modelSize.x * modelSize.y * modelSize.z);
+                voxels.resize(modelSizeX * modelSizeY * modelSizeZ);
 
                 std::cout << "\nVoxelArray Size: " << voxels.size(); // DEBUG
 
@@ -91,7 +90,7 @@ namespace CMP316engine
                     Voxel voxel;
                     voxel.colourIndex = colorIndex;
                     // MagicaVoxel uses Z direction for up and down (Gravity direction).
-                    //voxelsArray[VoxelHelper.ConvertPositionToArrayIndex(position, modelSize)] = voxel; // TODO
+                    voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, y, z, modelSizeX, modelSizeY, modelSizeZ)] = voxel; // TODO
                 }
             }
             else if (chunkIDString == "RGBA") // This is how the colour index gets the correct colour (index based on position in pallete).
