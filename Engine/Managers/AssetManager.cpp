@@ -3,6 +3,7 @@
 
 #include "../ResourceLoading/TextureLoader.h"
 #include "../ResourceLoading/OBJ_Loader.h"
+#include "../ResourceLoading/VoxImporter.h"
 
 namespace CMP316engine {
 	bool AssetManager::Initialize(ID3D11Device* rendererDevice, ID3D11DeviceContext* rendererDeviceContext) 
@@ -10,6 +11,11 @@ namespace CMP316engine {
 		device = rendererDevice; 
 		deviceContext = rendererDeviceContext; 
 		LoadAsset("data/Textures/default.png");
+
+		/// TEMP
+		VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
+		/// TEMP
+
 		return true; 
 	}
 

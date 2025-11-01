@@ -74,9 +74,12 @@ private:
 	int saveFileVersion = 0;
 
 public:
-	BinaryDeserializeArchive(std::ifstream& fileStream) : stream(fileStream) { (*this)(saveFileVersion); std::cout << "\nLoading File Version: " << saveFileVersion; }
+	BinaryDeserializeArchive(std::ifstream& fileStream) : stream(fileStream) { 
+		//(*this)(saveFileVersion); std::cout << "\nLoading File Version: " << saveFileVersion; 
+	}
 	~BinaryDeserializeArchive() = default;
 
+	void setFileVersion(int fileVersion) { saveFileVersion = fileVersion; }
 	int getFileVersion() { return saveFileVersion; };
 
 	// Handles serialization of POD types which do not need special handling.

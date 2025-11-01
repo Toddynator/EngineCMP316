@@ -53,6 +53,9 @@ namespace CMP316engine {
 			return;
 		}
 		BinaryDeserializeArchive deserializeArchive(file);
+		int saveFileVersion = 0;
+		deserializeArchive(saveFileVersion);
+		deserializeArchive.setFileVersion(saveFileVersion);
 		Deserialize(file, deserializeArchive);
 		file.close();
 	}
