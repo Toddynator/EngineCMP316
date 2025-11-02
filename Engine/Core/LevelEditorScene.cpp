@@ -3,6 +3,7 @@
 
 #include "Utility/VoxelHelper.h" // TEST
 #include "../ResourceLoading/VoxImporter.h" // TEST
+#include <chrono>
 //#include "mesher.h" // TEST
 
 namespace CMP316engine

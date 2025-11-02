@@ -17,6 +17,7 @@ the header uses them, but in building it will be using the precompiled header an
 #include <map>
 #include <functional>
 #include <optional>
+#include <chrono>
 
 #include <Windows.h>
 #include <d3d11.h>

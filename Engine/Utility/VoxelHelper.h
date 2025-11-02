@@ -93,19 +93,28 @@ namespace CMP316engine::VoxelHelper
     {
         int o = vertices.size(); // Offset between indices for each face
         DirectX::XMFLOAT3 vertexOffset;
+        Vector3Int faceDirection = FaceDirections[(int)voxelFace];
+        DirectX::XMFLOAT3 normal = { static_cast<float>(faceDirection.x), static_cast<float>(faceDirection.y), static_cast<float>(faceDirection.z) };
         
         vertices.push_back({});
         vertexOffset = FaceVertexOffsets[(int)voxelFace][0];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+        vertices.back().normal = normal;
         vertices.push_back({});
         vertexOffset = FaceVertexOffsets[(int)voxelFace][1];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+        vertices.back().normal = normal;
         vertices.push_back({});
         vertexOffset = FaceVertexOffsets[(int)voxelFace][2];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+        vertices.back().normal = normal;
         vertices.push_back({});
         vertexOffset = FaceVertexOffsets[(int)voxelFace][3];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+        vertices.back().normal = normal;
+
+        //// TODO: GENERATE UV'S, NEED TO MAKE COLOUR PALETTE TEXTURE FIRST
+        //// LATER, DUPLICATE THIS FUNCTION BUT MAKE A CULLING MESHING VARIANT.
 
         int newIndices[6] = {0 + o, 1 + o, 2 + o, 2 + o, 3 + o, 0 + o};
         //int newIndices[6] = { 2 + o, 1 + o, 0 + o, 0 + o, 3 + o, 2 + o };
