@@ -190,11 +190,15 @@ namespace CMP316engine
 		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
 		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
 
+
 		auto& mesh = meshComponent.meshes.emplace_back();
+		auto start = std::chrono::high_resolution_clock::now();
 		VoxelAsset voxelModel = VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
+		auto end = std::chrono::high_resolution_clock::now();
 		auto& voxels = voxelModel.voxels;
 		auto& modelSize = voxelModel.modelSize;
-		VoxelHelper::Vector3Int halfModelSizeOffset = { modelSize.x/2, modelSize.y / 2, modelSize.z / 2 }; // So that I can centre the mesh
+		VoxelHelper::Vector3Int halfModelSizeOffset = { modelSize.x / 2, modelSize.y / 2, modelSize.z / 2 }; // So that I can centre the mesh
+		auto start2 = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < voxels.size(); i++)
 		{
 			auto& voxel = voxels[i];
@@ -206,7 +210,21 @@ namespace CMP316engine
 			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
 			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
 			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
+
+			/*VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);*/
 		}
+		auto end2 = std::chrono::high_resolution_clock::now();
+		auto ns = duration_cast<std::chrono::nanoseconds>(end - start).count();
+		auto ms = duration_cast<std::chrono::milliseconds>(end - start).count();
+		auto ns2 = duration_cast<std::chrono::nanoseconds>(end2 - start2).count();
+		auto ms2 = duration_cast<std::chrono::milliseconds>(end2 - start2).count();
+		std::cout << "Voxel Model Import Time: " << ns << " ns (" << ms << " ms)\n";
+		std::cout << "Naive Voxel Mesh Calculation Time: " << ns2 << " ns (" << ms2 << " ms)\n";
 
 		/*MeshData meshData;
 		mesh(voxelGrid.data(), meshData);

@@ -7,7 +7,6 @@ namespace CMP316engine
     VoxelAsset VoxImporter::LoadVox(const char* filepath)
 	{
         VoxelAsset voxelAsset = {};
-		std::vector<Voxel> voxels;
 
 		std::ifstream file(filepath, std::ios::binary);
 		if (!file.is_open()) {
@@ -18,19 +17,21 @@ namespace CMP316engine
 		
 		//// DESERIALIZE VOX FILE
 
-        std::cout << "\nVox Deserialization Started for " << filepath;
+        //std::cout << "\nVox Deserialization Started for " << filepath;
 
         /// PREP VARIABLES
 
         std::array<int, 256> colourPalette{};
         VoxelHelper::Vector3Int modelSize;
+        std::vector<Voxel> voxels;
+        std::vector<std::pair<VoxelHelper::Vector3Int, Voxel>> voxelsTemp; // Store the voxels out of order first, need to get actual modelSize first.
 
 		/// GET FILE SIZE
 
 		file.seekg(0, std::ios::end); // Move read cursor to the end of the file
 		std::streampos filesize = file.tellg();  // get position to determine file size.
 		file.seekg(0, std::ios::beg); // Back to the start to begin reading the file.
-		std::cout << "\nFileSize: " << filesize; // DEBUG
+		//std::cout << "\nFileSize: " << filesize; // DEBUG
 
         /// FILE STRUCTURE / HEADER
 
@@ -38,8 +39,8 @@ namespace CMP316engine
 		deserializeArchive(id);
 		int versionNum;
 		deserializeArchive(versionNum);
-		std::cout << "\nid: " << id[0] << id[1] << id[2] << id[3]; // DEBUG
-		std::cout << "\nversion: " << versionNum; // DEBUG
+		//std::cout << "\nid: " << id[0] << id[1] << id[2] << id[3]; // DEBUG
+		//std::cout << "\nversion: " << versionNum; // DEBUG
         
         /// CHUNK STRUCTURE
         // id of 'MAIN' should be initial chunk, and parent of all other chunks, the importer should read children chunk recursively.
@@ -55,7 +56,7 @@ namespace CMP316engine
             deserializeArchive(numBytesOfChildrenContent);
 
             std::string chunkIDString(chunkID, 4);
-            std::cout << "\nchunkIDString: " << chunkIDString; // DEBUG
+            //std::cout << "\nchunkIDString: " << chunkIDString; // DEBUG
             if (chunkIDString == "MAIN")
             {
 
@@ -64,32 +65,42 @@ namespace CMP316engine
             {
                 // X, Y, Z
                 // Note MagicaVoxel's vertical axis is z
-                deserializeArchive(modelSize.x);
+                /*deserializeArchive(modelSize.x);
                 deserializeArchive(modelSize.z);
-                deserializeArchive(modelSize.y);
+                deserializeArchive(modelSize.y);*/
+                VoxelHelper::Vector3Int temp; // Because magicavoxel uses a bounding cube for model size instead of actual model bounds,
+                // I'll find it dynamically instead
+                deserializeArchive(temp.x);
+                deserializeArchive(temp.z);
+                deserializeArchive(temp.y);
             }
             else if (chunkIDString == "XYZI")
             {
                 int numVoxels;
                 deserializeArchive(numVoxels);
-                std::cout << "\nNum of Voxels: " << numVoxels; // DEBUG
+                //std::cout << "\nNum of Voxels: " << numVoxels; // DEBUG
 
-                voxels.resize(modelSize.x * modelSize.y * modelSize.z);
+                //voxels.resize(modelSize.x * modelSize.y * modelSize.z);
 
-                std::cout << "\nVoxelArray Size: " << voxels.size(); // DEBUG
+                //std::cout << "\nVoxelArray Size: " << voxels.size(); // DEBUG
 
                 for (int voxelNum = 0; voxelNum < numVoxels; voxelNum++)
                 {
                     uint8_t x, y, z, colorIndex;
+                    // MagicaVoxel uses Z direction for up and down (Gravity direction).
                     deserializeArchive(x);
-                    deserializeArchive(y);
                     deserializeArchive(z);
+                    deserializeArchive(y);
                     deserializeArchive(colorIndex); // Position in RGBA Colour Pallete
+
+                    if (modelSize.x < x + 1) { modelSize.x = x + 1; }
+                    if (modelSize.y < y + 1) { modelSize.y = y + 1; }
+                    if (modelSize.z < z + 1) { modelSize.z = z + 1; }
 
                     Voxel voxel;
                     voxel.colourIndex = static_cast<uint8_t>(colorIndex);
-                    // MagicaVoxel uses Z direction for up and down (Gravity direction).
-                    voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, z, y, modelSize.x, modelSize.y, modelSize.z)] = voxel;
+                    voxelsTemp.emplace_back(std::make_pair(VoxelHelper::Vector3Int{x, y, z}, voxel));
+                    //voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, z, y, modelSize.x, modelSize.y, modelSize.z)] = voxel;
                 }
             }
             else if (chunkIDString == "RGBA") // This is how the colour index gets the correct colour (index based on position in pallete).
@@ -115,7 +126,7 @@ namespace CMP316engine
             }
             else // UNKNOWN CHUNK
             {
-                std::cout << "\nUnknown MagicaVoxel Chunk!";
+                //std::cout << "\nUnknown MagicaVoxel Chunk!";
                 file.seekg(numBytesOfChunkContent, std::ios::cur);
             }
 		}
@@ -123,7 +134,15 @@ namespace CMP316engine
 
 		/// DESERIALIZE COMPLETE
 
-        std::cout << "\nVox Deserialization Complete\n"; // DEBUG
+        /// STORE VOXELS BASED ON MODEL SIZE
+
+        voxels.resize(modelSize.x * modelSize.y * modelSize.z);
+        for (auto& [position, voxel] : voxelsTemp)
+        {
+            voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(position.x, position.y, position.z, modelSize.x, modelSize.y, modelSize.z)] = voxel;
+        }
+
+        //std::cout << "\nVox Deserialization Complete\n"; // DEBUG
 
         if (!customPaletteExists)
         {
