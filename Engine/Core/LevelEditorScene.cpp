@@ -193,17 +193,18 @@ namespace CMP316engine
 		VoxelAsset voxelModel = VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
 		auto& voxels = voxelModel.voxels;
 		auto& modelSize = voxelModel.modelSize;
+		VoxelHelper::Vector3Int halfModelSizeOffset = { modelSize.x/2, modelSize.y / 2, modelSize.z / 2 }; // So that I can centre the mesh
 		for (int i = 0; i < voxels.size(); i++)
 		{
 			auto& voxel = voxels[i];
 			if (voxel.colourIndex == 0) { continue; }
 
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
 		}
 
 		/*MeshData meshData;

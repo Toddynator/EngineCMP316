@@ -54,31 +54,40 @@ namespace CMP316engine {
 				//inputManager->SetMouseToSavedPosition(static_cast<SDL_Window*>(windowManager->GetNativeWindow()));
 			}
 
+			if (inputManager->IsKeyDown(SDL_SCANCODE_LSHIFT))
+			{
+				currentCameraSpeed = BASE_CAMERA_SPRINT_MOVEMENT_SPEED;
+			}
+			else if (inputManager->IsKeyReleased(SDL_SCANCODE_LSHIFT))
+			{
+				currentCameraSpeed = BASE_CAMERA_MOVEMENT_SPEED;
+			}
+
 			/// LATERAL CAMERA MOVEMENT
 
 			if (inputManager->IsKeyBindingDown("Move Forward"))
 			{
-				move_forward(transformComponent, deltaTime);
+				move_forward(transformComponent, deltaTime * currentCameraSpeed);
 			}
 			if (inputManager->IsKeyBindingDown("Move Backward"))
 			{
-				move_backward(transformComponent, deltaTime);
+				move_backward(transformComponent, deltaTime * currentCameraSpeed);
 			}
 			if (inputManager->IsKeyBindingDown("Move Left"))
 			{
-				move_left(transformComponent, deltaTime);
+				move_left(transformComponent, deltaTime * currentCameraSpeed);
 			}
 			if (inputManager->IsKeyBindingDown("Move Right"))
 			{
-				move_right(transformComponent, deltaTime);
+				move_right(transformComponent, deltaTime * currentCameraSpeed);
 			}
 			if (inputManager->IsKeyBindingDown("Move Up"))
 			{
-				move_up(transformComponent, deltaTime);
+				move_up(transformComponent, deltaTime * currentCameraSpeed);
 			}
 			if (inputManager->IsKeyBindingDown("Move Down"))
 			{
-				move_down(transformComponent, deltaTime);
+				move_down(transformComponent, deltaTime * currentCameraSpeed);
 			}
 			if (inputManager->IsKeyBindingDown("Roll Anti-Clockwise"))
 			{

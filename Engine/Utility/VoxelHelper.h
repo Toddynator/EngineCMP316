@@ -11,6 +11,9 @@ namespace CMP316engine::VoxelHelper
         Vector3Int operator+(const Vector3Int& other) const {
             return { x + other.x, y + other.y, z + other.z };
         }
+        Vector3Int operator-(const Vector3Int& other) const {
+            return { x - other.x, y - other.y, z - other.z };
+        }
     };
 
 	/*
