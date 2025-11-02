@@ -4,14 +4,15 @@
 
 namespace CMP316engine
 {
-	std::vector<Voxel> VoxImporter::LoadVox(const char* filepath)
+    VoxelAsset VoxImporter::LoadVox(const char* filepath)
 	{
+        VoxelAsset voxelAsset = {};
 		std::vector<Voxel> voxels;
 
 		std::ifstream file(filepath, std::ios::binary);
 		if (!file.is_open()) {
 			std::cout << "\nFailed to open file for reading";
-			return voxels;
+			return voxelAsset;
 		}
 		BinaryDeserializeArchive deserializeArchive(file);
 		
@@ -22,9 +23,7 @@ namespace CMP316engine
         /// PREP VARIABLES
 
         int colourPallete[256];
-        int modelSizeX = 0;
-        int modelSizeY = 0;
-        int modelSizeZ = 0;
+        VoxelHelper::Vector3Int modelSize;
 
 		/// GET FILE SIZE
 
@@ -65,9 +64,9 @@ namespace CMP316engine
             {
                 // X, Y, Z
                 // Note MagicaVoxel's vertical axis is z instead of y.
-                deserializeArchive(modelSizeX);
-                deserializeArchive(modelSizeZ);
-                deserializeArchive(modelSizeY);
+                deserializeArchive(modelSize.x);
+                deserializeArchive(modelSize.z);
+                deserializeArchive(modelSize.y);
             }
             else if (chunkIDString == "XYZI")
             {
@@ -75,7 +74,7 @@ namespace CMP316engine
                 deserializeArchive(numVoxels);
                 std::cout << "\nNum of Voxels: " << numVoxels; // DEBUG
 
-                voxels.resize(modelSizeX * modelSizeY * modelSizeZ);
+                voxels.resize(modelSize.x * modelSize.y * modelSize.z);
 
                 std::cout << "\nVoxelArray Size: " << voxels.size(); // DEBUG
 
@@ -90,7 +89,7 @@ namespace CMP316engine
                     Voxel voxel;
                     voxel.colourIndex = colorIndex;
                     // MagicaVoxel uses Z direction for up and down (Gravity direction).
-                    voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, y, z, modelSizeX, modelSizeY, modelSizeZ)] = voxel; // TODO
+                    voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, y, z, modelSize.x, modelSize.y, modelSize.z)] = voxel; // TODO
                 }
             }
             else if (chunkIDString == "RGBA") // This is how the colour index gets the correct colour (index based on position in pallete).
@@ -126,7 +125,9 @@ namespace CMP316engine
 
         std::cout << "\nVox Deserialization Complete\n"; // DEBUG
 
-		return voxels;
+        voxelAsset.voxels = voxels;
+        voxelAsset.modelSize = modelSize;
+		return voxelAsset;
 	}
 
 	std::vector<Mesh> GenerateVoxelMesh(std::vector<Voxel> voxels)

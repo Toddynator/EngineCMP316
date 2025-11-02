@@ -9,6 +9,7 @@ https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.
 #pragma once
 #include <vector>
 #include "Graphics/Mesh.h" 
+#include "Utility/VoxelHelper.h"
 
 namespace CMP316engine
 {
@@ -28,10 +29,16 @@ namespace CMP316engine
         char colourIndex = -1;
     };
 
+    struct VoxelAsset
+    {
+        std::vector<Voxel> voxels;
+        VoxelHelper::Vector3Int modelSize;
+    };
+
     class VoxImporter
     {
     public:
-        static std::vector<Voxel> LoadVox(const char* filepath);
+        static VoxelAsset LoadVox(const char* filepath);
         static std::vector<Mesh> GenerateVoxelMesh(std::vector<Voxel> voxels);
     };
 }

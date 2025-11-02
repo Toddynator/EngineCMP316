@@ -37,5 +37,9 @@ namespace CMP316engine
 
 	private:
 		void createLevelEditorCameraEntity();
+
+		/// TEST
+		void testVoxelStuff();
+		/// TEST
 	};
 }

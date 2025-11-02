@@ -1,6 +1,10 @@
 #include "LevelEditorScene.h"
 #include "../ECS/Systems/LevelEditorSystem.h"
 
+#include "Utility/VoxelHelper.h" // TEST
+#include "../ResourceLoading/VoxImporter.h" // TEST
+//#include "mesher.h" // TEST
+
 namespace CMP316engine
 {
 	LevelEditorScene::LevelEditorScene(CMP316engine::EngineContext& context) : ECSScene(context)
@@ -46,6 +50,8 @@ namespace CMP316engine
 		auto ent2 = ECS::AddChild(&registry, sceneRoot);
 		auto ent21 = ECS::AddChild(&registry, ent2);
 		ECS::AddChild(&registry, ent21);
+
+		testVoxelStuff();
 		/// TEMP TEST
 
 		engineContext.audioManager->LoadAudio("ButtonPress1", "data/Audio/ButtonPress1.wav");
@@ -147,5 +153,61 @@ namespace CMP316engine
 		auto* editorCamComponent = &ECS::AddComponent<LevelEditorCameraComponent>(&registry, levelEditorCameraEntity);
 		auto* camTransformComponent = &registry.get<TransformComponent>(levelEditorCameraEntity);
 		camTransformComponent->position = { 0.f, 0.f, -5.0f };
+	}
+
+
+
+	void LevelEditorScene::testVoxelStuff()
+	{
+		uint8_t test;
+		int test2;
+
+		auto voxelEntity = ECS::AddChild(&registry, sceneRoot);
+		auto* hierarchyComponent = &registry.get<HierarchyComponent>(voxelEntity);
+		hierarchyComponent->name = "Test Voxel Entity";
+		auto& meshComponent = CMP316engine::ECS::AddComponent<CMP316engine::MeshComponent>(&registry, voxelEntity);
+
+		//std::vector<uint8_t> voxelGrid;
+		//voxelGrid.resize(32);
+
+		//for (auto& row : voxelGrid)
+		//{
+		//	row = std::numeric_limits<int>::max(); // Every bit is a 1
+		//}
+
+		///// CREATE MESH
+
+		//auto& mesh = meshComponent.meshes.emplace_back();
+		///*for (auto& row : voxelGrid)
+		//{
+		//	VoxelHelper::GenerateVoxelFaceVertices({0,1,0}, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
+		//}*/
+		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
+		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
+		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
+		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
+		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
+		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
+
+		auto& mesh = meshComponent.meshes.emplace_back();
+		VoxelAsset voxelModel = VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
+		auto& voxels = voxelModel.voxels;
+		auto& modelSize = voxelModel.modelSize;
+		for (int i = 0; i < voxels.size(); i++)
+		{
+			auto& voxel = voxels[i];
+			if (voxel.colourIndex == -1) { continue; }
+
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
+			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
+		}
+
+		/*MeshData meshData;
+		mesh(voxelGrid.data(), meshData);
+		meshComponent.meshes.emplace_back().vertices = meshData.vertices;*/
 	}
 }

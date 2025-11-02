@@ -1,9 +1,111 @@
 #pragma once
+#include "Graphics/Mesh.h"
 namespace CMP316engine::VoxelHelper
 {
+    struct Vector3Int
+    {
+        int x = 0;
+        int y = 0;
+        int z = 0;
+
+        Vector3Int operator+(const Vector3Int& other) const {
+            return { x + other.x, y + other.y, z + other.z };
+        }
+    };
+
 	/*
 	Convert Voxel Positions into a 1D array for increased performance at the cost of wasted memory.
 	*/
 	int Convert3DPositionToIndex(int x, int y, int z, int modelSizeX, int modelSizeY, int modelSizeZ);
-	void ConvertIndexTo3DPosition(int index, int& x, int& y, int& z, int modelSizeX, int modelSizeY, int modelSizeZ);
+	//void ConvertIndexTo3DPosition(int index, int& x, int& y, int& z, int modelSizeX, int modelSizeY, int modelSizeZ);
+    Vector3Int ConvertIndexTo3DPosition(int index, Vector3Int modelSize);
+
+    static const int COLOUR_PALLETE_SIZE = 256; // This is the total size of Magicavoxel Colour Palletes.
+
+    enum VoxelFace
+    {
+        Back = 0,
+        Front = 1,
+        Right = 2,
+        Left = 3,
+        Bottom = 4,
+        Top = 5
+    };
+    static const Vector3Int FaceDirections[6] =
+    {
+        Vector3Int(0,  0, -1), // Back
+        Vector3Int(0,  0,  1), // Front
+        Vector3Int(1,  0,  0), // Right
+        Vector3Int(-1,  0,  0), // Left
+        Vector3Int(0, -1,  0), // Bottom
+        Vector3Int(0,  1,  0)  // Top
+    };
+    static const DirectX::XMFLOAT3 FaceVertexOffsets[6][4] =
+    {
+        // Back // -Z
+        {
+            DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f),
+            DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f),
+            DirectX::XMFLOAT3(-0.5f,  0.5f, -0.5f),
+            DirectX::XMFLOAT3(0.5f,  0.5f, -0.5f)
+        },
+        // Front // +Z
+        {
+            DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f),
+            DirectX::XMFLOAT3(0.5f, -0.5f,  0.5f),
+            DirectX::XMFLOAT3(0.5f,  0.5f,  0.5f),
+            DirectX::XMFLOAT3(-0.5f,  0.5f,  0.5f)
+        },
+        // Right // +X
+        {
+            DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f),
+            DirectX::XMFLOAT3(0.5f,  0.5f, -0.5f),
+            DirectX::XMFLOAT3(0.5f,  0.5f,  0.5f),
+            DirectX::XMFLOAT3(0.5f, -0.5f,  0.5f)
+        },
+        // Left // -X
+        {
+            DirectX::XMFLOAT3(-0.5f,  0.5f, -0.5f),
+            DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f),
+            DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f),
+            DirectX::XMFLOAT3(-0.5f,  0.5f,  0.5f)
+        },
+        // Bottom // -Y
+        {
+            DirectX::XMFLOAT3(-0.5f, -0.5f, -0.5f),
+            DirectX::XMFLOAT3(0.5f, -0.5f, -0.5f),
+            DirectX::XMFLOAT3(0.5f, -0.5f,  0.5f),
+            DirectX::XMFLOAT3(-0.5f, -0.5f,  0.5f)
+        },
+        // Top // +Y
+        {
+            DirectX::XMFLOAT3(0.5f,  0.5f, -0.5f),
+            DirectX::XMFLOAT3(-0.5f,  0.5f, -0.5f),
+            DirectX::XMFLOAT3(-0.5f,  0.5f,  0.5f),
+            DirectX::XMFLOAT3(0.5f,  0.5f,  0.5f)
+        }
+    };
+
+    static void GenerateVoxelFaceVertices(Vector3Int position, std::vector<Vertex>& vertices, std::vector<unsigned long>& indices, VoxelFace voxelFace)
+    {
+        int o = vertices.size(); // Offset between indices for each face
+        DirectX::XMFLOAT3 vertexOffset;
+        
+        vertices.push_back({});
+        vertexOffset = FaceVertexOffsets[(int)voxelFace][0];
+        vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+        vertices.push_back({});
+        vertexOffset = FaceVertexOffsets[(int)voxelFace][1];
+        vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+        vertices.push_back({});
+        vertexOffset = FaceVertexOffsets[(int)voxelFace][2];
+        vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+        vertices.push_back({});
+        vertexOffset = FaceVertexOffsets[(int)voxelFace][3];
+        vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
+
+        int newIndices[6] = {0 + o, 1 + o, 2 + o, 2 + o, 3 + o, 0 + o};
+        //int newIndices[6] = { 2 + o, 1 + o, 0 + o, 0 + o, 3 + o, 2 + o };
+        indices.insert(indices.end(), std::begin(newIndices), std::end(newIndices));
+    }
 }
