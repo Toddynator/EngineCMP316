@@ -87,7 +87,7 @@ namespace CMP316engine
                     deserializeArchive(colorIndex); // Position in RGBA Colour Pallete
 
                     Voxel voxel;
-                    voxel.colourIndex = colorIndex;
+                    voxel.colourIndex = static_cast<uint8_t>(colorIndex);
                     // MagicaVoxel uses Z direction for up and down (Gravity direction).
                     voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, y, z, modelSize.x, modelSize.y, modelSize.z)] = voxel; // TODO
                 }

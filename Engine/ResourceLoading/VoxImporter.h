@@ -26,7 +26,8 @@ namespace CMP316engine
         //public float resistance;
         //public bool explosive;
         /// CORE
-        char colourIndex = -1;
+        uint8_t colourIndex = 0; 
+        //char colourIndex = -1;
     };
 
     struct VoxelAsset
