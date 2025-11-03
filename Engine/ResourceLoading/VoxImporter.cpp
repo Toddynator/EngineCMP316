@@ -99,8 +99,7 @@ namespace CMP316engine
                     lowestVoxelPos.y = std::min(lowestVoxelPos.y, position.y);
                     lowestVoxelPos.z = std::min(lowestVoxelPos.z, position.z);
 
-                    Voxel voxel;
-                    voxel.colourIndex = static_cast<uint8_t>(colorIndex);
+                    Voxel voxel = static_cast<uint8_t>(colorIndex);
                     voxelsTemp.emplace_back(std::make_pair(position, voxel));
                     //voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, z, y, modelSize.x, modelSize.y, modelSize.z)] = voxel;
                 }
@@ -143,7 +142,7 @@ namespace CMP316engine
         for (auto& [position, voxel] : voxelsTemp)
         {
             position = position - lowestVoxelPos;
-            voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(position.x, position.y, position.z, modelSize.x, modelSize.y, modelSize.z)] = voxel;
+            voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(position, modelSize)] = voxel;
         }
 
         //std::cout << "\nVox Deserialization Complete\n"; // DEBUG

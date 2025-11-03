@@ -10,26 +10,10 @@ https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.
 #include <vector>
 #include "Graphics/Mesh.h" 
 #include "Utility/VoxelHelper.h"
+#include "Core/Voxel.h"
 
 namespace CMP316engine
 {
-    /*
-    Store attributes in descending order of size for optimal packing
-    Minimum space wasted by padding.
-    If Colour Index is default, then voxel is not valid.
-    */
-    struct Voxel
-    {
-        /// ATTRIBUTES
-        float health;
-        //public float weight; // kg
-        //public float resistance;
-        //public bool explosive;
-        /// CORE
-        uint8_t colourIndex = 0; 
-        //char colourIndex = -1;
-    };
-
     struct VoxelAsset
     {
         std::vector<Voxel> voxels;

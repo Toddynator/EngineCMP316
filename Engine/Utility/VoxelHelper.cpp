@@ -2,16 +2,10 @@
 
 namespace CMP316engine::VoxelHelper
 {
-	int Convert3DPositionToIndex(int x, int y, int z, int modelSizeX, int modelSizeY, int modelSizeZ)
+	int Convert3DPositionToIndex(Vector3Int position, Vector3Int modelSize)
 	{
-		return (x * modelSizeY * modelSizeZ) + (y * modelSizeZ) + (z);
+		return (position.x * modelSize.y * modelSize.z) + (position.y * modelSize.z) + (position.z);
 	}
-	//void ConvertIndexTo3DPosition(int index, int& x, int& y, int& z, int modelSizeX, int modelSizeY, int modelSizeZ)
-	//{
-	//	x = index / (modelSizeY * modelSizeZ); // X
-	//	y = (index - (x * modelSizeY * modelSizeZ)) / modelSizeZ; // Y
-	//	z = index - (x * modelSizeY * modelSizeZ) - (y * modelSizeZ); // Z
-	//}
 	Vector3Int ConvertIndexTo3DPosition(int index, Vector3Int modelSize)
 	{
 		Vector3Int position;

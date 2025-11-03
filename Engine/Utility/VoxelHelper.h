@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics/Mesh.h"
+#include "Core/Voxel.h"
 namespace CMP316engine::VoxelHelper
 {
     struct Vector3Int
@@ -19,8 +20,7 @@ namespace CMP316engine::VoxelHelper
 	/*
 	Convert Voxel Positions into a 1D array for increased performance at the cost of wasted memory.
 	*/
-	int Convert3DPositionToIndex(int x, int y, int z, int modelSizeX, int modelSizeY, int modelSizeZ);
-	//void ConvertIndexTo3DPosition(int index, int& x, int& y, int& z, int modelSizeX, int modelSizeY, int modelSizeZ);
+	int Convert3DPositionToIndex(Vector3Int position, Vector3Int modelSize);
     Vector3Int ConvertIndexTo3DPosition(int index, Vector3Int modelSize);
 
     static const int COLOUR_PALLETE_SIZE = 256; // This is the total size of Magicavoxel Colour Palletes.

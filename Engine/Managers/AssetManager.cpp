@@ -11,11 +11,6 @@ namespace CMP316engine {
 		device = rendererDevice; 
 		deviceContext = rendererDeviceContext; 
 		LoadAsset("data/Textures/default.png");
-
-		/// TEMP
-		VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
-		/// TEMP
-
 		return true; 
 	}
 

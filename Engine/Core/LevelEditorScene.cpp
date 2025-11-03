@@ -189,7 +189,7 @@ namespace CMP316engine
 		for (int i = 0; i < voxels.size(); i++)
 		{
 			auto& voxel = voxels[i];
-			if (voxel.colourIndex == 0) { continue; }
+			if (voxel == 0) { continue; }
 
 			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
 			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
