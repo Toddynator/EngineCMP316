@@ -9,7 +9,7 @@ struct PixelInputType
 	float3 normal : NORMAL;
 };
 
-float4 TexturePixelShader(PixelInputType input) : SV_TARGET
+float4 main(PixelInputType input) : SV_TARGET
 {
 	float4 finalColour;
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.

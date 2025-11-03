@@ -15,17 +15,17 @@ Only include abstractions.
 
 #pragma once
 #include <memory>
-#include "../Managers/InputManager.h"
-#include "../Managers/TimeManager.h"
-#include "../Managers/AudioManager.h"
-#include "../Managers/WindowManager.h"
-#include "../Managers/RenderManager.h"
-#include "../Managers/PhysicsManager.h"
-#include "../Managers/SceneManager.h"
-#include "../Managers/AssetManager.h"
-/////
-#include "../Graphics/Renderer_DirectX11.h" // RENDERER
-#include "../Graphics/Shader.h"
+#include "Managers/InputManager.h"
+#include "Managers/TimeManager.h"
+#include "Managers/AudioManager.h"
+#include "Managers/WindowManager.h"
+#include "Managers/RenderManager.h"
+#include "Managers/PhysicsManager.h"
+#include "Managers/SceneManager.h"
+#include "Managers/AssetManager.h"
+///// GRAPHICS
+#include "Graphics/Renderer_DirectX11.h"
+#include "Graphics/Shaders/TextureShader.h"
 
 namespace CMP316engine {
 	struct EngineContext
@@ -37,9 +37,9 @@ namespace CMP316engine {
 		std::unique_ptr<PhysicsManager> physicsManager = nullptr;
 		std::unique_ptr<SceneManager> sceneManager = nullptr;
 		std::unique_ptr<AssetManager> assetManager = nullptr;
-
+		///// GRAPHICS
 		std::unique_ptr<Renderer_DirectX11> renderer = nullptr; // TODO: Make RenderManager ~ Should not be exposing ANY directX types.
-		std::unique_ptr<Shader> shader = nullptr; // TODO: Make AssetManager and Move to AssetManager
+		std::unique_ptr<TextureShader> shader = nullptr; // TODO: Make AssetManager and Move to AssetManager
 	};
 }
 

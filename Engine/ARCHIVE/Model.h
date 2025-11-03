@@ -4,9 +4,9 @@
 #include <directxmath.h>
 using namespace DirectX;
 
-#include "../Graphics/Texture.h"
-#include "../Graphics/Mesh.h"
-#include "../Graphics/Shader.h"
+#include "Graphics/Texture.h"
+#include "Graphics/Mesh.h"
+#include "Graphics/Shaders/TextureShader.h"
 #include <unordered_map>
 
 namespace CMP316engine {
@@ -22,7 +22,7 @@ namespace CMP316engine {
 		bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 		void Shutdown();
 		// Puts the model geometry onto the video card to prepare for drawing then draws using the shader.
-		bool Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
+		bool Render(TextureShader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
 		void RenderImGuiControls();
 
 		int GetIndexCount();

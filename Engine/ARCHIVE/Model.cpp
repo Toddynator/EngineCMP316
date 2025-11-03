@@ -44,7 +44,7 @@ void CMP316engine::Model::Shutdown()
 	return;
 }
 
-bool CMP316engine::Model::Render(Shader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+bool CMP316engine::Model::Render(TextureShader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	// Update models world matrix to any transforms that occurred during the frame, e.g. it has moved position or changed rotation
 	calculateWorldMatrix();
@@ -57,10 +57,11 @@ bool CMP316engine::Model::Render(Shader* shader, ID3D11DeviceContext* deviceCont
 	int meshVertexOffset = 0;
 	for (auto& mesh : meshes)
 	{
-		if (!shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), worldMatrix, viewMatrix, projectionMatrix, textures[mesh.textureName]->GetTextureView(), meshVertexOffset))
+		if (!shader->SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, textures[mesh.textureName]->GetTextureView()))
 		{
 			return false;
 		}
+		shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), meshVertexOffset);
 
 		meshVertexOffset += static_cast<int>(mesh.indices.size());
 	}

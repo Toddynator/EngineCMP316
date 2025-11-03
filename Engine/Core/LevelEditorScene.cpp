@@ -4,7 +4,8 @@
 #include "Utility/VoxelHelper.h" // TEST
 #include "../ResourceLoading/VoxImporter.h" // TEST
 #include <chrono>
-//#include "mesher.h" // TEST
+#define BM_IMPLEMENTATION
+#include "mesher.h" // TEST
 
 namespace CMP316engine
 {
@@ -160,8 +161,7 @@ namespace CMP316engine
 
 	void LevelEditorScene::testVoxelStuff()
 	{
-		uint8_t test;
-		int test2;
+		/// CREATE VOXEL ENTITY
 
 		auto voxelEntity = ECS::AddChild(&registry, sceneRoot);
 		auto* hierarchyComponent = &registry.get<HierarchyComponent>(voxelEntity);
@@ -172,13 +172,14 @@ namespace CMP316engine
 
 		//std::vector<uint8_t> voxelGrid;
 		//voxelGrid.resize(32);
-
 		//for (auto& row : voxelGrid)
 		//{
 		//	row = std::numeric_limits<int>::max(); // Every bit is a 1
 		//}
 
-		auto& mesh = meshComponent.meshes.emplace_back();
+		/// NAIVE MESHING
+
+		auto& meshStruct = meshComponent.meshes.emplace_back();
 		auto start = std::chrono::high_resolution_clock::now();
 		VoxelAsset voxelModel = VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
 		auto end = std::chrono::high_resolution_clock::now();
@@ -192,23 +193,49 @@ namespace CMP316engine
 			if (voxel == 0) { continue; }
 
 			VoxelHelper::Vector3Int position = VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset;
-			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
-			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
-			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
-			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
-			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
-			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
+			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Front);
+			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Back);
+			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Left);
+			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Right);
+			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Top);
+			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Bottom);
 		}
 		auto end2 = std::chrono::high_resolution_clock::now();
 		auto ns = duration_cast<std::chrono::nanoseconds>(end - start).count();
 		auto ms = duration_cast<std::chrono::milliseconds>(end - start).count();
-		auto ns2 = duration_cast<std::chrono::nanoseconds>(end2 - start2).count();
-		auto ms2 = duration_cast<std::chrono::milliseconds>(end2 - start2).count();
-		std::cout << "Voxel Model Import Time: " << ns << " ns (" << ms << " ms)\n";
-		std::cout << "Naive Voxel Mesh Calculation Time: " << ns2 << " ns (" << ms2 << " ms)\n";
+		std::cout << "\nVoxel Model Import Time: " << ns << " ns (" << ms << " ms)";
+		ns = duration_cast<std::chrono::nanoseconds>(end2 - start2).count();
+		ms = duration_cast<std::chrono::milliseconds>(end2 - start2).count();
+		std::cout << "\nNaive Voxel Mesh Calculation Time: " << ns << " ns (" << ms << " ms)";
 
-		/*MeshData meshData;
-		mesh(voxelGrid.data(), meshData);
-		meshComponent.meshes.emplace_back().vertices = meshData.vertices;*/
+		/// BITWISE GREEDY MESHING
+
+		/*start = std::chrono::high_resolution_clock::now();
+		MeshData meshData{};
+		meshData.opaqueMask = new uint64_t[CS_P2];
+		meshData.faceMasks = new uint64_t[CS_2 * 6];
+		meshData.forwardMerged = new uint8_t[CS_2];
+		meshData.rightMerged = new uint8_t[CS];
+		meshData.vertices = new BM_VECTOR<uint64_t>();
+
+		for (int x = 1; x < CS_P; x++) {
+			for (int y = 1; y < CS_P; y++) {
+				for (int z = 1; z < CS_P; z++) {
+					if (x % 2 == 0 && y % 2 == 0 && z % 2 == 0) {
+						mainThreadMeshData.opaqueMask[(y * CS_P) + x] |= 1ull << z;
+						mainThreadMeshData.opaqueMask[((y - 1) * CS_P) + (x - 1)] |= 1ull << z;
+						mainThreadMeshData.opaqueMask[(y * CS_P) + (x - 1)] |= 1ull << (z - 1);
+						mainThreadMeshData.opaqueMask[((y - 1) * CS_P) + x] |= 1ull << (z - 1);
+					}
+				}
+			}
+		}
+		
+		mesh(voxels.data(), meshData);
+		end = std::chrono::high_resolution_clock::now();
+		ns = duration_cast<std::chrono::nanoseconds>(end - start).count();
+		ms = duration_cast<std::chrono::milliseconds>(end - start).count();
+		std::cout << "Bitwise Greedy Voxel Mesh Calculation Time: " << ns << " ns (" << ms << " ms)\n";*/
+		//meshComponent.meshes.emplace_back().vertices = meshData.vertices;
 	}
 }

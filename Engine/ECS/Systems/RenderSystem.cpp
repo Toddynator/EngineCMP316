@@ -59,7 +59,7 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 	}
 }
 
-void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, Shader* shader, DirectX::XMMATRIX viewMatrix)
+void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, TextureShader* shader, DirectX::XMMATRIX viewMatrix)
 {
 	auto meshEntities = sceneRegistry->view<MeshComponent, TransformComponent>();
 	for (auto& entity : meshEntities) 
@@ -82,11 +82,12 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 		for (auto& mesh : meshComponent.meshes)
 		{
 			auto texture = assetManager->GetResource<Texture>(mesh.textureName);
-			if (!shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), transformComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), texture->GetTextureView(), meshVertexOffset))
+			if (!shader->SetShaderParameters(deviceContext, transformComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), texture->GetTextureView()))
 			{
 				std::cout << "\nShader failed to render the mesh";
 				break;
 			}
+			shader->Render(deviceContext, static_cast<int>(mesh.indices.size()), meshVertexOffset);
 			meshVertexOffset += static_cast<int>(mesh.indices.size());
 		}
 	}
