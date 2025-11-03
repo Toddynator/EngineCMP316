@@ -23,8 +23,10 @@ namespace CMP316engine
 
         std::array<int, 256> colourPalette{};
         VoxelHelper::Vector3Int modelSize;
+        VoxelHelper::Vector3Int magicaVoxelModelSize;
         std::vector<Voxel> voxels;
         std::vector<std::pair<VoxelHelper::Vector3Int, Voxel>> voxelsTemp; // Store the voxels out of order first, need to get actual modelSize first.
+        VoxelHelper::Vector3Int lowestVoxelPos = { 0,0,0 }; // Voxels in Magicavoxel range from 0 to Model Size (Bounding Box). If the lowest voxel is not at 0,0,0 then I can slim the model size down a bit.
 
 		/// GET FILE SIZE
 
@@ -65,14 +67,10 @@ namespace CMP316engine
             {
                 // X, Y, Z
                 // Note MagicaVoxel's vertical axis is z
-                /*deserializeArchive(modelSize.x);
-                deserializeArchive(modelSize.z);
-                deserializeArchive(modelSize.y);*/
-                VoxelHelper::Vector3Int temp; // Because magicavoxel uses a bounding cube for model size instead of actual model bounds,
-                // I'll find it dynamically instead
-                deserializeArchive(temp.x);
-                deserializeArchive(temp.z);
-                deserializeArchive(temp.y);
+                deserializeArchive(magicaVoxelModelSize.x);
+                deserializeArchive(magicaVoxelModelSize.z);
+                deserializeArchive(magicaVoxelModelSize.y);
+                lowestVoxelPos = magicaVoxelModelSize;
             }
             else if (chunkIDString == "XYZI")
             {
@@ -92,14 +90,18 @@ namespace CMP316engine
                     deserializeArchive(z);
                     deserializeArchive(y);
                     deserializeArchive(colorIndex); // Position in RGBA Colour Pallete
+                    VoxelHelper::Vector3Int position = { x, y, z };
 
-                    if (modelSize.x < x + 1) { modelSize.x = x + 1; }
-                    if (modelSize.y < y + 1) { modelSize.y = y + 1; }
-                    if (modelSize.z < z + 1) { modelSize.z = z + 1; }
+                    modelSize.x = std::max(modelSize.x, position.x + 1);
+                    modelSize.y = std::max(modelSize.y, position.y + 1);
+                    modelSize.z = std::max(modelSize.z, position.z + 1);
+                    lowestVoxelPos.x = std::min(lowestVoxelPos.x, position.x);
+                    lowestVoxelPos.y = std::min(lowestVoxelPos.y, position.y);
+                    lowestVoxelPos.z = std::min(lowestVoxelPos.z, position.z);
 
                     Voxel voxel;
                     voxel.colourIndex = static_cast<uint8_t>(colorIndex);
-                    voxelsTemp.emplace_back(std::make_pair(VoxelHelper::Vector3Int{x, y, z}, voxel));
+                    voxelsTemp.emplace_back(std::make_pair(position, voxel));
                     //voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(x, z, y, modelSize.x, modelSize.y, modelSize.z)] = voxel;
                 }
             }
@@ -136,9 +138,11 @@ namespace CMP316engine
 
         /// STORE VOXELS BASED ON MODEL SIZE
 
+        modelSize = modelSize - lowestVoxelPos;
         voxels.resize(modelSize.x * modelSize.y * modelSize.z);
         for (auto& [position, voxel] : voxelsTemp)
         {
+            position = position - lowestVoxelPos;
             voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(position.x, position.y, position.z, modelSize.x, modelSize.y, modelSize.z)] = voxel;
         }
 

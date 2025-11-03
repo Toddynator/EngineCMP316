@@ -167,6 +167,8 @@ namespace CMP316engine
 		auto* hierarchyComponent = &registry.get<HierarchyComponent>(voxelEntity);
 		hierarchyComponent->name = "Test Voxel Entity";
 		auto& meshComponent = CMP316engine::ECS::AddComponent<CMP316engine::MeshComponent>(&registry, voxelEntity);
+		auto* transformComponent = &registry.get<TransformComponent>(voxelEntity);
+		transformComponent->position = { 0.f, -20.f, 50.f};
 
 		//std::vector<uint8_t> voxelGrid;
 		//voxelGrid.resize(32);
@@ -175,21 +177,6 @@ namespace CMP316engine
 		//{
 		//	row = std::numeric_limits<int>::max(); // Every bit is a 1
 		//}
-
-		///// CREATE MESH
-
-		//auto& mesh = meshComponent.meshes.emplace_back();
-		///*for (auto& row : voxelGrid)
-		//{
-		//	VoxelHelper::GenerateVoxelFaceVertices({0,1,0}, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
-		//}*/
-		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
-		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
-		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
-		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
-		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
-		//VoxelHelper::GenerateVoxelFaceVertices({ 0,0,0 }, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
-
 
 		auto& mesh = meshComponent.meshes.emplace_back();
 		auto start = std::chrono::high_resolution_clock::now();
