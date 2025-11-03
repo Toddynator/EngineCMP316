@@ -93,8 +93,8 @@ void BaseShader::Render(ID3D11DeviceContext* deviceContext, int indexCount, int 
 
 void BaseShader::setShaderFilenames()
 {
-	vsFilename = L"data/Shaders/shader_vs.hlsl";
-	psFilename = L"data/Shaders/shader_ps.hlsl";
+	vsFilename = L"data/Shaders/texture_vs.hlsl";
+	psFilename = L"data/Shaders/texture_ps.hlsl";
 };
 bool BaseShader::initializeShader()
 {
