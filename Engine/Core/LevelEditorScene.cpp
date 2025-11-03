@@ -191,19 +191,13 @@ namespace CMP316engine
 			auto& voxel = voxels[i];
 			if (voxel == 0) { continue; }
 
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
-
-			/*VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
-			VoxelHelper::GenerateVoxelFaceVertices(VoxelHelper::ConvertIndexTo3DPosition(i, modelSize), mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);*/
+			VoxelHelper::Vector3Int position = VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset;
+			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Front);
+			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Back);
+			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Left);
+			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Right);
+			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Top);
+			VoxelHelper::GenerateVoxelFaceVertices(position, mesh.vertices, mesh.indices, VoxelHelper::VoxelFace::Bottom);
 		}
 		auto end2 = std::chrono::high_resolution_clock::now();
 		auto ns = duration_cast<std::chrono::nanoseconds>(end - start).count();
