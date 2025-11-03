@@ -1,6 +1,6 @@
 #include "ECSScene.h"
 #include "ECS/EngineECSSystems.h"
-#include "Reflection.h"
+#include "Core/Reflection.h"
 
 namespace CMP316engine {
 	ECSScene::ECSScene(CMP316engine::EngineContext& context) : Scene(context)

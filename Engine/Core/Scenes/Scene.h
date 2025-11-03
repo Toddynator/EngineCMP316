@@ -13,9 +13,9 @@ However I could use a setter and have a sceneManager handle this in the future.
 */
 
 #pragma once
-#include "EngineContext.h"
-#include "../Utility/BinarySerializeArchive.h"
-#include "../Utility/BinaryDeserializeArchive.h"
+#include "Core/EngineContext.h"
+#include "Utility/BinarySerializeArchive.h"
+#include "Utility/BinaryDeserializeArchive.h"
 
 namespace CMP316engine {
 	class Scene

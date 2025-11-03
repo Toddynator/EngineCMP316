@@ -4,7 +4,7 @@ in the application and any systems in the engine that weren't added by default.
 */
 
 #pragma once
-#include "Core/ECSScene.h"
+#include "Core/Scenes/ECSScene.h"
 
 class GameScene
 	: public CMP316engine::ECSScene

@@ -7,7 +7,7 @@ May have some default implementations that game projects can choose to utilize. 
 #pragma once
 #include <memory>
 #include "EngineContext.h"
-#include "Scene.h"
+#include "Scenes/Scene.h"
 
 namespace CMP316engine {
 	class Application

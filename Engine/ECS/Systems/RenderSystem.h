@@ -10,10 +10,10 @@ namespace CMP316engine {
 	private:
 		AssetManager* assetManager;
 		Renderer_DirectX11* renderer;
-		TextureShader* shader;
+		TextureShader* textureShader;
 
 	public:
-		RenderSystem(entt::registry* sceneRegistry, EngineContext* engineContext, Renderer_DirectX11* sceneRenderer, TextureShader* sceneDefaultShader) : System(sceneRegistry, engineContext), assetManager(engineContext->assetManager.get()), renderer(sceneRenderer), shader(sceneDefaultShader) {}
+		RenderSystem(entt::registry* sceneRegistry, EngineContext* engineContext, Renderer_DirectX11* sceneRenderer, TextureShader* sceneDefaultShader) : System(sceneRegistry, engineContext), assetManager(engineContext->assetManager.get()), renderer(sceneRenderer), textureShader(sceneDefaultShader) {}
 
 		bool Initialize() override;
 		void Shutdown() override;

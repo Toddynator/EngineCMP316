@@ -1,6 +1,6 @@
 #include "SceneManager.h"
-#include "../Core/Scene.h"
-#include "../Core/LevelEditorScene.h"
+#include "Core/Scenes/Scene.h"
+#include "Core/Scenes/LevelEditorScene.h"
 
 namespace CMP316engine {
 	SceneManager::SceneManager() = default;

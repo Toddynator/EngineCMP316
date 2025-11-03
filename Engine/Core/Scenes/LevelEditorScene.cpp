@@ -1,8 +1,8 @@
 #include "LevelEditorScene.h"
-#include "../ECS/Systems/LevelEditorSystem.h"
+#include "ECS/Systems/LevelEditorSystem.h"
 
 #include "Utility/VoxelHelper.h" // TEST
-#include "../ResourceLoading/VoxImporter.h" // TEST
+#include "ResourceLoading/VoxImporter.h" // TEST
 #include <chrono>
 #define BM_IMPLEMENTATION
 #include "mesher.h" // TEST

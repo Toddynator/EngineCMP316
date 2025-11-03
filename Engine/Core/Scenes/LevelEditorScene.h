@@ -17,7 +17,7 @@ TODO:
 
 #pragma once
 #include "ECSScene.h"
-#include "../ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
+#include "ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
 
 namespace CMP316engine
 {

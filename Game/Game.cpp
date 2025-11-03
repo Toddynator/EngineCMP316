@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "GameScene.h"
-#include "Core/LevelEditorScene.h"
+#include "Core/Scenes/LevelEditorScene.h"
 
 std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
 {
