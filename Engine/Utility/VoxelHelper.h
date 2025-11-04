@@ -83,13 +83,15 @@ namespace CMP316engine::VoxelHelper
         DirectX::XMFLOAT3 normal = { static_cast<float>(faceDirection.x), static_cast<float>(faceDirection.y), static_cast<float>(faceDirection.z) };
         
         float colourOffset = 1.0f / COLOUR_PALLETE_SIZE;
-        float colourPosition = colourOffset * voxel;
+        float colourPosition = colourOffset * static_cast<float>(voxel-0.5f);
+
+        //std::cout << "Voxel: " << static_cast<float>(voxel);
 
         vertices.push_back({});
         vertexOffset = FaceVertexOffsets[(int)voxelFace][0];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
         vertices.back().normal = normal;
-        vertices.back().uv = { colourPosition, 0 };
+        vertices.back().uv = { colourPosition, 0.f };
         vertices.push_back({});
         vertexOffset = FaceVertexOffsets[(int)voxelFace][1];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
@@ -99,12 +101,12 @@ namespace CMP316engine::VoxelHelper
         vertexOffset = FaceVertexOffsets[(int)voxelFace][2];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
         vertices.back().normal = normal;
-        vertices.back().uv = { colourPosition,  0 };
+        vertices.back().uv = { colourPosition,  0.f };
         vertices.push_back({});
         vertexOffset = FaceVertexOffsets[(int)voxelFace][3];
         vertices.back().position = { position.x + static_cast<float>(vertexOffset.x), position.y + static_cast<float>(vertexOffset.y), position.z + static_cast<float>(vertexOffset.z) };
         vertices.back().normal = normal;
-        vertices.back().uv = { colourPosition,  0 };
+        vertices.back().uv = { colourPosition,  0.f };
 
         int newIndices[6] = {0 + o, 1 + o, 2 + o, 2 + o, 3 + o, 0 + o};
         //int newIndices[6] = { 2 + o, 1 + o, 0 + o, 0 + o, 3 + o, 2 + o };
