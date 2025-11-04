@@ -20,6 +20,7 @@ ASSET TYPES:
 - Voxels
 
 TODO:
+- ModelLoader Class, move obj loading function into ModelLoader.
 - Currently looking at Entt for resource caching, as I like the idea that I could have
 storages specific to the type of data automatically created via entt's hashing system (however it works).
 I then just use a quick lookup to retrieve the data. Will probably still need templating to handle return types.
@@ -50,7 +51,8 @@ namespace CMP316engine {
 		IMAGE,
 		MESH,
 		AUDIO,
-		SHADER
+		SHADER,
+		VOXEL
 	};
 
 	class AssetManager
@@ -125,6 +127,11 @@ namespace CMP316engine {
 	inline std::vector<Mesh>* AssetManager::GetResource<std::vector<Mesh>>(std::string filepath)
 	{
 		return findOrLoadResource<std::unordered_map<std::string, std::vector<Mesh>>, std::vector<Mesh>>(models, filepath);
+	}
+	template<>
+	inline VoxelResource* AssetManager::GetResource<VoxelResource>(std::string filepath)
+	{
+		return findOrLoadResource<std::unordered_map<std::string, VoxelResource>, VoxelResource>(voxelModels, filepath);
 	}
 
 	template<typename ResourceMap, typename Resource>

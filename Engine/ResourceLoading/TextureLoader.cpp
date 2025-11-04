@@ -12,7 +12,7 @@ Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, 
 	unsigned char* pixels = stbi_load(filepath, &width, &height, &channels, 0);
 	return CreateRendererTexture(pixels, width, height, channels, device, deviceContext);
 }
-Texture* TextureLoader::CreateRendererTexture(unsigned char* pixels, int& width, int& height, int& channels, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+Texture* TextureLoader::CreateRendererTexture(unsigned char* pixels, int width, int height, int channels, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	Texture* texture = new Texture;
 

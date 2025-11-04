@@ -26,7 +26,8 @@ namespace CMP316engine {
 		{".bmp", AssetType::IMAGE},
 		{".hdr", AssetType::IMAGE},
 		{".obj", AssetType::MESH},
-		{".wav", AssetType::AUDIO}
+		{".wav", AssetType::AUDIO},
+		{".vox", AssetType::VOXEL}
 		};
 
 		/// GET TYPE
@@ -68,6 +69,9 @@ namespace CMP316engine {
 			/// TODO
 			break;
 		}
+		case AssetType::VOXEL:
+			voxelModels[filepath] = VoxImporter::LoadVox(filepath.c_str());
+			textures[filepath] = TextureLoader::CreateRendererTexture(voxelModels[filepath].pixels.data(), 256, 1, 4, device, deviceContext);
 		}
 		return true;
 	}

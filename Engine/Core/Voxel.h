@@ -31,6 +31,7 @@ namespace CMP316engine
 	{
 		std::vector<Voxel> voxels;
 		Vector3Int modelSize;
-		std::string textureName = "defaultColourPalette";
+        std::vector<unsigned char> pixels; // Colour Pallete, used to create texture
+		//std::string textureName = ""; // May be unecessary since I tend to just store texture by filepath anyway
 	};
 }

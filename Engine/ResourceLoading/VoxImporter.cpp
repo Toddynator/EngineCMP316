@@ -7,12 +7,12 @@ namespace CMP316engine
 {
     VoxelResource VoxImporter::LoadVox(const char* filepath)
 	{
-        VoxelResource voxelAsset = {};
+        VoxelResource voxelResource = {};
 
 		std::ifstream file(filepath, std::ios::binary);
 		if (!file.is_open()) {
 			std::cout << "\nFailed to open file for reading";
-			return voxelAsset;
+			return voxelResource;
 		}
 		BinaryDeserializeArchive deserializeArchive(file);
 		
@@ -176,7 +176,7 @@ namespace CMP316engine
 
         /// CREATE COLOUR PALETTE TEXTURE
 
-        /*int width = 256;
+        int width = 256;
         int height = 1;
         int channels = 4;
         std::vector<unsigned char> pixels(width * height * channels);
@@ -194,19 +194,12 @@ namespace CMP316engine
             pixels[i * 4 + 2] = b;
             pixels[i * 4 + 3] = a;
         }
-        Texture* texture = TextureLoader::CreateRendererTexture(pixels.data(), width, height, channels, device, deviceContext);
-        if (!customPaletteExists) { AssetManager::StoreResource<Texture*>("defaultColourPalette", texture); }
-        else { AssetManager::StoreResource<Texture*>(filepath, texture); }*/
 
         /// RETURN THE LOADED VOXEL ASSET
 
-        voxelAsset.voxels = voxels;
-        voxelAsset.modelSize = modelSize;
-		return voxelAsset;
-	}
-
-	std::vector<Mesh> GenerateVoxelMesh(std::vector<Voxel> voxels)
-	{
-		return std::vector<Mesh> {};
+        voxelResource.pixels = pixels;
+        voxelResource.voxels = voxels;
+        voxelResource.modelSize = modelSize;
+		return voxelResource;
 	}
 }

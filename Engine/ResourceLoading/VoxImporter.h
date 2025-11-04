@@ -18,6 +18,5 @@ namespace CMP316engine
     {
     public:
         static VoxelResource LoadVox(const char* filepath);
-        static std::vector<Mesh> GenerateVoxelMesh(std::vector<Voxel> voxels);
     };
 }
