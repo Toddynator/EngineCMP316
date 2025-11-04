@@ -5,12 +5,16 @@
 
 Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
-	Texture* texture = new Texture;
-
+	//std::cout << "\nLoading Texture from filepath: " << filepath; // DEBUG
 	// stbi_load reads all images as pixels stored as unsigned char.
 	// The engine now has to translate this into something the renderer can use.
 	int width, height, channels;
 	unsigned char* pixels = stbi_load(filepath, &width, &height, &channels, 0);
+	return CreateRendererTexture(pixels, width, height, channels, device, deviceContext);
+}
+Texture* TextureLoader::CreateRendererTexture(unsigned char* pixels, int& width, int& height, int& channels, ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+{
+	Texture* texture = new Texture;
 
 	// Setup the description of the texture.
 	D3D11_TEXTURE2D_DESC textureDesc{};
@@ -31,8 +35,8 @@ Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, 
 	HRESULT hResult = device->CreateTexture2D(&textureDesc, NULL, &textureResource);
 	if (FAILED(hResult))
 	{
-		std::cout << "\nFailed to create texture from file: ", filepath;
-		return NULL;
+		std::cout << "\nFailed to create Texture2D for texture";
+		return nullptr;
 	}
 
 	// Copy the image data into the texture.
@@ -51,8 +55,8 @@ Texture* TextureLoader::LoadTexture(const char* filepath, ID3D11Device* device, 
 	hResult = device->CreateShaderResourceView(textureResource, &srvDesc, &textureView);
 	if (FAILED(hResult))
 	{
-		std::cout << "\nFailed to create texture from file: ", filepath;
-		return NULL;
+		std::cout << "\nFailed to create shaderResourceView for texture";
+		return nullptr;
 	}
 
 	// Generate mipmaps for this texture.
