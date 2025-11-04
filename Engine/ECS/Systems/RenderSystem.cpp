@@ -59,7 +59,7 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 	}
 }
 
-void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, TextureShader* shader, DirectX::XMMATRIX viewMatrix)
+void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, LightShader* shader, DirectX::XMMATRIX viewMatrix, DirectX::XMFLOAT3 cameraPosition)
 {
 	auto meshEntities = sceneRegistry->view<MeshComponent, TransformComponent>();
 	for (auto& entity : meshEntities) 
@@ -76,13 +76,20 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 		deviceContext->IASetIndexBuffer(meshComponent.indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+		/// TEST
+		std::vector<Light> lights;
+		lights.emplace_back();
+		lights.back().lightType = LightType::DIRECTIONAL_LIGHT;
+		lights.back().lightDirection = { 1.f, 0.5f, 0.f };
+		/// TEST
+
 		// Render each mesh using the shader
 		// Compared to buffers this needs explicitly handled for each mesh as to handle different textures.
 		int meshVertexOffset = 0;
 		for (auto& mesh : meshComponent.meshes)
 		{
 			auto texture = assetManager->GetResource<Texture>(mesh.textureName);
-			if (!shader->SetShaderParameters(deviceContext, transformComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), texture->GetTextureView()))
+			if (!shader->SetShaderParameters(deviceContext, transformComponent.worldMatrix, viewMatrix, sceneRenderer->GetProjectionMatrix(), texture->GetTextureView(), cameraPosition, lights))
 			{
 				std::cout << "\nShader failed to render the mesh";
 				break;

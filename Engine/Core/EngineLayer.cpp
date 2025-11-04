@@ -73,7 +73,7 @@ bool CMP316engine::EngineLayer::Initialize()
 	// TODO: Prob move to assetManager soon
 
 	// Create and initialize the texture shader object.
-	engineContext.shader = std::make_unique<TextureShader>();
+	engineContext.shader = std::make_unique<LightShader>();
 	if (!engineContext.shader->Initialize(engineContext.renderer->GetDevice(), hwnd))
 	{
 		//MessageBox(hwnd, L"Could not initialize the shader object.", L"Error", MB_OK);

@@ -159,6 +159,8 @@ float4 main(InputType input) : SV_TARGET
     }
 	
 	return (lightColour * textureColour) + specularColour;
+	//float4 normalColour = float4(input.normal.x, input.normal.y, input.normal.z, 1.f);
+	//return (lightColour * normalColour) + specularColour;
 }
 
 

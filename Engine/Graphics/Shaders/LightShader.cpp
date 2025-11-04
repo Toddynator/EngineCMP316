@@ -16,7 +16,7 @@ void LightShader::Shutdown()
 	BaseShader::Shutdown();
 }
 
-void LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, const DirectX::XMMATRIX &worldMatrix, const DirectX::XMMATRIX &viewMatrix, const DirectX::XMMATRIX &projectionMatrix, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 cameraPosition, std::vector<Light> lights)
+bool LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, const DirectX::XMMATRIX &worldMatrix, const DirectX::XMMATRIX &viewMatrix, const DirectX::XMMATRIX &projectionMatrix, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 cameraPosition, std::vector<Light> lights)
 {
 	BaseShader::SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture);
 
@@ -59,6 +59,8 @@ void LightShader::SetShaderParameters(ID3D11DeviceContext* deviceContext, const 
 	cameraPtr->padding = 0.0f;
 	deviceContext->Unmap(cameraBuffer, 0);
 	deviceContext->VSSetConstantBuffers(1, 1, &cameraBuffer);
+
+	return true;
 }
 
 bool LightShader::initializeShader()

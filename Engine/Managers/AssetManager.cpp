@@ -154,8 +154,9 @@ namespace CMP316engine {
 
 				mesh.vertices.push_back(vertex);
 				mesh.vertices.back().uv.y = 1 - mesh.vertices.back().uv.y;
-				//mesh.vertices.back().Normal = glm::normalize(mesh.vertices.back().Normal); // Is it obvious now that I stole this from an old project :P
-				//mesh.vertices.back().Normal *= -1;
+				DirectX::XMVECTOR adjustedNormal = DirectX::XMVector3Normalize(DirectX::XMLoadFloat3(&mesh.vertices.back().normal));
+				adjustedNormal = DirectX::XMVectorScale(adjustedNormal, -1);
+				DirectX::XMStoreFloat3(&mesh.vertices.back().normal, adjustedNormal);
 			}
 			//// INDICES
 			for (auto& index : loadedMesh.Indices) {

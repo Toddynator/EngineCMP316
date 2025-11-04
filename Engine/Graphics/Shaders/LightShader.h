@@ -38,7 +38,7 @@ private:
 
 public:
 	virtual void Shutdown() override;
-	void SetShaderParameters(ID3D11DeviceContext* deviceContext, const DirectX::XMMATRIX& world, const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 cameraPosition, std::vector<Light> lights);
+	bool SetShaderParameters(ID3D11DeviceContext* deviceContext, const DirectX::XMMATRIX& world, const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, ID3D11ShaderResourceView* texture, DirectX::XMFLOAT3 cameraPosition, std::vector<Light> lights);
 
 protected:
 	virtual bool initializeShader() override;

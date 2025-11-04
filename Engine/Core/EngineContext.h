@@ -26,6 +26,7 @@ Only include abstractions.
 ///// GRAPHICS
 #include "Graphics/Renderer_DirectX11.h"
 #include "Graphics/Shaders/TextureShader.h"
+#include "Graphics/Shaders/LightShader.h"
 
 namespace CMP316engine {
 	struct EngineContext
@@ -39,7 +40,7 @@ namespace CMP316engine {
 		std::unique_ptr<AssetManager> assetManager = nullptr;
 		///// GRAPHICS
 		std::unique_ptr<Renderer_DirectX11> renderer = nullptr; // TODO: Make RenderManager ~ Should not be exposing ANY directX types.
-		std::unique_ptr<TextureShader> shader = nullptr; // TODO: Make AssetManager and Move to AssetManager
+		std::unique_ptr<LightShader> shader = nullptr; // TODO: Make AssetManager and Move to AssetManager
 	};
 }
 
