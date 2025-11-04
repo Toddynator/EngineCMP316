@@ -34,14 +34,14 @@ NOTE:
 For specific types of those asseets, if a library doesn't handle all of them, I can then make functions for the different types, e.g. LoadObj, LoadVox)
 */
 
+#pragma once
 #include "Manager.h"
-
 #include <d3d11.h>
 #include <unordered_map>
 #include <string.h>
-#include "../Graphics/Mesh.h"
-#include "../Graphics/Texture.h"
-#include <d3d11.h>
+#include "Graphics/Mesh.h"
+#include "Graphics/Texture.h"
+#include "Core/Voxel.h"
 
 namespace CMP316engine {
 	enum AssetType
@@ -62,6 +62,7 @@ namespace CMP316engine {
 
 		std::unordered_map<std::string, Texture*> textures;
 		std::unordered_map<std::string, std::vector<Mesh>> models;
+		std::unordered_map<std::string, VoxelResource> voxelModels;
 
 	public:
 		AssetManager() {};
@@ -81,6 +82,12 @@ namespace CMP316engine {
 		}
 		// Automatically loads type of asset based on file extensions passed in.
 		bool LoadAsset(std::string filePath); // std::filesystem::path = filePath; if filePath.extension == fileType then do something, else invalid filetype, no asset loaded.
+		// For any assets that are already loaded, or resources created at runtime, you can add it to the assetManager with this function.
+		template<typename Resource>
+		void StoreResource(std::string resourceName, Resource& resource)
+		{
+			std::cout << "\nAssetManager::StoreResource() attempted to store an unrecognized type, check if there is a template definition for the resource type being stored!";
+		}
 		void UnloadAsset(std::string filepath, AssetType assetType);
 		// Allows targetting of a specific type of asset.
 		void UnloadAssets(AssetType assetType);
@@ -95,6 +102,12 @@ namespace CMP316engine {
 
 	///////////////////////////////////
 	///// RESOURCE TEMPLATE DEFINITIONS
+
+	template<>
+	inline void AssetManager::StoreResource<Texture*>(std::string resourceName, Texture*& texture)
+	{
+		textures[resourceName] = texture;
+	}
 
 	template<>
 	inline Texture* AssetManager::GetResource<Texture>(std::string filepath)

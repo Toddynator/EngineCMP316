@@ -529,7 +529,7 @@ namespace CMP316engine {
 			XMVECTOR boundingBoxMax = DirectX::XMLoadFloat3(&colliderComponent.max);
 			//XMVECTOR scaleVector = DirectX::XMLoadFloat3(&transformComponent.scale);
 			//boundingBoxMin = DirectX::XMVectorMultiply(boundingBoxMin, scaleVector);
-			//boundingBoxMax = DirectX::XMVectorMultiply(boundingBoxMax, scaleVector);
+			//boundingBoxMax = DirectX::XMVectorMultiply(boundingBoxMax, scaleVector); 
 
 			XMVECTOR minVector = DirectX::XMVectorDivide(DirectX::XMVectorSubtract(boundingBoxMin, localOrigin), localDirection);
 			XMVECTOR maxVector = DirectX::XMVectorDivide(DirectX::XMVectorSubtract(boundingBoxMax, localOrigin), localDirection);

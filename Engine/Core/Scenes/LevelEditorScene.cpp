@@ -181,18 +181,18 @@ namespace CMP316engine
 
 		auto& meshStruct = meshComponent.meshes.emplace_back();
 		auto start = std::chrono::high_resolution_clock::now();
-		VoxelAsset voxelModel = VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
+		VoxelResource voxelModel = VoxImporter::LoadVox("data/Models/Fighter Spaceship.vox");
 		auto end = std::chrono::high_resolution_clock::now();
 		auto& voxels = voxelModel.voxels;
 		auto& modelSize = voxelModel.modelSize;
-		VoxelHelper::Vector3Int halfModelSizeOffset = { modelSize.x / 2, modelSize.y / 2, modelSize.z / 2 }; // So that I can centre the mesh
+		Vector3Int halfModelSizeOffset = { modelSize.x / 2, modelSize.y / 2, modelSize.z / 2 }; // So that I can centre the mesh
 		auto start2 = std::chrono::high_resolution_clock::now();
 		for (int i = 0; i < voxels.size(); i++)
 		{
 			auto& voxel = voxels[i];
 			if (voxel == 0) { continue; }
 
-			VoxelHelper::Vector3Int position = VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset;
+			Vector3Int position = VoxelHelper::ConvertIndexTo3DPosition(i, modelSize) - halfModelSizeOffset;
 			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Front);
 			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Back);
 			VoxelHelper::GenerateVoxelFaceVertices(position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Left);

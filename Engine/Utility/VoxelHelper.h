@@ -3,20 +3,6 @@
 #include "Core/Voxel.h"
 namespace CMP316engine::VoxelHelper
 {
-    struct Vector3Int
-    {
-        int x = 0;
-        int y = 0;
-        int z = 0;
-
-        Vector3Int operator+(const Vector3Int& other) const {
-            return { x + other.x, y + other.y, z + other.z };
-        }
-        Vector3Int operator-(const Vector3Int& other) const {
-            return { x - other.x, y - other.y, z - other.z };
-        }
-    };
-
 	/*
 	Convert Voxel Positions into a 1D array for increased performance at the cost of wasted memory.
 	*/

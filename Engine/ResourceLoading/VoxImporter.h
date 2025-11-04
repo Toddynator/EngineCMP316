@@ -14,16 +14,10 @@ https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.
 
 namespace CMP316engine
 {
-    struct VoxelAsset
-    {
-        std::vector<Voxel> voxels;
-        VoxelHelper::Vector3Int modelSize;
-    };
-
     class VoxImporter
     {
     public:
-        static VoxelAsset LoadVox(const char* filepath);
+        static VoxelResource LoadVox(const char* filepath);
         static std::vector<Mesh> GenerateVoxelMesh(std::vector<Voxel> voxels);
     };
 }

@@ -1,12 +1,13 @@
 #include "VoxImporter.h"
 #include "Utility/BinaryDeserializeArchive.h"
 #include "Utility/VoxelHelper.h"
+#include "ResourceLoading/TextureLoader.h"
 
 namespace CMP316engine
 {
-    VoxelAsset VoxImporter::LoadVox(const char* filepath)
+    VoxelResource VoxImporter::LoadVox(const char* filepath)
 	{
-        VoxelAsset voxelAsset = {};
+        VoxelResource voxelAsset = {};
 
 		std::ifstream file(filepath, std::ios::binary);
 		if (!file.is_open()) {
@@ -22,11 +23,11 @@ namespace CMP316engine
         /// PREP VARIABLES
 
         std::array<int, 256> colourPalette{};
-        VoxelHelper::Vector3Int modelSize;
-        VoxelHelper::Vector3Int magicaVoxelModelSize;
+        Vector3Int modelSize;
+        Vector3Int magicaVoxelModelSize;
         std::vector<Voxel> voxels;
-        std::vector<std::pair<VoxelHelper::Vector3Int, Voxel>> voxelsTemp; // Store the voxels out of order first, need to get actual modelSize first.
-        VoxelHelper::Vector3Int lowestVoxelPos = { 0,0,0 }; // Voxels in Magicavoxel range from 0 to Model Size (Bounding Box). If the lowest voxel is not at 0,0,0 then I can slim the model size down a bit.
+        std::vector<std::pair<Vector3Int, Voxel>> voxelsTemp; // Store the voxels out of order first, need to get actual modelSize first.
+        Vector3Int lowestVoxelPos = { 0,0,0 }; // Voxels in Magicavoxel range from 0 to Model Size (Bounding Box). If the lowest voxel is not at 0,0,0 then I can slim the model size down a bit.
 
 		/// GET FILE SIZE
 
@@ -90,7 +91,7 @@ namespace CMP316engine
                     deserializeArchive(z);
                     deserializeArchive(y);
                     deserializeArchive(colorIndex); // Position in RGBA Colour Pallete
-                    VoxelHelper::Vector3Int position = { x, y, z };
+                    Vector3Int position = { x, y, z };
 
                     modelSize.x = std::max(modelSize.x, position.x + 1);
                     modelSize.y = std::max(modelSize.y, position.y + 1);
@@ -147,6 +148,8 @@ namespace CMP316engine
 
         //std::cout << "\nVox Deserialization Complete\n"; // DEBUG
 
+        /// CREATE MAGICAVOXELS DEFAULT COLOUR PALETTE IF A CUSTOM ONE DIDN'T EXIST
+
         if (!customPaletteExists)
         {
             /// MagicaVoxel Default Pallete
@@ -170,6 +173,32 @@ namespace CMP316engine
             };
             colourPalette = defaultColourPalette;
         }
+
+        /// CREATE COLOUR PALETTE TEXTURE
+
+        /*int width = 256;
+        int height = 1;
+        int channels = 4;
+        std::vector<unsigned char> pixels(width * height * channels);
+        for (int i = 0; i < 256; ++i)
+        {
+            uint32_t color = colourPalette[i];
+
+            unsigned char a = (color >> 24) & 0xFF;
+            unsigned char r = (color >> 16) & 0xFF;
+            unsigned char g = (color >> 8) & 0xFF;
+            unsigned char b = (color >> 0) & 0xFF;
+
+            pixels[i * 4 + 0] = r;
+            pixels[i * 4 + 1] = g;
+            pixels[i * 4 + 2] = b;
+            pixels[i * 4 + 3] = a;
+        }
+        Texture* texture = TextureLoader::CreateRendererTexture(pixels.data(), width, height, channels, device, deviceContext);
+        if (!customPaletteExists) { AssetManager::StoreResource<Texture*>("defaultColourPalette", texture); }
+        else { AssetManager::StoreResource<Texture*>(filepath, texture); }*/
+
+        /// RETURN THE LOADED VOXEL ASSET
 
         voxelAsset.voxels = voxels;
         voxelAsset.modelSize = modelSize;

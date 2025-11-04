@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "AssetManager.h"
-
-#include "../ResourceLoading/TextureLoader.h"
-#include "../ResourceLoading/OBJ_Loader.h"
-#include "../ResourceLoading/VoxImporter.h"
+#include "ResourceLoading/TextureLoader.h"
+#include "ResourceLoading/OBJ_Loader.h"
+#include "ResourceLoading/VoxImporter.h"
 
 namespace CMP316engine {
 	bool AssetManager::Initialize(ID3D11Device* rendererDevice, ID3D11DeviceContext* rendererDeviceContext) 
