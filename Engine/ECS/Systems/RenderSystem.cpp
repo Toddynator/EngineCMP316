@@ -81,6 +81,8 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 		lights.emplace_back();
 		lights.back().lightType = LightType::DIRECTIONAL_LIGHT;
 		lights.back().lightDirection = { 1.f, 0.5f, 0.f };
+		lights.back().specularPower = 32.f;
+		lights.back().lightSpecularColour = { 0.3f, 0.3f, 0.3f, 1.f };
 		/// TEST
 
 		// Render each mesh using the shader
