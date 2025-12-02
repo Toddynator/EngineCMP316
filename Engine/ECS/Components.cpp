@@ -122,7 +122,7 @@ namespace CMP316engine
 			.data<&ModelComponent::modelLoaded, entt::as_ref_t>("modelLoaded"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "modelLoaded" }, })
 			.traits(Traits::EDITOR)
-			.traits(Traits::NOT_SERIALIZED)
+			.traits(Traits::NOT_SERIALIZED_OR_DESERIALIZED)
 			;
 
 		entt::meta<MovementComponent>()
@@ -143,7 +143,7 @@ namespace CMP316engine
 			.data<&MeshComponent::meshNeedsCalculated, entt::as_ref_t>("meshNeedsCalculated"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "meshNeedsCalculated" }, })
 			.traits(Traits::EDITOR)
-			.traits(Traits::NOT_SERIALIZED) // Should evaluate to default so that it gets reinitialized after loading
+			.traits(Traits::NOT_SERIALIZED_OR_DESERIALIZED) // Should evaluate to default so that it gets reinitialized after loading
 			;
 
 		entt::meta<CameraComponent>()

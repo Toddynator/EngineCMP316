@@ -18,7 +18,9 @@ namespace CMP316engine
 	{
 		EDITOR = 1 << 0, // Reflected member variables that should have an editor control
 		NOT_SERIALIZED = 1 << 1, // Reflected member variables that should not be serialized, and should evaluate to default values on loading (initialize bools for example). (Only needed if you actually reflect the variable)
-		COMPONENT = 1 << 2 // Add to components so that components can be identified from other reflected data, can be useful for Component specific UI's
+		COMPONENT = 1 << 2, // Add to components so that components can be identified from other reflected data, can be useful for Component specific UI's
+		NOT_DESERIALIZED = 1 << 3, // This is primarily for manual forward/backward compatibility, allowing people to update serialized files to the latest version when modifying components.
+		NOT_SERIALIZED_OR_DESERIALIZED = 1 << 4 // Technically you could just se both NOT_DESERIALIZED and NOT_SERIALIZED. This is for convenience.
 	};
 	using PropertiesMap = std::unordered_map<entt::id_type, entt::meta_any>;
 

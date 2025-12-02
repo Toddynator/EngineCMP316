@@ -230,7 +230,7 @@ namespace CMP316engine {
 
 		auto func = type.func("Serialize"_hs);
 		// Check if I have serialize handling for this specific component type first
-		if (!(type.traits<Traits>() & Traits::NOT_SERIALIZED) && func)
+		if (!((type.traits<Traits>() & (Traits::NOT_SERIALIZED_OR_DESERIALIZED | Traits::NOT_SERIALIZED)) != 0) && func)
 		{
 			PropertiesMap propertiesMap = {};
 			if (auto* map = static_cast<const PropertiesMap*>(customData))
@@ -244,7 +244,7 @@ namespace CMP316engine {
 			// Loop through member variable types (TODO: Make this recursive, currently only one level deep!)
 			for (auto [id, data] : type.data())
 			{
-				if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED))
+				if (!((data.traits<Traits>() & (Traits::NOT_SERIALIZED_OR_DESERIALIZED | Traits::NOT_SERIALIZED)) != 0))
 				{
 					auto dataInstance = data.get(instance);
 					recursiveReflectionSerialize(dataInstance, data.custom(), archive);
@@ -258,7 +258,8 @@ namespace CMP316engine {
 
 		// Check if I have serialize handling for this specific component type first
 		auto func = type.func("Deserialize"_hs);
-		if (!(type.traits<Traits>() & Traits::NOT_SERIALIZED) && func)
+		// Ensure both flags are false before attempting deserialize
+		if (!((type.traits<Traits>() & (Traits::NOT_SERIALIZED_OR_DESERIALIZED & Traits::NOT_DESERIALIZED)) != 0) && func)
 		{
 			PropertiesMap propertiesMap = {};
 			if (auto* map = static_cast<const PropertiesMap*>(customData))
@@ -272,7 +273,7 @@ namespace CMP316engine {
 			// Loop through member variable types (TODO: Make this recursive, currently only one level deep!)
 			for (auto [id, data] : type.data())
 			{
-				if (!(data.traits<Traits>() & Traits::NOT_SERIALIZED))
+				if (!((data.traits<Traits>() & (Traits::NOT_SERIALIZED_OR_DESERIALIZED | Traits::NOT_DESERIALIZED)) != 0))
 				{
 					auto dataInstance = data.get(instance);
 					recursiveReflectionDeserialize(dataInstance, data.custom(), archive);
