@@ -100,19 +100,26 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/Game")
         #pragma once
         #include "Core/Application.h"
         
+        // Extend this with your own Level enums OR use an alternative way of indexing your scenes, as long as they
+        // map to an integer.
+        enum Levels 
+        {
+        	LEVEL_EDITOR
+        };
+
         class Game
         	: public CMP316engine::Application
         {
         public:
         	Game(CMP316engine::EngineContext& context) : Application(context) {}
         
-        	bool Initialize() override { return true; }
-        	void Shutdown() override {}
+        	bool Initialize() override;
+            void Shutdown() override;
         
-        	void HandleInput() override {}
-        	void HandleImGui() override {}
-        	void Update(float deltaTime) override {}
-        	void Render() override {}
+            void HandleInput(float deltaTime) override;
+            void HandleImGui() override;
+            void Update(float deltaTime) override;
+            void Render() override;
         
         private:
         	bool wireframeEnabled = false;
@@ -121,10 +128,44 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/Game")
     file(WRITE "${CMAKE_SOURCE_DIR}/Game/Game.cpp" [[
         #include "pch.h"
         #include "Game.h"
+        #include "Core/Scenes/LevelEditorScene.h"
+
         std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
         {
         	return std::make_unique<Game>(engineContext);
         }
+
+        bool Game::Initialize() 
+        {
+            engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR); // Sets starting scene
+	        engineContext.sceneManager->RegisterScene<CMP316engine::LevelEditorScene>(LEVEL_EDITOR);
+            return true;
+        }
+
+        void Game::Shutdown()
+		{
+			Application::Shutdown();
+		}
+
+		void Game::HandleInput(float deltaTime)
+		{
+			Application::HandleInput(deltaTime);
+		}
+
+		void Game::HandleImGui()
+		{
+			Application::HandleImGui();
+		}
+
+		void Game::Update(float deltaTime)
+		{
+			Application::Update(deltaTime);
+		}
+
+		void Game::Render()
+		{
+			Application::Render();
+		}
     ]])
     file(WRITE "${CMAKE_SOURCE_DIR}/Game/pch.h" [[
         #pragma once
