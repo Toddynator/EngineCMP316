@@ -48,15 +48,16 @@ void CMP316engine::VoxelSystem::calculateVoxelMesh(VoxelComponent& voxelComponen
 	Vector3Int halfModelSizeOffset = { modelSize.x / 2, modelSize.y / 2, modelSize.z / 2 }; // So that I can centre the mesh
 	auto start = std::chrono::high_resolution_clock::now();
 
-	/// NAIVE MESHING 
 	/* TODO
-	* Culling meshing (Don't generate quads on hidden voxels)
 	* Greedy Meshing (Combine faces to save on vertices and indices)
+	* Handling for chunks ~ Once I've sorted my voxels into chunks. May try and go straight to bitwise compatible chunks so that I can use a bitwise greedy mesher instead.
 	* Multi-Threading (Voxels are perfect for this, the benefit should be pretty massive)
 	* Bitwise Greedy Meshing ~ I can either try and make my own, or I use an existing bitwise greedy mesher, but this would require formatting my voxels correctly (which may be for the best).
 	*/
 
-	for (int i = 0; i < voxels.size(); i++)
+	/// NAIVE MESHING 
+
+	/*for (int i = 0; i < voxels.size(); i++)
 	{
 		auto& voxel = voxels[i];
 		if (voxel == 0) { continue; }
@@ -68,12 +69,49 @@ void CMP316engine::VoxelSystem::calculateVoxelMesh(VoxelComponent& voxelComponen
 		VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Right);
 		VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Top);
 		VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Bottom);
+	}*/
+
+	/// SIMPLE CULLING MESHING
+
+	for (int i = 0; i < voxels.size(); i++)
+	{
+		auto& voxel = voxels[i];
+		if (voxel == 0) { continue; }
+
+		// Only generates faces for voxels that aren't concealed by another voxel, voxels at the edge of the model are generated without checking.
+
+		Vector3Int actualPosition = VoxelHelper::ConvertIndexTo3DPosition(i, modelSize);
+		Vector3Int position = actualPosition - halfModelSizeOffset;
+		if (actualPosition.z == modelSize.z-1 || voxels[VoxelHelper::Convert3DPositionToIndex(actualPosition + VoxelHelper::FaceDirections[VoxelHelper::VoxelFace::Front], modelSize)] == 0)
+		{
+			VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Front);
+		}
+		if (actualPosition.z == 0.f || voxels[VoxelHelper::Convert3DPositionToIndex(actualPosition + VoxelHelper::FaceDirections[VoxelHelper::VoxelFace::Back], modelSize)] == 0)
+		{
+			VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Back);
+		}
+		if (actualPosition.x == 0.f || voxels[VoxelHelper::Convert3DPositionToIndex(actualPosition + VoxelHelper::FaceDirections[VoxelHelper::VoxelFace::Left], modelSize)] == 0)
+		{
+			VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Left);
+		}
+		if (actualPosition.x == modelSize.x-1 || voxels[VoxelHelper::Convert3DPositionToIndex(actualPosition + VoxelHelper::FaceDirections[VoxelHelper::VoxelFace::Right], modelSize)] == 0)
+		{
+			VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Right);
+		}
+		if (actualPosition.y == modelSize.y-1 || voxels[VoxelHelper::Convert3DPositionToIndex(actualPosition + VoxelHelper::FaceDirections[VoxelHelper::VoxelFace::Top], modelSize)] == 0)
+		{
+			VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Top);
+		}
+		if (actualPosition.y == 0.f || voxels[VoxelHelper::Convert3DPositionToIndex(actualPosition + VoxelHelper::FaceDirections[VoxelHelper::VoxelFace::Bottom], modelSize)] == 0)
+		{
+			VoxelHelper::GenerateVoxelFaceVertices(voxel, position, meshStruct.vertices, meshStruct.indices, VoxelHelper::VoxelFace::Bottom);
+		}
 	}
 
 	auto end = std::chrono::high_resolution_clock::now();
 	auto ns = duration_cast<std::chrono::nanoseconds>(end - start).count();
 	auto ms = duration_cast<std::chrono::milliseconds>(end - start).count();
-	std::cout << "\nNaive Voxel Mesh Calculation Time: " << ns << " ns (" << ms << " ms)";
+	std::cout << "\nVoxel Mesh Calculation Time: " << ns << " ns (" << ms << " ms)";
 
 	voxelComponent.voxelMeshNeedsCalculated = false;
 	meshComponent.meshNeedsCalculated = true;

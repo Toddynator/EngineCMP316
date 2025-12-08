@@ -18,6 +18,7 @@ the header uses them, but in building it will be using the precompiled header an
 #include <functional>
 #include <optional>
 #include <chrono>
+#include <thread>
 
 #include <Windows.h>
 #include <d3d11.h>
