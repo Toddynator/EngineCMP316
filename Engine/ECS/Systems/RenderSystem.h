@@ -22,7 +22,6 @@ namespace CMP316engine {
 		static void RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, LightShader* shader, DirectX::XMMATRIX viewMatrix, DirectX::XMFLOAT3 cameraPosition);
 
 	private:
-		//void calculateVoxelMesh(MeshComponent& meshComponent, VoxelComponent& voxelComponent);
 		void loadModel(ModelComponent& modelComponent, MeshComponent& meshComponent);
 		void calculateBuffers(MeshComponent& meshComponent);
 		void shutdownBuffers();

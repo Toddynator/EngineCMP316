@@ -70,6 +70,7 @@ namespace CMP316engine {
 			break;
 		}
 		case AssetType::VOXEL:
+			// I won't make a mesh in the asset manager for this, as the voxels may be modified and therefore have dynamically created meshes.
 			voxelModels[filepath] = VoxImporter::LoadVox(filepath.c_str());
 			textures[filepath] = TextureLoader::CreateRendererTexture(voxelModels[filepath].pixels.data(), 256, 1, 4, device, deviceContext);
 		}

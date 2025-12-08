@@ -9,6 +9,7 @@ namespace CMP316engine {
 		systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, &engineContext, engineContext.renderer.get()));
 		systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry, &engineContext));
 		systems.push_back(std::make_unique<CMP316engine::TransformSystem>(&registry, &engineContext));
+		systems.push_back(std::make_unique<CMP316engine::VoxelSystem>(&registry, &engineContext));
 	}
 
 	bool ECSScene::Initialize()

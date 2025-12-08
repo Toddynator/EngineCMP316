@@ -141,7 +141,7 @@ namespace CMP316engine
 			entt::as_ref_t>("AddComponent"_hs)
 			.data<&MeshComponent::meshNeedsCalculated, entt::as_ref_t>("meshNeedsCalculated"_hs)
 			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "meshNeedsCalculated" }, })
-			.traits(Traits::EDITOR)
+			//.traits(Traits::EDITOR)
 			.traits(Traits::NOT_SERIALIZED_OR_DESERIALIZED) // Should evaluate to default so that it gets reinitialized after loading
 			;
 
@@ -169,6 +169,20 @@ namespace CMP316engine
 			entt::as_ref_t>("AddComponent"_hs)
 			.data<&LevelEditorColliderComponent::min, entt::as_ref_t>("min"_hs)
 			.data<&LevelEditorColliderComponent::max, entt::as_ref_t>("max"_hs)
+			;
+
+		REFLECT_COMPONENT(VoxelComponent)
+			.data<&VoxelComponent::filepath, entt::as_ref_t>("filepath"_hs)
+			.custom<PropertiesMap>(PropertiesMap{
+				{ "name"_hs, "filepath" },
+				{ "textBuffer"_hs, std::array<char, 256>{"Enter Text"}},
+				{ "filepath"_hs, "data/Models/"}
+				})
+			.traits(Traits::EDITOR)
+			.data<&VoxelComponent::voxelModelLoaded, entt::as_ref_t>("voxelModelLoaded"_hs)
+			.custom<PropertiesMap>(PropertiesMap{ { "name"_hs, "voxelModelLoaded" }, })
+			.traits(Traits::EDITOR)
+			.traits(Traits::NOT_SERIALIZED_OR_DESERIALIZED)
 			;
 	}
 }

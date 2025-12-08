@@ -5,6 +5,7 @@
 #include "../Graphics/Texture.h"
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/Body.h>
+#include "Core/Voxel.h"
 
 /*
 Components should purely store data, only Systems should handle functionality.
@@ -46,7 +47,7 @@ namespace CMP316engine
 	*/
 	struct HierarchyComponent
 	{
-		std::string name = "Undefined";
+		std::string name = "Unnamed Object";
 		entt::entity parent = entt::null; // The root entity, that owns the current entity as a child.
 		entt::entity firstChild = entt::null; // Entities store children, but they only point to the first child.
 		entt::entity prevNeighbour = entt::null; // The previous adjacent entity with the same parent (if null then it is the first child).
@@ -145,6 +146,15 @@ namespace CMP316engine
 	struct MovementComponent
 	{
 		DirectX::XMFLOAT3 linearVelocity; // CURRENTLY JUST ONE VELOCITY ALL DIRECTIONS, TODO: More settings
+	};
+
+	// Could potentially stored the modified voxels (instead of storing a copy of every voxel that is already in the asset manager).
+	struct VoxelComponent
+	{
+		VoxelResource voxelResource;
+		std::string filepath = "data/Models/Fighter Spaceship.vox";
+		bool voxelModelLoaded = false;
+		bool voxelMeshNeedsCalculated = false; // For calculating vertices and indices
 	};
 }
 
