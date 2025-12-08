@@ -1,7 +1,3 @@
-/*
-
-*/
-
 #pragma once
 #include "entt.hpp"
 #include <unordered_map>
@@ -11,6 +7,13 @@
 #include "../Utility/ImGuiHelper.h"
 
 using namespace entt::literals;
+
+#define REFLECT_COMPONENT(TYPE) \
+	entt::meta<TYPE>()	\
+	.traits(Traits::COMPONENT) \
+	.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<TYPE>)>("HasComponent"_hs) \
+	.func<static_cast<TYPE& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<TYPE>), \
+		entt::as_ref_t>("AddComponent"_hs) 
 
 namespace CMP316engine
 {

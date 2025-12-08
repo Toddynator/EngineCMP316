@@ -50,6 +50,8 @@ namespace CMP316engine
 			.func<static_cast<COMPONENT_TYPE& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<COMPONENT_TYPE>),
 			entt::as_ref_t>("AddComponent"_hs)
 			;
+
+	The REFLECT_COMPONENT(ComponentType) Macro in Reflection.h will help with this.
 	*/
 	void CMP316engine::InitializeReflection()
 	{
@@ -90,11 +92,8 @@ namespace CMP316engine
 			.traits(Traits::EDITOR)
 			;
 
-		entt::meta<HierarchyComponent>()
-			.traits(Traits::COMPONENT)
-			.func<static_cast<bool (entt::registry::*)(const entt::entity) const>(&entt::registry::any_of<HierarchyComponent>)>("HasComponent"_hs)
-			.func<static_cast<HierarchyComponent& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<HierarchyComponent>),
-			entt::as_ref_t>("AddComponent"_hs)
+		// Example of using Hierarchy Component Macro
+		REFLECT_COMPONENT(HierarchyComponent)
 			.data<&HierarchyComponent::name, entt::as_ref_t>("name"_hs)
 			.custom<PropertiesMap>(PropertiesMap{
 				{ "name"_hs, "name" },
