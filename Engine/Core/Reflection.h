@@ -1,3 +1,23 @@
+/*
+Core Reflection File
+Implements all the engine functionality for reflected objects.
+This is achieved by creating functions then reflecting them for a particular data type (e.g. float).
+Examples of use include Serialization functions & Editor UI functions.
+Objects should be reflected elsewhere
+for the sake organisation, preferably in their class/file of origin.
+
+This is better than implementing functionality for specific objects as it means 
+application developers do not need to edit engine functionality to utilize engine
+features for their own components. Once the engine has implemented functionality
+for a particular data type, whenever that variable is reflected it then works
+for every single engine feature which uses reflection.
+
+Key Features:
+- Reflection Traits : Used to indicate particular functionality should be used for a reflected object/variable.
+- Serialization Functions : Each data type is reflected with compatible serialization functions in this file, allowing for that data type to be saved and loaded.
+- Editor Functions : Each data type is reflected with compatible editor functions which allows for the Level Editor to create controls.
+*/
+
 #pragma once
 #include "entt.hpp"
 #include <unordered_map>
@@ -29,6 +49,8 @@ namespace CMP316engine
 
 	/*
 	Where the reflection for the functions will get initialized
+	I found it better to just create a static class instead of throwing the initialisation
+	call somewhere else in the program.
 	*/
 	void InitializeReflectionFunctions();
 	class FunctionReflector
@@ -42,7 +64,6 @@ namespace CMP316engine
 	inline static FunctionReflector reflectorFunctions;
 
 	/// EDITOR UI
-
 
 	void GetEditorCustomData(const PropertiesMap& properties, const char*& label, float& min, float& max);
 	template<typename Type>
@@ -69,7 +90,7 @@ namespace CMP316engine
 	void SerializeAny(Type& data, const PropertiesMap& properties, BinarySerializeArchive& archive)
 	{
 		/// TODO: File Version, could pass file version that is being save into function param when invoking.
-		/// Will be used for backward compatability.
+		/// Will be used for backward compatability. Alternatively I try and write bytelength of data somehow.
 		/*int version = -1;
 		if (auto it = properties.find("version"_hs); it != properties.end())
 		{

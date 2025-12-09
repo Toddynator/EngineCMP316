@@ -1,3 +1,11 @@
+/*
+ABSTRACT CLASS
+Acts as an interface for the underlying implementation for window management.
+
+This may be removed in the future, considering I've used SDL for window management, which is already
+an abstraction layer. This class is fairly unnecessary.
+*/
+
 #pragma once
 #include "Manager.h"
 #include <Windows.h>

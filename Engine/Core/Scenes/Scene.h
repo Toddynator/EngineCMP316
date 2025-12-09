@@ -1,14 +1,10 @@
 /*
 Where levels, aka scenes will go inside an application.
-Scenes will handle the 'Scene Tree' where all GameObjects are stored.
+This implements the required framework all scenes should use,
+scenes implemented in Game projects should inherit this or one of the derived scene classes.
+Any functions that are overridden should call the base implementation from their inherited scene class.
 
-Current plan is that games will simply override this and create their own definitions of levels.
-However,
-may consider having levels be entirely serialized, and created through an engine level editor, in which case you would only need one scene class for all levels in a game.
-
-
-
-CURRENTLY: Passes in Engine Context via constructor, means derivations need to create their own constructor (boilerplate). 
+IMPROVEMENT IDEA: Currently passes in Engine Context via constructor, means derivations need to create their own constructor (boilerplate). 
 However I could use a setter and have a sceneManager handle this in the future.
 */
 

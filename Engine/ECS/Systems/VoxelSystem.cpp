@@ -51,7 +51,6 @@ void CMP316engine::VoxelSystem::calculateVoxelMesh(VoxelComponent& voxelComponen
 	/* TODO
 	* Greedy Meshing (Combine faces to save on vertices and indices)
 	* Handling for chunks ~ Once I've sorted my voxels into chunks. May try and go straight to bitwise compatible chunks so that I can use a bitwise greedy mesher instead.
-	* Multi-Threading (Voxels are perfect for this, the benefit should be pretty massive)
 	* Bitwise Greedy Meshing ~ I can either try and make my own, or I use an existing bitwise greedy mesher, but this would require formatting my voxels correctly (which may be for the best).
 	*/
 

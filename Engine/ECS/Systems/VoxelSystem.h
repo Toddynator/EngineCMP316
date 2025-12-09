@@ -1,3 +1,10 @@
+/*
+Updates any Voxel related components.
+
+Key Feature:
+- Creates a mesh for any voxel entities which have had their voxels updated.
+*/
+
 #pragma once
 #include "ECS/System.h"
 #include "Graphics/Renderer_DirectX11.h"

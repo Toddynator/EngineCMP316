@@ -2,6 +2,10 @@
 ABSTACT CLASS
 Games utilizing the engine will inherit this and define the CreateApp Function with their own implementation.
 May have some default implementations that game projects can choose to utilize. E.g. Common Inputs like Fullscreen
+
+It takes a reference to engineContext but this may need replaced with only specific systems that are required by the application,
+since ideally everything that needs a particular manager will have gotten a pointer on initialisation, and therefore doesn't need
+the context struct any longer.
 */
 
 #pragma once

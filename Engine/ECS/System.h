@@ -1,13 +1,13 @@
-#pragma once
-#include "Components.h"
-#include "entt.hpp"
-#include "Core/EngineContext.h"
-
 /*
 ABSTRACT BASE CLASS
 Base System that ALL system classes should inherit.
 ANY FUNCTIONS outside of the ones listed in this class should be either private or protected, YOU SHOULD NEVER be using systems outside of the scenes system container.
 */
+
+#pragma once
+#include "Components.h"
+#include "entt.hpp"
+#include "Core/EngineContext.h"
 
 namespace CMP316engine {
 	class System

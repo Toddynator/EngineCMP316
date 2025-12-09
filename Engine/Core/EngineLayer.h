@@ -2,6 +2,10 @@
 The Engine itself, it is responsible for the initialization of the systems/managers that I want the application
 to inherently have. The application should not need to worry about creating the managers.
 It is also responsible for the structuring / ordering of the updates in an application, e.g. HandleInputs() > Update() > Render()
+
+It creates an engineContext so that the application can then easily access all systems on startup, and create pointers to any systems
+that they will need during runtime. Having every system contained in a struct means that adding more systems/managers in the future
+will not require any modifications to the application or engineLayer.
 */
 
 #pragma once

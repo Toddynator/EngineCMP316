@@ -1,3 +1,7 @@
+/*
+Represents all Mesh Data structures required by the rendering pipeline.
+*/
+
 #pragma once
 #include <string>
 #include <d3d11.h>

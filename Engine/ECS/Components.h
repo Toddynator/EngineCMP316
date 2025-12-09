@@ -1,3 +1,22 @@
+/*
+This class implements all core engine components,
+an application can and should make their own component file to implement additional components.
+
+Components should purely store data, only Systems should handle functionality.
+Ideally components should be reflected in the InitializeReflection() function to utilize any
+engine reflection features such as serialization and the editor.
+
+If a data type is not working with engine reflection features despite being reflected, it is likely the engine 
+has not implemented the functionality for it yet. Unfortunately with how the reflection works, even if the data 
+type would natively work with the underlying functions, a metaObject has to be manually defined for each dataType 
+by the engine.
+The easiest work-around are initialisation bools so that systems can then recreate the component with more primitive
+data types (settings), could simply be an enum to indicate a type for example.
+
+COMPONENT IDEAS:
+- ShaderMaterial component? Mesh objects without one use a default shader for rendering.
+*/
+
 #pragma once
 #include "entt.hpp"
 #include <directxmath.h>
@@ -6,13 +25,6 @@
 #include <Jolt/Jolt.h>
 #include <Jolt/Physics/Body/Body.h>
 #include "Core/Voxel.h"
-
-/*
-Components should purely store data, only Systems should handle functionality.
-
-COMPONENT IDEAS:
-- ShaderMaterial component? Mesh objects without one use a default shader for rendering.
-*/
 
 namespace CMP316engine 
 {

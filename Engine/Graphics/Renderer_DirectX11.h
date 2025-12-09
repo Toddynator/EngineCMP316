@@ -3,7 +3,6 @@
 DirectX11 Renderer
 https://learn.microsoft.com/en-us/windows/win32/direct3d11/atoc-dx-graphics-direct3d-11
 https://learn.microsoft.com/en-us/windows/win32/direct3d11/dx-graphics-overviews
-
 */
 
 #pragma once

@@ -1,3 +1,7 @@
+/*
+Purely for convenience, includes all the core Engine ECS Systems.
+*/
+
 #pragma once
 #include "Systems/RenderSystem.h"
 #include "Systems/CameraSystem.h"

@@ -1,3 +1,11 @@
+/*
+Helper which provides reusable functions for common ImGui Logic.
+
+InptAny() is an overloaded function that can be utilized to get the best imgui widget without
+having to define the exact ImGui function. This was most helpful for reflection logic but can 
+be used by the application developer optionally.
+*/
+
 #pragma once
 #include <imgui.h>
 

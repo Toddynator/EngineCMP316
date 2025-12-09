@@ -1,3 +1,11 @@
+/*
+Render a mesh with simple lighting.
+
+TODO:
+Implement lighting from my other DirectX11 Projects. This can be massively improved with structured buffers and alternative
+DirectX11 features.
+*/
+
 #pragma once
 #include "BaseShader.h"
 #include "Graphics/Light.h"
@@ -22,7 +30,7 @@ private:
 		DirectX::XMFLOAT3 padding;
 	};
 	/*
-	TODO: Heard there may be a 'StructuredBuffer' that I can use instead which means I would no longer need a FIXED light array!
+	TODO: Use structured buffers, there is a lot of code I can use from my other projects for this.
 	*/
 	struct alignas(16) LightsBufferType
 	{

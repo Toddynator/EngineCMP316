@@ -1,4 +1,7 @@
-/*TODO:
+/*
+File implements core Voxel structures utilized by the engine. 
+
+TODO:
 Materials: Need to figure out how to make colourIndexes for a model map
 to a material. It should be customizable per model so that slight colour variations are allowed for the same material.
 Can introduce stuff like Volatile Voxels, and Resistance.

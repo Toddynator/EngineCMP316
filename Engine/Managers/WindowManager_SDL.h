@@ -4,7 +4,8 @@
 
 /*
 It is unlikely I will change out SDL for any other window creation, as SDL already handles abstraction for different platforms.
-I've created this thin wrapper just to provide some abstraction from the rest of the engine.
+I've created a thin wrapper just to provide some abstraction from the rest of the engine. But I'll need to either go all the way
+and fully abstract it at some point or get rid of the abstraction layer completely.
 */
 
 namespace CMP316engine {

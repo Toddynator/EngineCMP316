@@ -1,3 +1,11 @@
+/*
+Very simple class for calculating deltaTime.
+
+TODO:
+- Add a controllable fixed timestep for some sort of FixedUpdate() loop. Would be good for physics
+updates for example.
+*/
+
 #pragma once
 #include "Manager.h"
 #include <chrono>
@@ -5,7 +13,6 @@
 namespace CMP316engine {
 	class TimeManager
 		: public Manager
-
 	{
 	public:
 		TimeManager();

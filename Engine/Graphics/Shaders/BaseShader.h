@@ -1,6 +1,7 @@
 /*
 ABSTRACT BASE CLASS
-Based off Rastertek Tutorial
+Initially based off Rastertek Tutorial on DirectX11.
+https://rastertek.com/index.html
 
 Derived Classes should at minimum be defining the shader filenames.
 */

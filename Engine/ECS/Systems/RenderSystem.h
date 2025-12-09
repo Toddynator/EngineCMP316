@@ -1,3 +1,6 @@
+/*
+Handles all rendering logic for a scene.
+*/
 
 #pragma once
 #include "ECS/System.h"

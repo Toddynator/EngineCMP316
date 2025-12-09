@@ -1,3 +1,8 @@
+/*
+Key purpose is for handling hierarchal transforms.
+If one object moves, its children should move with it.
+*/
+
 #pragma once
 #include "../System.h"
 

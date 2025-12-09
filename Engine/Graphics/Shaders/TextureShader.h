@@ -1,3 +1,7 @@
+/*
+Simply render a mesh with its texture, no other functionality.
+*/
+
 #pragma once
 #include "BaseShader.h"
 class TextureShader : public BaseShader

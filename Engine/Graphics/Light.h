@@ -1,3 +1,7 @@
+/*
+Represents all Light data structures used by the rendering pipeline
+*/
+
 #pragma once
 #include <directxmath.h>
 

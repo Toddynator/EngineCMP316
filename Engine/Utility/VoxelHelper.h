@@ -1,3 +1,7 @@
+/*
+File for common data and functions required by voxel logic in the engine.
+*/
+
 #pragma once
 #include "Graphics/Mesh.h"
 #include "Core/Voxel.h"

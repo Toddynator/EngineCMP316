@@ -9,6 +9,7 @@ IMPORTANT:
 need to include the additional dependencies, and only needs to worry about including the engine files.
 EngineContext should only be exposing interfaces. Even if I have a library that I don't plan to ever swap out, it should be abstracted so
 that the header file does not expose any third party types.
+Unfortunately this is much easier said than done, so it may not be easily achievable.
 - DO NOT include implementations of managers in this file. The game will include engineContext and will not have access to the files for specific implementations.
 Only include abstractions.
 */
@@ -40,7 +41,7 @@ namespace CMP316engine {
 		std::unique_ptr<AssetManager> assetManager = nullptr;
 		///// GRAPHICS
 		std::unique_ptr<Renderer_DirectX11> renderer = nullptr; // TODO: Make RenderManager ~ Should not be exposing ANY directX types.
-		std::unique_ptr<LightShader> shader = nullptr; // TODO: Make AssetManager and Move to AssetManager
+		std::unique_ptr<LightShader> shader = nullptr; // TODO: Move to AssetManager ~ Only need ONE shader. Alternatively I might want a ShaderManager instead.
 	};
 }
 

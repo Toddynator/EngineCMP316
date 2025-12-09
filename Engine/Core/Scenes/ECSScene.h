@@ -1,4 +1,7 @@
 /*
+Scene that utilizes EnTT ECS for its entities.
+Has handling for serialization of the entities.
+
 HOW TO USE:
 - ALWAYS INCLUDE BASE IMPLEMENTATION IN DERIVED CLASS FOR ALL OVERRIDABLE FUNCTIONS. 
 - INITIALIZATION SHOULD ALWAYS BE CALLED FIRST.

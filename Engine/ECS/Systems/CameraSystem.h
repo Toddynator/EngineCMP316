@@ -1,3 +1,8 @@
+/*
+Handles logic in a scene for the active camera.
+It is used for determining the active camera and for controlling it.
+*/
+
 #pragma once
 #include "../System.h"
 #include "Managers/WindowManager.h"
