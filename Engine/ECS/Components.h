@@ -96,6 +96,7 @@ namespace NomadEngine
 	*/
 	struct TransformComponent
 	{
+		bool worldMatrixNeedsCalculated = true;
 		DirectX::XMMATRIX worldMatrix{};
 		DirectX::XMFLOAT3 position = DirectX::XMFLOAT3(0.f,0.f,0.f);
 		DirectX::XMFLOAT3 rotation = DirectX::XMFLOAT3(0.f, 0.f, 0.f); // TODO: Probably should replace with Quaternions in the future.

@@ -64,6 +64,8 @@ namespace NomadEngine {
 		{
 			transformComponent.worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
 		}
+
+		transformComponent.worldMatrixNeedsCalculated = false;
 	}
 	// Doing it myself instead of using directX's method allows me to enforce the order. Which helps with compatability with other libraries as a bonus.
 	DirectX::XMMATRIX NomadEngine::TransformSystem::calculateRotationMatrix(TransformComponent& transformComponent)

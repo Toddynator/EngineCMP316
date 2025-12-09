@@ -24,7 +24,7 @@ void NomadEngine::PhysicsSystem::Update(float deltaTime)
 
 		/// INITIALIZATION
 
-		if (rigidBodyComponent.bodyCreated == false)
+		if (rigidBodyComponent.bodyCreated == false && transformComponent.worldMatrixNeedsCalculated == false)
 		{
 			auto& t = transformComponent;
 			auto& r = rigidBodyComponent;
@@ -57,7 +57,7 @@ void NomadEngine::PhysicsSystem::Update(float deltaTime)
 		/// UPDATE TRANSFORMS
 
 		JPH::RVec3 position = physicsManager->GetBodyInterface().GetPosition(rigidBodyComponent.physicsBodyHandle);
-		JPH::Quat rotation = physicsManager->GetBodyInterface().GetRotation(rigidBodyComponent.physicsBodyHandle);
+		//JPH::Quat rotation = physicsManager->GetBodyInterface().GetRotation(rigidBodyComponent.physicsBodyHandle);
 		transformComponent.position = DirectX::XMFLOAT3(position.GetX(), position.GetY(), position.GetZ());
 		//transformComponent.rotation = DirectX::XMFLOAT4(rotation.GetX, rotation.GetY(), rotation.GetZ(), rotation.GetW());
 
