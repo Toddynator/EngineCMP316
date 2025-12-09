@@ -1,9 +1,9 @@
 #include "LevelEditorScene.h"
 #include "ECS/Systems/LevelEditorSystem.h"
 
-namespace CMP316engine
+namespace NomadEngine
 {
-	LevelEditorScene::LevelEditorScene(CMP316engine::EngineContext& context) : ECSScene(context)
+	LevelEditorScene::LevelEditorScene(NomadEngine::EngineContext& context) : ECSScene(context)
 	{		
 		saveFileType = ".level";
 		saveFolderPath = "data/Levels/";
@@ -25,9 +25,9 @@ namespace CMP316engine
 		auto firstChild = ECS::AddChild(&registry, sceneRoot);
 		auto* hierarchyComponent = &registry.get<HierarchyComponent>(firstChild);
 		hierarchyComponent->name = "Test Model Entity";
-		auto& modelComponent = CMP316engine::ECS::AddComponent<CMP316engine::ModelComponent>(&registry, firstChild);
+		auto& modelComponent = NomadEngine::ECS::AddComponent<NomadEngine::ModelComponent>(&registry, firstChild);
 		modelComponent.filepath = "data/Models/Dug/Dug.obj";
-		auto& meshComponent = CMP316engine::ECS::AddComponent<CMP316engine::MeshComponent>(&registry, firstChild);
+		auto& meshComponent = NomadEngine::ECS::AddComponent<NomadEngine::MeshComponent>(&registry, firstChild);
 
 		auto secondChild = ECS::AddChild(&registry, sceneRoot);
 		auto* hierarchyComponent2 = &registry.get<HierarchyComponent>(secondChild);
@@ -36,10 +36,10 @@ namespace CMP316engine
 		auto voxelEntity = ECS::AddChild(&registry, sceneRoot);
 		auto* hierarchyComponentVoxel = &registry.get<HierarchyComponent>(voxelEntity);
 		hierarchyComponentVoxel->name = "Test Voxel Entity";
-		auto& meshComponentVoxel = CMP316engine::ECS::AddComponent<CMP316engine::MeshComponent>(&registry, voxelEntity);
+		auto& meshComponentVoxel = NomadEngine::ECS::AddComponent<NomadEngine::MeshComponent>(&registry, voxelEntity);
 		auto* transformComponentVoxel = &registry.get<TransformComponent>(voxelEntity);
 		transformComponentVoxel->position = { 0.f, -20.f, 50.f };
-		auto& voxelComponent = CMP316engine::ECS::AddComponent<CMP316engine::VoxelComponent>(&registry, voxelEntity);
+		auto& voxelComponent = NomadEngine::ECS::AddComponent<NomadEngine::VoxelComponent>(&registry, voxelEntity);
 		voxelComponent.filepath = "data/Models/Fighter Spaceship.vox";
 
 		/// EDITOR SFX

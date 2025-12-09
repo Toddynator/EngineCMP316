@@ -3,10 +3,10 @@
 #include "Managers/InputManager.h"
 
 class PlayerSystem :
-	public CMP316engine::System
+	public NomadEngine::System
 {
 public:
-	PlayerSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext);
+	PlayerSystem(entt::registry* sceneRegistry, NomadEngine::EngineContext* engineContext);
 
 	bool Initialize() override;
 	void Shutdown() override;

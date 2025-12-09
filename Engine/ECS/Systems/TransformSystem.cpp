@@ -2,7 +2,7 @@
 #include "TransformSystem.h"
 #include "../Components.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	void TransformSystem::Update(float deltaTime)
 	{
 		auto transformEntities = registry->view<TransformComponent>();
@@ -66,7 +66,7 @@ namespace CMP316engine {
 		}
 	}
 	// Doing it myself instead of using directX's method allows me to enforce the order. Which helps with compatability with other libraries as a bonus.
-	DirectX::XMMATRIX CMP316engine::TransformSystem::calculateRotationMatrix(TransformComponent& transformComponent)
+	DirectX::XMMATRIX NomadEngine::TransformSystem::calculateRotationMatrix(TransformComponent& transformComponent)
 	{
 		auto& t = transformComponent;
 

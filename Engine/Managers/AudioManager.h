@@ -7,7 +7,7 @@ Abstracted audio incase I want to swap out SoLoud for a more powerful library.
 #include "Manager.h"
 #include <string>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class AudioManager :
 		public Manager
 	{

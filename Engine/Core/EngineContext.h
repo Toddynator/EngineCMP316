@@ -29,7 +29,7 @@ Only include abstractions.
 #include "Graphics/Shaders/TextureShader.h"
 #include "Graphics/Shaders/LightShader.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	struct EngineContext
 	{
 		std::unique_ptr<InputManager> inputManager = nullptr;

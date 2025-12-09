@@ -26,7 +26,7 @@ This also allows for better support on other platforms, of which I can then have
 #include <functional>
 #include <DirectXMath.h>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	struct KeyBindingKey
 	{
 		enum KeyType

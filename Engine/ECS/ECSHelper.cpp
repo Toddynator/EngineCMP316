@@ -2,7 +2,7 @@
 #include "Components.h"
 #include <unordered_map>
 
-namespace CMP316engine::ECS
+namespace NomadEngine::ECS
 {
 	entt::entity AddChild(entt::registry* registry, entt::entity parentEntity)
 	{

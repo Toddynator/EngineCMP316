@@ -7,17 +7,17 @@
 //#include "mesher.h"
 
 
-bool CMP316engine::VoxelSystem::Initialize()
+bool NomadEngine::VoxelSystem::Initialize()
 {
 	return true;
 }
 
-void CMP316engine::VoxelSystem::Shutdown()
+void NomadEngine::VoxelSystem::Shutdown()
 {
 
 }
 
-void CMP316engine::VoxelSystem::Update(float deltaTime)
+void NomadEngine::VoxelSystem::Update(float deltaTime)
 {
 	auto voxelEntities = registry->view<VoxelComponent, MeshComponent>();
 	for (auto& entity : voxelEntities) {
@@ -28,7 +28,7 @@ void CMP316engine::VoxelSystem::Update(float deltaTime)
 	}
 }
 
-void CMP316engine::VoxelSystem::loadVoxelModel(VoxelComponent& voxelComponent)
+void NomadEngine::VoxelSystem::loadVoxelModel(VoxelComponent& voxelComponent)
 {
 	if (VoxelResource* voxelModel = assetManager->GetResource<VoxelResource>(voxelComponent.filepath))
 	{
@@ -38,7 +38,7 @@ void CMP316engine::VoxelSystem::loadVoxelModel(VoxelComponent& voxelComponent)
 	voxelComponent.voxelModelLoaded = true; // Set regardless of whether it was successful, it is more about checking ONCE. If I keep attempting this will become very laggy.
 }
 
-void CMP316engine::VoxelSystem::calculateVoxelMesh(VoxelComponent& voxelComponent, MeshComponent& meshComponent)
+void NomadEngine::VoxelSystem::calculateVoxelMesh(VoxelComponent& voxelComponent, MeshComponent& meshComponent)
 {
 	meshComponent.meshes.clear();
 	auto& meshStruct = meshComponent.meshes.emplace_back();

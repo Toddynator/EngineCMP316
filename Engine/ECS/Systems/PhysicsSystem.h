@@ -10,14 +10,14 @@ On initialization transform component is used for the bodies starting transforms
 #include "../System.h"
 #include "Managers/PhysicsManager.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class PhysicsSystem : public System
 	{
 	private:
-		CMP316engine::PhysicsManager* physicsManager;
+		NomadEngine::PhysicsManager* physicsManager;
 
 	public:
-		PhysicsSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext);
+		PhysicsSystem(entt::registry* sceneRegistry, NomadEngine::EngineContext* engineContext);
 
 		bool Initialize() override;
 		void Shutdown() override;

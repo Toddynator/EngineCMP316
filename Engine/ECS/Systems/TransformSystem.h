@@ -6,12 +6,12 @@ If one object moves, its children should move with it.
 #pragma once
 #include "../System.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class TransformSystem
 		: public System
 	{
 	public:
-		TransformSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext) {}
+		TransformSystem(entt::registry* sceneRegistry, NomadEngine::EngineContext* engineContext) : System(sceneRegistry, engineContext) {}
 
 		bool Initialize() override { return true; }
 		void Shutdown() override {}

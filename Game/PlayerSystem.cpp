@@ -1,7 +1,7 @@
 #include "PlayerSystem.h"
 #include "Components.h"
 
-PlayerSystem::PlayerSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext)
+PlayerSystem::PlayerSystem(entt::registry* sceneRegistry, NomadEngine::EngineContext* engineContext) : System(sceneRegistry, engineContext)
 {
 }
 
@@ -20,7 +20,7 @@ void PlayerSystem::HandleInput(float deltaTime)
 	for (auto& entity : playerEntities) {
 		auto& playerComponent = registry->get<PlayerComponent>(entity);
 
-		if (auto movementComponent = registry->try_get<CMP316engine::MovementComponent>(entity))
+		if (auto movementComponent = registry->try_get<NomadEngine::MovementComponent>(entity))
 		{
 			auto& m = movementComponent;
 			if (inputManager->IsKeyBindingDown("Move Up"))
@@ -63,9 +63,9 @@ void PlayerSystem::HandleInput(float deltaTime)
 
 void PlayerSystem::Update(float deltaTime)
 {
-	auto playerEntities = registry->view<PlayerComponent, CMP316engine::TransformComponent>();
+	auto playerEntities = registry->view<PlayerComponent, NomadEngine::TransformComponent>();
 	for (auto& entity : playerEntities) {
-		auto [playerComponent, transformComponent] = registry->get<PlayerComponent, CMP316engine::TransformComponent>(entity);
+		auto [playerComponent, transformComponent] = registry->get<PlayerComponent, NomadEngine::TransformComponent>(entity);
 
 		// TODO
 	}

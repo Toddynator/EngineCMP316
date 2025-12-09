@@ -1,6 +1,6 @@
 #include "VoxelHelper.h"
 
-namespace CMP316engine::VoxelHelper
+namespace NomadEngine::VoxelHelper
 {
 	int Convert3DPositionToIndex(Vector3Int position, Vector3Int modelSize)
 	{

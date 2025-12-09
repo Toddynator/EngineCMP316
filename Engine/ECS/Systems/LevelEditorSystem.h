@@ -35,7 +35,7 @@ and don't need to create a class with the sole purpose of pushing their systems 
 #include "../../ImGui/ImGuizmo/ImGuizmo.h"
 #include "../../ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class LevelEditorSystem : public System
 	{
 	private:

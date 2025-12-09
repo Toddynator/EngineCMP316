@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "PhysicsManager.h"
 
-bool CMP316engine::PhysicsManager::Initialize()
+bool NomadEngine::PhysicsManager::Initialize()
 {
 	// Register allocation hook. In this example we'll just let Jolt use malloc / free but you can override these if you want (see Memory.h).
 	// This needs to be done before any other Jolt function is called.
@@ -65,7 +65,7 @@ bool CMP316engine::PhysicsManager::Initialize()
 	return true;
 }
 
-void CMP316engine::PhysicsManager::Shutdown()
+void NomadEngine::PhysicsManager::Shutdown()
 {
 	/* Destroy Bodies Example
 	// Remove the sphere from the physics system. Note that the sphere itself keeps all of its state and can be re-added at any time.
@@ -83,7 +83,7 @@ void CMP316engine::PhysicsManager::Shutdown()
 	JPH::Factory::sInstance = nullptr;
 }
 
-void CMP316engine::PhysicsManager::Update(float deltaTime)
+void NomadEngine::PhysicsManager::Update(float deltaTime)
 {
 	// If you take larger steps than 1 / 60th of a second you need to do multiple collision steps in order to keep the simulation stable. Do 1 collision step per 1 / 60th of a second (round up).
 	const int cCollisionSteps = 1;

@@ -26,7 +26,7 @@ COMPONENT IDEAS:
 #include <Jolt/Physics/Body/Body.h>
 #include "Core/Voxel.h"
 
-namespace CMP316engine 
+namespace NomadEngine 
 {
 	///// REFLECTION
 

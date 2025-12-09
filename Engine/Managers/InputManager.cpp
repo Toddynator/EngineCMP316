@@ -3,7 +3,7 @@
 
 
 
-const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::defaultKeybinds
+const NomadEngine::InputManager::KeyBindMap NomadEngine::InputManager::defaultKeybinds
 {
 	{ "fullscreen", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, static_cast<int>(SDL_SCANCODE_F11)) }) },
 	{ "Move Forward", KeyBinding({ KeyBindingKey(KeyBindingKey::KEYBOARD, SDL_SCANCODE_W) }) },
@@ -34,7 +34,7 @@ const CMP316engine::InputManager::KeyBindMap CMP316engine::InputManager::default
 
 
 
-CMP316engine::InputManager::InputManager()
+NomadEngine::InputManager::InputManager()
 {
 	// Initialize all keys to not pressed
 	for (int i = 0; i < SDL_SCANCODE_COUNT; ++i) 
@@ -49,14 +49,14 @@ CMP316engine::InputManager::InputManager()
 	}
 }
 
-bool CMP316engine::InputManager::Initialize()
+bool NomadEngine::InputManager::Initialize()
 {
 	keybindMap = defaultKeybinds;
 
 	return true;
 }
 
-void CMP316engine::InputManager::EndFrame()
+void NomadEngine::InputManager::EndFrame()
 {
 	// Keyboard
 	for (int key = 0; key < SDL_SCANCODE_COUNT; key++)
@@ -71,7 +71,7 @@ void CMP316engine::InputManager::EndFrame()
 	SDL_GetMouseState(&mousePositionLastFrame.x, &mousePositionLastFrame.y);
 }
 
-void CMP316engine::InputManager::UpdateInputStates(const SDL_Event* event)
+void NomadEngine::InputManager::UpdateInputStates(const SDL_Event* event)
 {
 	switch (event->type)
 	{
@@ -94,28 +94,28 @@ void CMP316engine::InputManager::UpdateInputStates(const SDL_Event* event)
 
 
 
-bool CMP316engine::InputManager::IsKeyBindingPressed(std::string action)
+bool NomadEngine::InputManager::IsKeyBindingPressed(std::string action)
 {
 	KeyBinding keyBind;
 	if (!getKeyBinding(action, keyBind)) { return false; }
 	return checkKeyBinding(keyBind.keyCombo1, PRESSED)
 		|| checkKeyBinding(keyBind.keyCombo2, PRESSED);
 }
-bool CMP316engine::InputManager::IsKeyBindingDown(std::string action)
+bool NomadEngine::InputManager::IsKeyBindingDown(std::string action)
 {
 	KeyBinding keyBind;
 	if (!getKeyBinding(action, keyBind)) { return false; }
 	return checkKeyBinding(keyBind.keyCombo1, DOWN)
 		|| checkKeyBinding(keyBind.keyCombo2, DOWN);
 }
-bool CMP316engine::InputManager::IsKeyBindingReleased(std::string action)
+bool NomadEngine::InputManager::IsKeyBindingReleased(std::string action)
 {
 	KeyBinding keyBind;
 	if (!getKeyBinding(action, keyBind)) { return false; }
 	return checkKeyBinding(keyBind.keyCombo1, RELEASED)
 		|| checkKeyBinding(keyBind.keyCombo2, RELEASED);
 }
-bool CMP316engine::InputManager::getKeyBinding(std::string action, KeyBinding& keyBind)
+bool NomadEngine::InputManager::getKeyBinding(std::string action, KeyBinding& keyBind)
 {
 	auto it = keybindMap.find(action);
 	if (it == keybindMap.end()) {
@@ -125,7 +125,7 @@ bool CMP316engine::InputManager::getKeyBinding(std::string action, KeyBinding& k
 	keyBind = it->second;
 	return true;
 }
-bool CMP316engine::InputManager::checkKeyBinding(std::vector<KeyBindingKey> keyBindingCombo, CheckType checkType) const {
+bool NomadEngine::InputManager::checkKeyBinding(std::vector<KeyBindingKey> keyBindingCombo, CheckType checkType) const {
 	/*
 	In order to handle multi-key-combos, as users will realistically never be able to press both keys at the exact same frame, only the last key in the combo needs
 	to obey the checkType.
@@ -168,51 +168,51 @@ bool CMP316engine::InputManager::checkKeyBinding(std::vector<KeyBindingKey> keyB
 
 
 
-bool CMP316engine::InputManager::IsKeyPressed(SDL_Scancode key) const
+bool NomadEngine::InputManager::IsKeyPressed(SDL_Scancode key) const
 {
 	//if (keys[key] && event->key.scancode && event->type == sdl_event_key_down && !event->key.repeat)
 	if (keys[key] && !prevKeys[key]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsKeyDown(SDL_Scancode key) const
+bool NomadEngine::InputManager::IsKeyDown(SDL_Scancode key) const
 {
 	if(keys[key] && prevKeys[key]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsKeyReleased(SDL_Scancode key) const
+bool NomadEngine::InputManager::IsKeyReleased(SDL_Scancode key) const
 {
 	if (!keys[key] && prevKeys[key]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton) const
+bool NomadEngine::InputManager::IsMouseButtonPressed(SDL_MouseButtonFlags mouseButton) const
 {
 	if (mouseButtons[mouseButton] && !prevMouseButtons[mouseButton]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsMouseButtonDown(SDL_MouseButtonFlags mouseButton) const
+bool NomadEngine::InputManager::IsMouseButtonDown(SDL_MouseButtonFlags mouseButton) const
 {
 	if (mouseButtons[mouseButton] && prevMouseButtons[mouseButton]) { return true; }
 	return false;
 }
 
-bool CMP316engine::InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton) const
+bool NomadEngine::InputManager::IsMouseButtonReleased(SDL_MouseButtonFlags mouseButton) const
 {
 	if (!mouseButtons[mouseButton] && prevMouseButtons[mouseButton]) { return true; }
 	return false;
 }
 
-DirectX::XMFLOAT2 CMP316engine::InputManager::GetMousePositionOnWindow()
+DirectX::XMFLOAT2 NomadEngine::InputManager::GetMousePositionOnWindow()
 { 
 	DirectX::XMFLOAT2 mousePosition;
 	SDL_GetMouseState(&mousePosition.x, &mousePosition.y); 
 	return mousePosition;
 }
 
-float CMP316engine::InputManager::GetMouseDeltaX()
+float NomadEngine::InputManager::GetMouseDeltaX()
 {
 	DirectX::XMFLOAT2 currentMousePosition;
 	SDL_GetMouseState(&currentMousePosition.x, &currentMousePosition.y);
@@ -220,7 +220,7 @@ float CMP316engine::InputManager::GetMouseDeltaX()
 	return mouseDeltaX;
 }
 
-float CMP316engine::InputManager::GetMouseDeltaY()
+float NomadEngine::InputManager::GetMouseDeltaY()
 {
 	DirectX::XMFLOAT2 currentMousePosition;
 	SDL_GetMouseState(&currentMousePosition.x, &currentMousePosition.y);
@@ -228,17 +228,17 @@ float CMP316engine::InputManager::GetMouseDeltaY()
 	return mouseDeltaY;
 }
 
-void CMP316engine::InputManager::SetWindowRelativeMouseMode(SDL_Window* window, bool enabled) 
+void NomadEngine::InputManager::SetWindowRelativeMouseMode(SDL_Window* window, bool enabled) 
 { 
 	SDL_SetWindowRelativeMouseMode(window, enabled); 
 }
 
-void CMP316engine::InputManager::SaveCurrentMouseWindowPosition()
+void NomadEngine::InputManager::SaveCurrentMouseWindowPosition()
 {
 	SDL_GetMouseState(&mouseSavedPos.x, &mouseSavedPos.y); // Relative to window
 }
 
-void CMP316engine::InputManager::SetMouseToSavedPosition(SDL_Window* window)
+void NomadEngine::InputManager::SetMouseToSavedPosition(SDL_Window* window)
 {
 	SDL_WarpMouseInWindow(window, mouseSavedPos.x, mouseSavedPos.y);
 }

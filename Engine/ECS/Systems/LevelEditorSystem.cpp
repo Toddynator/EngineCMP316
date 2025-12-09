@@ -5,7 +5,7 @@
 #include "CameraSystem.h"
 #include "Core/Reflection.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	LevelEditorSystem::LevelEditorSystem(entt::registry* sceneRegistry, EngineContext* engineContext, entt::entity sceneRootEntity, Renderer_DirectX11* sceneRenderer) :
 		System(sceneRegistry, engineContext), sceneRoot(sceneRootEntity), renderer(sceneRenderer), windowManager(engineContext->windowManager.get()), audioManager(engineContext->audioManager.get())
 	{

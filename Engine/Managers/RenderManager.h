@@ -7,7 +7,7 @@ need to figure out how to abstract d3d from other graphic related classes such a
 #include "Manager.h"
 #include "Windows.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class RenderManager
 		: public Manager
 	{

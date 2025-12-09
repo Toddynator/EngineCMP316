@@ -20,7 +20,7 @@ HOW TO USE:
 #include "Manager.h"
 #include <unordered_map>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	/// FORWARD DECLARATIONS
 	class Scene;
 	struct EngineContext;

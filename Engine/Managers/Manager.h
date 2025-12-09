@@ -4,7 +4,7 @@ Base implementation for all managers.
 */
 
 #pragma once
-namespace CMP316engine {
+namespace NomadEngine {
 	class Manager
 	{
 	public:

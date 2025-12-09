@@ -44,7 +44,7 @@ For specific types of those asseets, if a library doesn't handle all of them, I 
 #include "Graphics/Texture.h"
 #include "Core/Voxel.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	enum AssetType
 	{
 		NONE,

@@ -8,7 +8,7 @@ I've created a thin wrapper just to provide some abstraction from the rest of th
 and fully abstract it at some point or get rid of the abstraction layer completely.
 */
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class WindowManager_SDL
 		: public WindowManager
 	{

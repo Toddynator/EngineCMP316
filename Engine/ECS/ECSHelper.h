@@ -4,7 +4,7 @@
 #include <entt.hpp>
 
 
-namespace CMP316engine::ECS
+namespace NomadEngine::ECS
 {
 	/*
 	@brief handles adding a child and correctly setting the hierarchy component of the parent and children.

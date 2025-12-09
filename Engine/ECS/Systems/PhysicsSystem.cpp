@@ -1,22 +1,22 @@
 #include "pch.h"
 #include "PhysicsSystem.h"
 
-CMP316engine::PhysicsSystem::PhysicsSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext), physicsManager(engineContext->physicsManager.get())
+NomadEngine::PhysicsSystem::PhysicsSystem(entt::registry* sceneRegistry, NomadEngine::EngineContext* engineContext) : System(sceneRegistry, engineContext), physicsManager(engineContext->physicsManager.get())
 {
 
 }
 
-bool CMP316engine::PhysicsSystem::Initialize()
+bool NomadEngine::PhysicsSystem::Initialize()
 {
 	return true;
 }
 
-void CMP316engine::PhysicsSystem::Shutdown()
+void NomadEngine::PhysicsSystem::Shutdown()
 {
 
 }
 
-void CMP316engine::PhysicsSystem::Update(float deltaTime)
+void NomadEngine::PhysicsSystem::Update(float deltaTime)
 {
 	auto physicsEntities = registry->view<RigidBodyComponent, TransformComponent>();
 	for (auto& entity : physicsEntities) {

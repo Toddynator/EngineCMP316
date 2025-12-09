@@ -7,10 +7,10 @@ in the application and any systems in the engine that weren't added by default.
 #include "Core/Scenes/ECSScene.h"
 
 class GameScene
-	: public CMP316engine::ECSScene
+	: public NomadEngine::ECSScene
 {
 public:
-	GameScene(CMP316engine::EngineContext& context);
+	GameScene(NomadEngine::EngineContext& context);
 
 	bool Initialize() override;
 };

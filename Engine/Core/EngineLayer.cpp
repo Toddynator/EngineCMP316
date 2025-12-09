@@ -10,10 +10,10 @@
 
 
 
-CMP316engine::EngineLayer::EngineLayer()
+NomadEngine::EngineLayer::EngineLayer()
 {
 	auto& ec = engineContext;
-	application = CMP316engine::CreateApp(engineContext);
+	application = NomadEngine::CreateApp(engineContext);
 	ec.timeManager = std::make_unique<TimeManager>();
 	ec.inputManager = std::make_unique<InputManager>();
 	ec.audioManager = std::make_unique<AudioManager_SoLoud>();
@@ -23,7 +23,7 @@ CMP316engine::EngineLayer::EngineLayer()
 	ec.assetManager = std::make_unique<AssetManager>();
 }
 
-bool CMP316engine::EngineLayer::Initialize()
+bool NomadEngine::EngineLayer::Initialize()
 {
 	auto& ec = engineContext;
 	if (!ec.inputManager->Initialize()) { return false; }
@@ -84,7 +84,7 @@ bool CMP316engine::EngineLayer::Initialize()
 	return true;
 }
 
-void CMP316engine::EngineLayer::Run()
+void NomadEngine::EngineLayer::Run()
 {
 	while (true)
 	{
@@ -94,7 +94,7 @@ void CMP316engine::EngineLayer::Run()
 	}
 }
 
-void CMP316engine::EngineLayer::Shutdown()
+void NomadEngine::EngineLayer::Shutdown()
 {
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplSDL3_Shutdown();
@@ -111,7 +111,7 @@ void CMP316engine::EngineLayer::Shutdown()
 	if (engineContext.assetManager) { engineContext.assetManager->Shutdown(); }
 }
 
-bool CMP316engine::EngineLayer::processEvents()
+bool NomadEngine::EngineLayer::processEvents()
 {
 	SDL_Event event;
 	while(SDL_PollEvent(&event) != 0)
@@ -145,7 +145,7 @@ bool CMP316engine::EngineLayer::processEvents()
 	return true;
 }
 
-void CMP316engine::EngineLayer::update()
+void NomadEngine::EngineLayer::update()
 {
 	///// IMGUI  
 
@@ -173,7 +173,7 @@ void CMP316engine::EngineLayer::update()
 	engineContext.inputManager->EndFrame();
 }
 
-void CMP316engine::EngineLayer::render()
+void NomadEngine::EngineLayer::render()
 {
 	engineContext.renderer->BeginScene(0.05f, 0.08f, 0.1f, 1.0f); // Clear Colour
 	///// APPLICATION
@@ -185,7 +185,7 @@ void CMP316engine::EngineLayer::render()
 	engineContext.renderer->EndScene();
 }
 
-bool CMP316engine::EngineLayer::createRenderer(HWND hwnd)
+bool NomadEngine::EngineLayer::createRenderer(HWND hwnd)
 {
 	engineContext.renderer = std::make_unique<Renderer_DirectX11>();
 

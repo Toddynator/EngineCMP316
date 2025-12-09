@@ -11,14 +11,14 @@ an abstraction layer. This class is fairly unnecessary.
 #include <Windows.h>
 #include <string>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	struct WindowProperties
 	{
 		std::string Title;
 		int Width;
 		int Height;
 
-		WindowProperties() : Title("CMP316 Engine"), Width(800), Height(600) {}
+		WindowProperties() : Title("NomadEngine"), Width(800), Height(600) {}
 	};
 
 	class WindowManager :

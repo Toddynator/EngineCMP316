@@ -8,10 +8,10 @@ enum Levels
 };
 
 class Game
-	: public CMP316engine::Application
+	: public NomadEngine::Application
 {
 public:
-	Game(CMP316engine::EngineContext& context) : Application(context) {}
+	Game(NomadEngine::EngineContext& context) : Application(context) {}
 
 	bool Initialize() override;
 	void Shutdown() override;

@@ -9,7 +9,7 @@ Key Feature:
 #include "ECS/System.h"
 #include "Graphics/Renderer_DirectX11.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class VoxelSystem : public System
 	{
 	private:

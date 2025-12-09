@@ -13,12 +13,12 @@ HOW TO USE:
 #include "ECS/System.h"
 #include "ECS/ECSHelper.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class ECSScene :
 		public Scene
 	{
 	public:
-		ECSScene(CMP316engine::EngineContext& context);
+		ECSScene(NomadEngine::EngineContext& context);
 
 		bool Initialize() override;
 		void Shutdown() override;

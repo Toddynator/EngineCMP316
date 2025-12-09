@@ -14,7 +14,7 @@ However I could use a setter and have a sceneManager handle this in the future.
 #include "Utility/BinaryDeserializeArchive.h"
 #include <filesystem>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class Scene
 	{
 	public:

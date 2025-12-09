@@ -13,7 +13,7 @@ the context struct any longer.
 #include "EngineContext.h"
 #include "Scenes/Scene.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class Application
 	{
 	public:

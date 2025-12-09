@@ -9,7 +9,7 @@ using namespace DirectX;
 #include "Graphics/Shaders/TextureShader.h"
 #include <unordered_map>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class Model
 	{
 	private:

@@ -10,7 +10,7 @@ No PhysicsSystem means that the scene will be static.
 #include "ECSScene.h"
 #include "ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
 
-namespace CMP316engine
+namespace NomadEngine
 {
 	class LevelEditorScene
 		: public ECSScene
@@ -19,7 +19,7 @@ namespace CMP316engine
 		ImGuiFileDialog fileDialog; // This might not be necessary, since I only ever plan to have one modal file dialog at a time (Could use the singleton dialog)
 
 	public:
-		LevelEditorScene(CMP316engine::EngineContext& context);
+		LevelEditorScene(NomadEngine::EngineContext& context);
 		bool Initialize() override;
 
 		void HandleImGui() override;

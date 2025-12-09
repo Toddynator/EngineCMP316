@@ -12,7 +12,7 @@ https://github.com/ephtracy/voxel-model/blob/master/MagicaVoxel-file-format-vox.
 #include "Utility/VoxelHelper.h"
 #include "Core/Voxel.h"
 
-namespace CMP316engine
+namespace NomadEngine
 {
     class VoxImporter
     {

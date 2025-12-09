@@ -35,7 +35,7 @@ using namespace entt::literals;
 	.func<static_cast<TYPE& (entt::registry::*)(const entt::entity)>(&entt::registry::emplace_or_replace<TYPE>), \
 		entt::as_ref_t>("AddComponent"_hs) 
 
-namespace CMP316engine
+namespace NomadEngine
 {
 	enum Traits : uint16_t
 	{

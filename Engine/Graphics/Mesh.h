@@ -8,7 +8,7 @@ Represents all Mesh Data structures required by the rendering pipeline.
 #include <directxmath.h>
 #include <vector>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	// Definition of the vertex type that will be used with the vertex buffer.
 	// MUST match the layout in the ShaderClass.
 	struct Vertex
@@ -21,7 +21,7 @@ namespace CMP316engine {
 	struct Mesh
 	{
 		std::string name = "Unnamed Mesh";
-		std::vector<CMP316engine::Vertex> vertices;
+		std::vector<NomadEngine::Vertex> vertices;
 		std::vector<unsigned long> indices;
 		std::string textureName = ""; // Default nothing, engine should have handling for this / a default texture to load, e.g. white pixel so that colour property has control
 	};

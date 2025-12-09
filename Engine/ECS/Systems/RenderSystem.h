@@ -7,7 +7,7 @@ Handles all rendering logic for a scene.
 #include "Graphics/Renderer_DirectX11.h"
 #include "Graphics/Shaders/TextureShader.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class RenderSystem : public System
 	{
 	private:

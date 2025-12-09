@@ -3,7 +3,7 @@
 #include "Utility/VoxelHelper.h"
 #include "ResourceLoading/TextureLoader.h"
 
-namespace CMP316engine
+namespace NomadEngine
 {
     VoxelResource VoxImporter::LoadVox(const char* filepath)
 	{
@@ -143,7 +143,7 @@ namespace CMP316engine
         for (auto& [position, voxel] : voxelsTemp)
         {
             position = position - lowestVoxelPos;
-            voxels[CMP316engine::VoxelHelper::Convert3DPositionToIndex(position, modelSize)] = voxel;
+            voxels[NomadEngine::VoxelHelper::Convert3DPositionToIndex(position, modelSize)] = voxel;
         }
 
         //std::cout << "\nVox Deserialization Complete\n"; // DEBUG

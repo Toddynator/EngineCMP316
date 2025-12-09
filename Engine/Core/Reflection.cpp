@@ -1,7 +1,7 @@
 #include "Reflection.h"
 #include "../ImGui/ImGuiFileDialog/ImGuiFileDialog.h"
 
-namespace CMP316engine
+namespace NomadEngine
 {
 	/*
 	By creating meta objects for the dataTypes, 

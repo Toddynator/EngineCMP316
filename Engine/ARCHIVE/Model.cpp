@@ -4,22 +4,22 @@
 #include "../ResourceLoading/TextureLoader.h"
 #include "imgui.h"
 
-CMP316engine::Model::Model()
+NomadEngine::Model::Model()
 {
 	worldMatrix = XMMatrixIdentity();
 }
 
 
-CMP316engine::Model::Model(const Model& other)
+NomadEngine::Model::Model(const Model& other)
 {
 }
 
 
-CMP316engine::Model::~Model()
+NomadEngine::Model::~Model()
 {
 }
 
-bool CMP316engine::Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+bool NomadEngine::Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	bool result;
 
@@ -33,7 +33,7 @@ bool CMP316engine::Model::Initialize(ID3D11Device* device, ID3D11DeviceContext* 
 	return true;
 }
 
-void CMP316engine::Model::Shutdown()
+void NomadEngine::Model::Shutdown()
 {
 	// Release the model texture.
 	ReleaseTexture();
@@ -44,7 +44,7 @@ void CMP316engine::Model::Shutdown()
 	return;
 }
 
-bool CMP316engine::Model::Render(TextureShader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+bool NomadEngine::Model::Render(TextureShader* shader, ID3D11DeviceContext* deviceContext, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 {
 	// Update models world matrix to any transforms that occurred during the frame, e.g. it has moved position or changed rotation
 	calculateWorldMatrix();
@@ -69,7 +69,7 @@ bool CMP316engine::Model::Render(TextureShader* shader, ID3D11DeviceContext* dev
 	return true;
 }
 
-int CMP316engine::Model::GetIndexCount()
+int NomadEngine::Model::GetIndexCount()
 {
 	int total = 0;
 	for (auto& mesh : meshes) {
@@ -78,7 +78,7 @@ int CMP316engine::Model::GetIndexCount()
 	return total;
 }
 
-int CMP316engine::Model::GetVertexCount()
+int NomadEngine::Model::GetVertexCount()
 {
 	int total = 0;
 	for (auto& mesh : meshes) {
@@ -87,7 +87,7 @@ int CMP316engine::Model::GetVertexCount()
 	return total;
 }
 
-void CMP316engine::Model::RenderImGuiControls()
+void NomadEngine::Model::RenderImGuiControls()
 {	
 	if (ImGui::InputFloat3("Position", &position.x))
 	{
@@ -100,7 +100,7 @@ void CMP316engine::Model::RenderImGuiControls()
 	}
 }
 
-bool CMP316engine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
+bool NomadEngine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	/*
 	NOTE: Currently hard coded to draw a specific model, should instead have this handled by derived classes or a file model loader
@@ -169,21 +169,21 @@ bool CMP316engine::Model::generateVerticesAndIndices(ID3D11Device* device, ID3D1
 	return true;
 }
 
-void CMP316engine::Model::calculateWorldMatrix()
+void NomadEngine::Model::calculateWorldMatrix()
 {
 	XMMATRIX translationMatrix = XMMatrixTranslation(position.x, position.y, position.z);
 	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z);
 	worldMatrix = rotationMatrix * translationMatrix;
 }
 
-bool CMP316engine::Model::InitializeBuffers(ID3D11Device* device)
+bool NomadEngine::Model::InitializeBuffers(ID3D11Device* device)
 {
 	D3D11_BUFFER_DESC vertexBufferDesc{};
 	D3D11_BUFFER_DESC indexBufferDesc{};
 	D3D11_SUBRESOURCE_DATA vertexData{};
 	D3D11_SUBRESOURCE_DATA indexData{};
 
-	std::vector<CMP316engine::Vertex> allVertices;
+	std::vector<NomadEngine::Vertex> allVertices;
 	std::vector<unsigned long> allIndices;
 
 	/*
@@ -251,7 +251,7 @@ bool CMP316engine::Model::InitializeBuffers(ID3D11Device* device)
 	return true;
 }
 
-void CMP316engine::Model::ShutdownBuffers()
+void NomadEngine::Model::ShutdownBuffers()
 {
 	// Release the index buffer.
 	if (indexBuffer)
@@ -270,7 +270,7 @@ void CMP316engine::Model::ShutdownBuffers()
 	return;
 }
 
-void CMP316engine::Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void NomadEngine::Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	/*
 	Purpose of the function is to set the vertex and index buffer as active on the input assembler in the GPU.
@@ -297,7 +297,7 @@ void CMP316engine::Model::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-void CMP316engine::Model::ReleaseTexture()
+void NomadEngine::Model::ReleaseTexture()
 {
 	// Release the texture objects.
 	for (auto& [key,texture] : textures)
@@ -308,7 +308,7 @@ void CMP316engine::Model::ReleaseTexture()
 	return;
 }
 
-bool CMP316engine::Model::loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath)
+bool NomadEngine::Model::loadModel(ID3D11Device* device, ID3D11DeviceContext* deviceContext, std::string filepath)
 {
 	/*
 	meshes.clear();

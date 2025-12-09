@@ -9,7 +9,7 @@ be used by the application developer optionally.
 #pragma once
 #include <imgui.h>
 
-namespace CMP316engine::ImGuiHelper
+namespace NomadEngine::ImGuiHelper
 {
 	void PromptUser(bool& isPrompt, std::function<void()> actionOnConfirm, std::string popupName, std::string popupQuestion);
 

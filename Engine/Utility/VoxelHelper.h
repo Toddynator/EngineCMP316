@@ -5,7 +5,7 @@ File for common data and functions required by voxel logic in the engine.
 #pragma once
 #include "Graphics/Mesh.h"
 #include "Core/Voxel.h"
-namespace CMP316engine::VoxelHelper
+namespace NomadEngine::VoxelHelper
 {
 	/*
 	Convert Voxel Positions into a 1D array for increased performance at the cost of wasted memory.

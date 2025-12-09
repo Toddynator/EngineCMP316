@@ -2,7 +2,7 @@
 #include "GameScene.h"
 #include "Core/Scenes/LevelEditorScene.h"
 
-std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
+std::unique_ptr<NomadEngine::Application> NomadEngine::CreateApp(NomadEngine::EngineContext& engineContext)
 {
 	return std::make_unique<Game>(engineContext);
 }
@@ -14,7 +14,7 @@ bool Game::Initialize()
 	/// REGISTER GAME SCENES
 
 	engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR); // Sets starting scene
-	engineContext.sceneManager->RegisterScene<CMP316engine::LevelEditorScene>(LEVEL_EDITOR);
+	engineContext.sceneManager->RegisterScene<NomadEngine::LevelEditorScene>(LEVEL_EDITOR);
 	engineContext.sceneManager->RegisterScene<GameScene>(TEST_LEVELFILE_SCENE, "Placeholder");
 
 	return true;

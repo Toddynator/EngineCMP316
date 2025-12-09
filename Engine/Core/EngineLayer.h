@@ -14,12 +14,12 @@ will not require any modifications to the application or engineLayer.
 #include "EngineContext.h"
 #include "Application.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class EngineLayer
 	{
 	public:
 		EngineLayer();
-		~EngineLayer() = default;
+		~EngineLayer() = default;\
 
 		bool Initialize();
 		void Run();
@@ -34,7 +34,7 @@ namespace CMP316engine {
 		bool createRenderer(HWND hwnd); // Note: In the future this may need carefully handled by a platformManager of sorts, as HWND won't be relevant to non-windows OS platforms.
 
 	private:
-		std::unique_ptr<CMP316engine::Application> application = nullptr; // The actual game
+		std::unique_ptr<NomadEngine::Application> application = nullptr; // The actual game
 		EngineContext engineContext;
 
 		const bool VSYNC_ENABLED = false; // Locks to 60fps ~ Renderer

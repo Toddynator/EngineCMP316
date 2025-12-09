@@ -5,7 +5,7 @@
 NOTE: Some of the University computers don't have audio drivers so I want my program to still run without audio, hence I don't halt the program completely.
 */
 
-bool CMP316engine::AudioManager_SoLoud::Initialize()
+bool NomadEngine::AudioManager_SoLoud::Initialize()
 {
 	// Initialize Audio Library
 	SoLoud::result result;
@@ -26,13 +26,13 @@ bool CMP316engine::AudioManager_SoLoud::Initialize()
 	return true;
 }
 
-void CMP316engine::AudioManager_SoLoud::Shutdown()
+void NomadEngine::AudioManager_SoLoud::Shutdown()
 {
 	if (!audioInitialized) { return; }
 	soloud.deinit();
 }
 
-bool CMP316engine::AudioManager_SoLoud::LoadAudio(std::string audioName, std::string filepath)
+bool NomadEngine::AudioManager_SoLoud::LoadAudio(std::string audioName, std::string filepath)
 {
 	if (!audioInitialized) { return false; }
 
@@ -56,50 +56,50 @@ bool CMP316engine::AudioManager_SoLoud::LoadAudio(std::string audioName, std::st
 	return true;
 }
 
-bool CMP316engine::AudioManager_SoLoud::CheckAudioHandleIsValid(int audioHandle)
+bool NomadEngine::AudioManager_SoLoud::CheckAudioHandleIsValid(int audioHandle)
 {
 	if (!audioInitialized) { return false; }
 	return soloud.isValidVoiceHandle(audioHandle);
 }
 
-int CMP316engine::AudioManager_SoLoud::Play(std::string audioName)
+int NomadEngine::AudioManager_SoLoud::Play(std::string audioName)
 {
 	if (!audioInitialized) { return 0; }
 	SoLoud::handle audioHandle = soloud.play(audioAssets[audioName]);
 	return audioHandle;
 }
 
-void CMP316engine::AudioManager_SoLoud::Stop(int audioHandle)
+void NomadEngine::AudioManager_SoLoud::Stop(int audioHandle)
 {
 	if (!audioInitialized) { return; }
 	soloud.setLooping(audioHandle, true);
 }
 
-void CMP316engine::AudioManager_SoLoud::Seek(int audioHandle, float time)
+void NomadEngine::AudioManager_SoLoud::Seek(int audioHandle, float time)
 {
 	if (!audioInitialized) { return; }
 	soloud.seek(audioHandle, time);
 }
 
-void CMP316engine::AudioManager_SoLoud::SetAudioLoop(int audioHandle, bool loop)
+void NomadEngine::AudioManager_SoLoud::SetAudioLoop(int audioHandle, bool loop)
 {
 	if (!audioInitialized) { return; }
 	soloud.setLooping(audioHandle, loop);
 }
 
-void CMP316engine::AudioManager_SoLoud::StopAll()
+void NomadEngine::AudioManager_SoLoud::StopAll()
 {
 	if (!audioInitialized) { return; }
 	soloud.stopAll();
 }
 
-void CMP316engine::AudioManager_SoLoud::SetVolume(int audioHandle, float volume)
+void NomadEngine::AudioManager_SoLoud::SetVolume(int audioHandle, float volume)
 {
 	if (!audioInitialized) { return; }
 	soloud.setVolume(audioHandle, volume);
 }
 
-float CMP316engine::AudioManager_SoLoud::GetVolume(int audioHandle)
+float NomadEngine::AudioManager_SoLoud::GetVolume(int audioHandle)
 {
 	if (!audioInitialized) { return 0.f; }
 	return soloud.getVolume(audioHandle);

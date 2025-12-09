@@ -25,7 +25,7 @@ Currently this class is largely a copy of Jolt's HelloWorld, with the difference
 
 
 
-namespace CMP316engine {
+namespace NomadEngine {
 
 	// Layer that objects can be in, determines which other objects it can collide with
 	// Typically you at least want to have 1 layer for moving bodies and 1 layer for static bodies, but you can have more

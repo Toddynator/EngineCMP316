@@ -7,7 +7,7 @@ It is used for determining the active camera and for controlling it.
 #include "../System.h"
 #include "Managers/WindowManager.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class CameraSystem : public System
 	{
 	private:

@@ -10,7 +10,7 @@ updates for example.
 #include "Manager.h"
 #include <chrono>
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class TimeManager
 		: public Manager
 	{

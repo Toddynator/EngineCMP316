@@ -2,14 +2,14 @@
 #include "ECS/EngineECSSystems.h"
 #include "Core/Reflection.h"
 
-namespace CMP316engine {
-	ECSScene::ECSScene(CMP316engine::EngineContext& context) : Scene(context)
+namespace NomadEngine {
+	ECSScene::ECSScene(NomadEngine::EngineContext& context) : Scene(context)
 	{
 		sceneRoot = ECS::CreateEntityWithDefaultComponents(&registry);
-		systems.push_back(std::make_unique<CMP316engine::RenderSystem>(&registry, &engineContext, engineContext.renderer.get()));
-		systems.push_back(std::make_unique<CMP316engine::CameraSystem>(&registry, &engineContext));
-		systems.push_back(std::make_unique<CMP316engine::TransformSystem>(&registry, &engineContext));
-		systems.push_back(std::make_unique<CMP316engine::VoxelSystem>(&registry, &engineContext));
+		systems.push_back(std::make_unique<NomadEngine::RenderSystem>(&registry, &engineContext, engineContext.renderer.get()));
+		systems.push_back(std::make_unique<NomadEngine::CameraSystem>(&registry, &engineContext));
+		systems.push_back(std::make_unique<NomadEngine::TransformSystem>(&registry, &engineContext));
+		systems.push_back(std::make_unique<NomadEngine::VoxelSystem>(&registry, &engineContext));
 	}
 
 	bool ECSScene::Initialize()
@@ -59,9 +59,9 @@ namespace CMP316engine {
 
 	void ECSScene::Render()
 	{
-		XMMATRIX viewMatrix = CMP316engine::CameraSystem::GetActiveCameraViewMatrix(&registry);
-		XMFLOAT3 cameraPosition = CMP316engine::CameraSystem::GetActiveCameraPosition(&registry);
-		CMP316engine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.assetManager.get(), engineContext.shader.get(), viewMatrix, cameraPosition);
+		XMMATRIX viewMatrix = NomadEngine::CameraSystem::GetActiveCameraViewMatrix(&registry);
+		XMFLOAT3 cameraPosition = NomadEngine::CameraSystem::GetActiveCameraPosition(&registry);
+		NomadEngine::RenderSystem::RenderModels(&registry, engineContext.renderer.get(), engineContext.assetManager.get(), engineContext.shader.get(), viewMatrix, cameraPosition);
 	}
 
 	void ECSScene::Serialize(std::ofstream& file, BinarySerializeArchive& archive)

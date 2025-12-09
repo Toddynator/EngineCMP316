@@ -9,7 +9,7 @@ ANY FUNCTIONS outside of the ones listed in this class should be either private 
 #include "entt.hpp"
 #include "Core/EngineContext.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class System
 	{
 	protected:

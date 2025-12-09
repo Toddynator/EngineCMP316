@@ -4,7 +4,7 @@
 #include "ResourceLoading/OBJ_Loader.h"
 #include "ResourceLoading/VoxImporter.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	bool AssetManager::Initialize(ID3D11Device* rendererDevice, ID3D11DeviceContext* rendererDeviceContext) 
 	{ 
 		device = rendererDevice; 
@@ -145,13 +145,13 @@ namespace CMP316engine {
 		std::vector<Mesh> model;
 		for (auto& loadedMesh : objLoader.LoadedMeshes)
 		{
-			model.push_back(CMP316engine::Mesh());
+			model.push_back(NomadEngine::Mesh());
 			auto& mesh = model.back();
 			mesh.name = loadedMesh.MeshName;
 
 			//// VERTICES
 			for (auto& loadedVertex : loadedMesh.Vertices) {
-				CMP316engine::Vertex vertex;
+				NomadEngine::Vertex vertex;
 				vertex.position = DirectX::XMFLOAT3(loadedVertex.Position.X, loadedVertex.Position.Y, loadedVertex.Position.Z);
 				vertex.normal = DirectX::XMFLOAT3(loadedVertex.Normal.X, loadedVertex.Normal.Y, loadedVertex.Normal.Z);
 				vertex.uv = DirectX::XMFLOAT2(loadedVertex.TextureCoordinate.X, loadedVertex.TextureCoordinate.Y);

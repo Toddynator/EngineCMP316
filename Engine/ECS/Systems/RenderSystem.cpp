@@ -4,17 +4,17 @@
 #include "../../ResourceLoading/TextureLoader.h"
 #include "../../ResourceLoading/OBJ_Loader.h"
 
-bool CMP316engine::RenderSystem::Initialize()
+bool NomadEngine::RenderSystem::Initialize()
 {
 	return true;
 }
 
-void CMP316engine::RenderSystem::Shutdown()
+void NomadEngine::RenderSystem::Shutdown()
 {
 	shutdownBuffers();
 }
 
-void CMP316engine::RenderSystem::Update(float deltaTime)
+void NomadEngine::RenderSystem::Update(float deltaTime)
 {
 	auto modelEntities = registry->view<ModelComponent, MeshComponent>();
 	for (auto& entity : modelEntities) {
@@ -59,7 +59,7 @@ void CMP316engine::RenderSystem::Update(float deltaTime)
 	}
 }
 
-void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, LightShader* shader, DirectX::XMMATRIX viewMatrix, DirectX::XMFLOAT3 cameraPosition)
+void NomadEngine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Renderer_DirectX11* sceneRenderer, AssetManager* assetManager, LightShader* shader, DirectX::XMMATRIX viewMatrix, DirectX::XMFLOAT3 cameraPosition)
 {
 	auto meshEntities = sceneRegistry->view<MeshComponent, TransformComponent>();
 	for (auto& entity : meshEntities) 
@@ -102,7 +102,7 @@ void CMP316engine::RenderSystem::RenderModels(entt::registry* sceneRegistry, Ren
 	}
 }
 
-void CMP316engine::RenderSystem::loadModel(ModelComponent& modelComponent, MeshComponent& meshComponent)
+void NomadEngine::RenderSystem::loadModel(ModelComponent& modelComponent, MeshComponent& meshComponent)
 {
 	meshComponent.meshes.clear();
 	if (std::vector<Mesh>* model = assetManager->GetResource<std::vector<Mesh>>(modelComponent.filepath))
@@ -113,11 +113,11 @@ void CMP316engine::RenderSystem::loadModel(ModelComponent& modelComponent, MeshC
 	meshComponent.meshNeedsCalculated = true;
 }
 
-void CMP316engine::RenderSystem::calculateBuffers(MeshComponent& meshComponent)
+void NomadEngine::RenderSystem::calculateBuffers(MeshComponent& meshComponent)
 {
 	meshComponent.meshNeedsCalculated = false;
 
-	std::vector<CMP316engine::Vertex> allVertices;
+	std::vector<NomadEngine::Vertex> allVertices;
 	std::vector<unsigned long> allIndices;
 
 	/*
@@ -191,7 +191,7 @@ void CMP316engine::RenderSystem::calculateBuffers(MeshComponent& meshComponent)
 	}
 }
 
-void CMP316engine::RenderSystem::shutdownBuffers()
+void NomadEngine::RenderSystem::shutdownBuffers()
 {
 	auto meshEntities = registry->view<MeshComponent>();
 	for (auto& entity : meshEntities) {

@@ -7,7 +7,7 @@
 #include "soloud.h"
 #include "soloud_wav.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	class AudioManager_SoLoud
 		: public AudioManager
 	{

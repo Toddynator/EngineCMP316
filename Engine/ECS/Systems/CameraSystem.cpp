@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "CameraSystem.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 
-	CameraSystem::CameraSystem(entt::registry* sceneRegistry, CMP316engine::EngineContext* engineContext) : System(sceneRegistry, engineContext), windowManager(engineContext->windowManager.get())
+	CameraSystem::CameraSystem(entt::registry* sceneRegistry, NomadEngine::EngineContext* engineContext) : System(sceneRegistry, engineContext), windowManager(engineContext->windowManager.get())
 	{
 
 	}

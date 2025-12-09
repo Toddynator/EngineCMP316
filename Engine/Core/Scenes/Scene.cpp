@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Scene.h"
 
-namespace CMP316engine {
+namespace NomadEngine {
 	bool Scene::Initialize()
 	{
 		return true;

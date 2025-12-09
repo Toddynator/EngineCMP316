@@ -12,7 +12,7 @@ the bullet has 1 force and fails to destroy.
 */
 
 #pragma once
-namespace CMP316engine
+namespace NomadEngine
 {
 	using Voxel = uint8_t;
 
