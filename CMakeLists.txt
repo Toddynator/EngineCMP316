@@ -108,10 +108,10 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/Game")
         };
 
         class Game
-        	: public CMP316engine::Application
+        	: public NomadEngine::Application
         {
         public:
-        	Game(CMP316engine::EngineContext& context) : Application(context) {}
+        	Game(NomadEngine::EngineContext& context) : Application(context) {}
         
         	bool Initialize() override;
             void Shutdown() override;
@@ -130,7 +130,7 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/Game")
         #include "Game.h"
         #include "Core/Scenes/LevelEditorScene.h"
 
-        std::unique_ptr<CMP316engine::Application> CMP316engine::CreateApp(CMP316engine::EngineContext& engineContext)
+        std::unique_ptr<NomadEngine::Application> NomadEngine::CreateApp(NomadEngine::EngineContext& engineContext)
         {
         	return std::make_unique<Game>(engineContext);
         }
@@ -138,7 +138,7 @@ if (NOT EXISTS "${CMAKE_SOURCE_DIR}/Game")
         bool Game::Initialize() 
         {
             engineContext.sceneManager->RequestSceneChange(LEVEL_EDITOR); // Sets starting scene
-	        engineContext.sceneManager->RegisterScene<CMP316engine::LevelEditorScene>(LEVEL_EDITOR);
+	        engineContext.sceneManager->RegisterScene<NomadEngine::LevelEditorScene>(LEVEL_EDITOR);
             return true;
         }
 
